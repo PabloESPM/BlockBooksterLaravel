@@ -1,0 +1,158 @@
+USERS {
+        string email PK
+        string name
+        string telephone
+        string password
+        date date_of_birth
+        enum gender
+        enum country
+        enum type
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    BOOKS {
+        string isbn PK
+        string title
+        string publisher
+        int publication_year
+        enum language
+        int number_of_pages
+        string cover_path
+        enum genre
+        text description
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    AUTHORS {
+        int id PK
+        string name
+        string surname
+        date birth_date
+        string nationality
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    AUTHOR_BOOK {
+        int id PK
+        int author_id FK
+        string book_isbn FK
+        enum role
+        int author_order
+    }
+
+    FAV_LISTS {
+        int id PK
+        string user_email FK
+        string name
+        text description
+        enum visibility
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    BOOK_LIST {
+        int id PK
+        int list_id FK
+        string book_isbn FK
+        int position
+        text note
+        timestamp added_at
+    }
+
+    BOOK_USER {
+        int id PK
+        string user_email FK
+        string book_isbn FK
+        enum status
+        date started_at
+        date finished_at
+        int rating
+    }
+
+    REVIEWS {
+        int id PK
+        string user_email FK
+        string book_isbn FK
+        string title
+        text body
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PURCHASE {
+        int id PK
+        string book_isbn FK
+        string provider
+        enum format
+        string country
+        string affiliate_url
+        boolean active
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    FOLLOWS {
+        int id PK
+        string follower_email FK
+        string followed_email FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    RECOMMENDATIONS {
+        int id PK
+        string from_user_email FK
+        string to_user_email FK
+        string book_isbn FK
+        text message
+        timestamp read_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    LIST_LIKES {
+        int id PK
+        string user_email FK
+        int list_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    REVIEW_LIKES {
+        int id PK
+        string user_email FK
+        int review_id FK
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    USERS ||--o{ FAV_LISTS : creates
+    FAV_LISTS ||--o{ BOOK_LIST : contains
+    BOOKS ||--o{ BOOK_LIST : included_in
+
+    BOOKS ||--o{ AUTHOR_BOOK : written_by
+    AUTHORS ||--o{ AUTHOR_BOOK : writes
+
+    USERS ||--o{ BOOK_USER : tracks
+    BOOKS ||--o{ BOOK_USER : tracked_by
+
+    USERS ||--o{ REVIEWS : writes
+    BOOKS ||--o{ REVIEWS : reviewed_in
+
+    BOOKS ||--o{ PURCHASE : monetized_by
+
+    USERS ||--o{ FOLLOWS : follows
+    USERS ||--o{ FOLLOWS : followed_by
+
+    USERS ||--o{ RECOMMENDATIONS : sends
+    USERS ||--o{ RECOMMENDATIONS : receives
+    BOOKS ||--o{ RECOMMENDATIONS : recommended_book
+
+    USERS ||--o{ LIST_LIKES : likes
+    FAV_LISTS ||--o{ LIST_LIKES : liked_list
+
+    USERS ||--o{ REVIEW_LIKES : likes
+    REVIEWS ||--o{ REVIEW_LIKES : liked_review
