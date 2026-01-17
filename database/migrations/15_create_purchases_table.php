@@ -30,7 +30,7 @@ return new class extends Migration
                 'audiobook'
             ]);
 
-            $table->string('country', 2)->default('es');
+            $table->foreignId('country_id')->constrained();
 
             $table->string('affiliate_url');
 
@@ -42,7 +42,7 @@ return new class extends Migration
                 'book_isbn',
                 'provider',
                 'format',
-                'country'
+                'country_id'
             ]);
         });
 

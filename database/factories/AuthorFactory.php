@@ -18,7 +18,7 @@ class AuthorFactory extends Factory
             'name'        => $this->faker->firstName(),
             'surname'     => $this->faker->lastName(),
             'birth_date'  => $this->faker->date(),
-            'nationality' => $this->faker->country(),
+            'country_id'  => \App\Models\Country::inRandomOrder()->first()->id ?? \App\Models\Country::factory(),
             'biography'   => $this->faker->text(),
         ];
     }

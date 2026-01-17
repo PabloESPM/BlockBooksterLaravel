@@ -11,38 +11,42 @@ use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
+
     use HasApiTokens, HasFactory, Notifiable;
-    protected $primaryKey = 'email';
-    protected $keyType = 'string';
-    public $incrementing = false;
+
 
     protected $hidden = ['password'];
 
     /* Relaciones */
 
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
+
     public function lists()
     {
-        return $this->hasMany(FavList::class, 'user_email', 'email');
+        return $this->hasMany(FavList::class);
     }
 
     public function books()
     {
-        return $this->hasMany(BookUser::class, 'user_email', 'email');
+        return $this->hasMany(BookUser::class);
     }
 
     public function reviews()
     {
-        return $this->hasMany(Review::class, 'user_email', 'email');
+        return $this->hasMany(Review::class);
     }
 
     public function followers()
     {
-        return $this->hasMany(Follow::class, 'followed_email', 'email');
+        return $this->hasMany(Follow::class, 'followed_id');
     }
 
     public function following()
     {
-        return $this->hasMany(Follow::class, 'follower_email', 'email');
+        return $this->hasMany(Follow::class, 'follower_id');
     }
 }
 

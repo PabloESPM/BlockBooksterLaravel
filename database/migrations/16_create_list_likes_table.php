@@ -15,11 +15,7 @@ return new class extends Migration
 
             $table->id();
 
-            $table->string('user_email');
-            $table->foreign('user_email')
-                ->references('email')
-                ->on('users')
-                ->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             $table->foreignId('list_id')
                 ->constrained('fav_lists')
@@ -28,7 +24,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Un usuario solo puede dar like una vez a una lista
-            $table->unique(['user_email', 'list_id']);
+            $table->unique(['user_id', 'list_id']);
         });
 
     }

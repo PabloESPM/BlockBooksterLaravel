@@ -9,18 +9,16 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
+    //Recomendaciones de libros entre usuarios
     public function up(): void
     {
-        Schema::create('reviews', function (Blueprint $table) {
+        Schema::create('recommendations', function (Blueprint $table) {
 
             $table->id();
 
-            // Relaciones
-            $table->string('user_email');
-            $table->foreign('user_email')
-                ->references('email')
-                ->on('users')
-                ->cascadeOnDelete();
+            $table->foreignId('from_user_id')->constrained('users')->cascadeOnDelete();
+
+            $table->foreignId('to_user_id')->constrained('users')->cascadeOnDelete();
 
             $table->string('book_isbn', 17);
             $table->foreign('book_isbn')
@@ -28,16 +26,18 @@ return new class extends Migration
                 ->on('books')
                 ->cascadeOnDelete();
 
-            //Comentarios y valoracion
-            $table->string('title')->nullable();
-            $table->text('body');
+            $table->text('message')->nullable();
+
+            $table->timestamp('read_at')->nullable();
 
             $table->timestamps();
 
-            // Un usuario solo puede reseñar una vez cada libro
-            $table->unique(['user_email', 'book_isbn']);
+            $table->unique([
+                'from_user_id',
+                'to_user_id',
+                'book_isbn'
+            ]);
         });
-
     }
 
     /**
@@ -45,6 +45,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('reviews');
+        Schema::dropIfExists('recommendations');
     }
 };

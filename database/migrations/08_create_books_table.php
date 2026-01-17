@@ -16,16 +16,10 @@ return new class extends Migration
             $table->string('title');
             $table->string('publisher');
             $table->year('publication_year');
-            $table->enum('language', [
-                'es','en','fr','de','it','pt','ca','zh','ja','otros'
-            ])->default('es');
+            $table->foreignId('language_id')->constrained()->cascadeOnDelete();
             $table->integer('number_of_pages');
             $table->string('cover_path')->nullable();
-            $table->enum('genre', [
-                'ficcion','no_ficcion','misterio','thriller','romance',
-                'fantasia','ciencia_ficcion','terror','biografia',
-                'historia','poesia','ensayo','infantil','juvenil','autoayuda'
-            ]);
+            $table->foreignId('genre_id')->constrained()->cascadeOnDelete();
             $table->text('description');
             $table->timestamps();
         });

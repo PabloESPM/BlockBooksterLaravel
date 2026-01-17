@@ -17,4 +17,9 @@ class Purchase extends Model
     {
         return $this->belongsTo(Book::class, 'book_isbn', 'isbn');
     }
+
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }

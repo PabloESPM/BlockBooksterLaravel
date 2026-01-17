@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('surname')->nullable();
             $table->date('birth_date')->nullable();
-            $table->string('nationality', 50)->nullable();
+            $table->foreignId('country_id')->nullable()->constrained()->onDelete('set null');
             $table->text('biography')->nullable();
 
             $table->timestamps();

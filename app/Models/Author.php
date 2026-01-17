@@ -18,5 +18,9 @@ class Author extends Model
             'book_isbn'
         )->withPivot(['role', 'author_order']);
     }
+    public function country()
+    {
+        return $this->belongsTo(Country::class);
+    }
 }
 

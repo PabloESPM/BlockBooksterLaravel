@@ -23,6 +23,16 @@ class Book extends Model
             'author_id'
         )->withPivot(['role', 'author_order']);
     }
+
+    public function language()
+    {
+        return $this->belongsTo(Language::class);
+    }
+
+    public function genre()
+    {
+        return $this->belongsTo(Genre::class);
+    }
     // App/Models/Book.php
     public function lists()
     {

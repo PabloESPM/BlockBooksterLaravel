@@ -17,7 +17,7 @@ class FavListFactory extends Factory
         return [
             'name' => $this->faker->sentence(3),      // Nombre de la lista
             'description' => $this->faker->paragraph(), // Descripción opcional
-            'user_email' => null,                       // Será sobrescrito en el Seeder
+            'description' => $this->faker->paragraph(), // Descripción opcional
         ];
     }
 }

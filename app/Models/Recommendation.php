@@ -13,12 +13,12 @@ class Recommendation extends Model
 
     public function from()
     {
-        return $this->belongsTo(User::class, 'from_user_email', 'email');
+        return $this->belongsTo(User::class, 'from_user_id');
     }
 
     public function to()
     {
-        return $this->belongsTo(User::class, 'to_user_email', 'email');
+        return $this->belongsTo(User::class, 'to_user_id');
     }
 
     public function book()

@@ -15,9 +15,6 @@ class UserFactory extends Factory
 
     public function definition(): array
     {
-        // Definimos los códigos de país que coinciden con la migración
-        $countries = ['es','en','fr','de','it','pt','ca','zh','ja','otros'];
-
         return [
             'name' => $this->faker->name(),
             'email' => $this->faker->unique()->safeEmail(),
@@ -25,7 +22,7 @@ class UserFactory extends Factory
             'password' => bcrypt('password'),
             'date_of_birth' => $this->faker->date(),
             'gender' => $this->faker->randomElement(['Male','Female','Other']), // coincidir con migración
-            'country' => $this->faker->randomElement($countries), // solo países válidos
+            'country_id' => \App\Models\Country::inRandomOrder()->first()->id ?? \App\Models\Country::factory(),
             'type' => 'user', // se puede cambiar a 'admin' o 'worker' en el seeder
         ];
     }

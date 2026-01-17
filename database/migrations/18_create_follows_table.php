@@ -16,21 +16,13 @@ return new class extends Migration
 
             $table->id();
 
-            $table->string('follower_email');
-            $table->foreign('follower_email')
-                ->references('email')
-                ->on('users')
-                ->cascadeOnDelete();
+            $table->foreignId('follower_id')->constrained('users')->cascadeOnDelete();
 
-            $table->string('followed_email');
-            $table->foreign('followed_email')
-                ->references('email')
-                ->on('users')
-                ->cascadeOnDelete();
+            $table->foreignId('followed_id')->constrained('users')->cascadeOnDelete();
 
             $table->timestamps();
 
-            $table->unique(['follower_email', 'followed_email']);
+            $table->unique(['follower_id', 'followed_id']);
         });
     }
 

@@ -18,9 +18,7 @@ class BookFactory extends Factory
             'publication_year' => $this->faker->numberBetween(1950, now()->year),
 
             // ENUM correcto
-            'language' => $this->faker->randomElement([
-                'es','en','fr','de','it','pt','ca','zh','ja','otros'
-            ]),
+            'language_id' => \App\Models\Language::inRandomOrder()->first()->id ?? \App\Models\Language::factory(),
 
             'number_of_pages' => $this->faker->numberBetween(80, 900),
 
@@ -28,11 +26,7 @@ class BookFactory extends Factory
             'cover_path' => 'covers/' . $this->faker->uuid . '.jpg',
 
             // ENUM correcto
-            'genre' => $this->faker->randomElement([
-                'ficcion','no_ficcion','misterio','thriller','romance',
-                'fantasia','ciencia_ficcion','terror','biografia',
-                'historia','poesia','ensayo','infantil','juvenil','autoayuda'
-            ]),
+            'genre_id' => \App\Models\Genre::inRandomOrder()->first()->id ?? \App\Models\Genre::factory(),
 
             'description' => $this->faker->paragraphs(3, true),
         ];

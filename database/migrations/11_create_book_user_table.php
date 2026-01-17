@@ -15,11 +15,7 @@ return new class extends Migration
 
             $table->id();
 
-            $table->string('user_email');
-            $table->foreign('user_email')
-                ->references('email')
-                ->on('users')
-                ->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained()->cascadeOnDelete();
 
             $table->string('book_isbn', 17);
             $table->foreign('book_isbn')
@@ -35,7 +31,7 @@ return new class extends Migration
             //Valoracion en estrellas u otros
             $table->tinyInteger('rating')->nullable(); // 1–5
 
-            $table->unique(['user_email', 'book_isbn']);
+            $table->unique(['user_id', 'book_isbn']);
         });
 
     }

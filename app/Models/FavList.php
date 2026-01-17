@@ -10,11 +10,11 @@ class FavList extends Model
 {
     use HasFactory;
     protected $table = 'fav_lists';
-    protected $fillable = ['user_email', 'name', 'description', 'visibility'];
+    protected $fillable = ['user_id', 'name', 'description', 'visibility'];
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_email', 'email');
+        return $this->belongsTo(User::class);
     }
 
     public function books()
