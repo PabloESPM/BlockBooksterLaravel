@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\FavList;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,15 +10,15 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class FavListFactory extends Factory
 {
-    /**
-     * Define the model's default state.
-     *
-     * @return array<string, mixed>
-     */
+    protected $model = FavList::class;
+
     public function definition(): array
     {
         return [
-            //
+            'name' => $this->faker->sentence(3),      // Nombre de la lista
+            'description' => $this->faker->paragraph(), // Descripción opcional
+            'user_email' => null,                       // Será sobrescrito en el Seeder
         ];
     }
 }
+

@@ -5,8 +5,30 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+
 class FavList extends Model
 {
-    /** @use HasFactory<\Database\Factories\FavListFactory> */
     use HasFactory;
+    protected $table = 'fav_lists';
+    protected $fillable = ['user_email', 'name', 'description', 'visibility'];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'user_email', 'email');
+    }
+
+    public function books()
+    {
+        return $this->belongsToMany(
+            Book::class,      // Modelo relacionado
+            'book_list',       // Tabla pivot
+            'list_id',         // FK de la lista en pivot
+            'book_isbn'        // FK del libro en pivot
+        )->withPivot(['position', 'note', 'added_at']);
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(ListLike::class, 'list_id');
+    }
 }

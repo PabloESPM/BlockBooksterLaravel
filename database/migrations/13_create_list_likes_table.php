@@ -22,7 +22,7 @@ return new class extends Migration
                 ->cascadeOnDelete();
 
             $table->foreignId('list_id')
-                ->constrained('lists')
+                ->constrained('fav_lists')
                 ->cascadeOnDelete();
 
             $table->timestamps();

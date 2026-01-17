@@ -5,16 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
-class Purchase extends Model
+class AuthorBook extends Model
 {
     use HasFactory;
-    protected $casts = [
-        'active' => 'boolean',
-    ];
+    protected $table = 'author_book';
+    public $timestamps = false;
+
+    public function author()
+    {
+        return $this->belongsTo(Author::class);
+    }
 
     public function book()
     {
         return $this->belongsTo(Book::class, 'book_isbn', 'isbn');
     }
 }
+

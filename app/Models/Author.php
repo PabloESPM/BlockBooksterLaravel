@@ -8,16 +8,15 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Author extends Model
 {
-    /** @use HasFactory<\Database\Factories\AuthorFactory> */
     use HasFactory;
-
-    public function books():HasMany{
-        return $this->HasMany(
+    public function books()
+    {
+        return $this->belongsToMany(
             Book::class,
             'author_book',
             'author_id',
             'book_isbn'
-        );
+        )->withPivot(['role', 'author_order']);
     }
-
 }
+

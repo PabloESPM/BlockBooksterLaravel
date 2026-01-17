@@ -6,9 +6,6 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('book_list', function (Blueprint $table) {
@@ -16,7 +13,7 @@ return new class extends Migration
             $table->id();
 
             $table->foreignId('list_id')
-                ->constrained('lists')
+                ->constrained('fav_lists')
                 ->cascadeOnDelete();
 
             $table->string('book_isbn', 17);
@@ -31,12 +28,8 @@ return new class extends Migration
 
             $table->unique(['list_id', 'book_isbn']);
         });
-
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('book_list');

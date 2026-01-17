@@ -9,6 +9,7 @@
 - como almacenar la base de datos de sql para n o tener que crearla y que asi cuadre con las listas de favoritos etc
 - como usar googlebooks
 - como llamar a tailwind o bootsrap y donde van la parte visual
+- tabla countris con los paisas, el prefijo telefoni, la moneda, codigo iso, la zona horaria etc
 
 ## Comandos Artisan
 

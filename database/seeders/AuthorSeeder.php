@@ -12,11 +12,6 @@ class AuthorSeeder extends Seeder
      */
     public function run(): void
     {
-        //
-        // En DatabaseSeeder.php o AuthorSeeder.php
-        Author::factory(10)
-            ->has(Book::factory()->count(rand(1, 4)))
-        .create();
 
     }
 }

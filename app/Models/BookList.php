@@ -5,16 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-
-class Purchase extends Model
+class BookList extends Model
 {
     use HasFactory;
-    protected $casts = [
-        'active' => 'boolean',
-    ];
+    public $timestamps = false;
+
+    protected $dates = ['added_at'];
+
+    public function list()
+    {
+        return $this->belongsTo(FavList::class, 'list_id');
+    }
 
     public function book()
     {
         return $this->belongsTo(Book::class, 'book_isbn', 'isbn');
     }
 }
+
