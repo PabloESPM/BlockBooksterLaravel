@@ -15,3 +15,9 @@
 
 - php artisan make:migration (crear tabla)
 - php artisan make:model (crea el modelo y todo lo que le acompaña)
+
+## Futuras implementaciones
+- premios y nominaciones (planeta, nobel, nadal)
+- noticias
+- calendario de publicaciones
+- blog en el espacio de los autores para postear
