@@ -1,5 +1,13 @@
 @import "tailwindcss";
 
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../views/pages/home/*.blade.php'
+@source '../views/pages/**/*.blade.php'
+@source '../views/**/**/*.blade.php'
+@source '../**/*.js';
+
 @theme {
     /* codigo de colores */
     --color-brand-blue: #0E3FA9;
@@ -21,26 +29,26 @@
     }
 
     .neo-shadow {
-        @apply shadow-[4px_4px_0px_0px_rgba(0, 0, 0, 1)];
+        @apply shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
     }
 
     .neo-shadow-hover {
-        @apply hover:shadow-[6px_6px_0px_0px_rgba(0, 0, 0, 1)] hover:-translate-y-[2px] hover:-translate-x-[1px] transition-all;
+        @apply hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-[2px] hover:-translate-x-[1px] transition-all;
     }
 
     .neo-card {
-        @apply bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0, 0, 0, 1)];
+        @apply bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)];
     }
 
     .neo-input {
-        @apply border-2 border-black w-full px-4 py-2 focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0, 0, 0, 1)] transition-all;
+        @apply border-2 border-black w-full px-4 py-2 focus:outline-none focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all;
     }
 
     .neo-btn-primary {
-        @apply bg-brand-yellow text-black border-2 border-black font-bold uppercase tracking-wide px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0, 0, 0, 1)] hover:shadow-[6px_6px_0px_0px_rgba(0, 0, 0, 1)] hover:-translate-y-1 transition-all active:shadow-none active:translate-y-[4px] active:translate-x-[4px];
+        @apply bg-brand-yellow text-black border-2 border-black font-bold uppercase tracking-wide px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all active:shadow-none active:translate-y-[4px] active:translate-x-[4px];
     }
 
     .neo-btn-secondary {
-        @apply bg-white text-black border-2 border-black font-bold px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0, 0, 0, 1)] hover:shadow-[6px_6px_0px_0px_rgba(0, 0, 0, 1)] hover:-translate-y-1 transition-all active:shadow-none active:translate-y-[4px] active:translate-x-[4px];
+        @apply bg-white text-black border-2 border-black font-bold px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all active:shadow-none active:translate-y-[4px] active:translate-x-[4px];
     }
 }

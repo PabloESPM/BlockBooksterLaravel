@@ -12,15 +12,19 @@
                 <div class="hidden sm:ml-6 sm:flex sm:space-x-8 h-full items-center">
                     <a href="/books"
                         class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
-                        Books
+                        Libros
                     </a>
                     <a href="/lists"
                         class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
-                        Lists
+                        Listas
                     </a>
                     <a href="/authors"
                         class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
-                        Authors
+                        Autores
+                    </a>
+                    <a href="/community"
+                       class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
+                        Comunidad
                     </a>
                 </div>
             </div>
@@ -72,9 +76,9 @@
                     </div>
                 @else
                     <div class="flex space-x-3">
-                        <x-neutral-button href="/login" class="text-sm">LOGIN</x-neutral-button>
+                        <x-neutral-button href="{{ route('login') }}" class="text-sm">INICIA SESIÓN</x-neutral-button>
                         <x-primary-button href="/register"
-                            class="text-sm py-2 px-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">JOIN</x-primary-button>
+                            class="text-sm py-2 px-4 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)]">REGISTRATE</x-primary-button>
                     </div>
                 @endauth
 
