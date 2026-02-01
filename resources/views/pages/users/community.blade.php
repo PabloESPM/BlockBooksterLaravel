@@ -17,18 +17,26 @@
             </div>
 
             <div class="space-y-6">
-                @for ($i = 1; $i <= 5; $i++)
+                @foreach ($mostFollowed as $user)
                     <div class="neo-card p-4 flex items-center gap-4 hover:translate-x-1 transition-transform">
-                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $i }}</div>
-                        <div class="w-12 h-12 bg-brand-blue rounded-full border-2 border-black flex-shrink-0"></div>
-                        <div class="flex-grow">
-                            <h3 class="font-bold uppercase text-sm">ReaderName{{ $i }}</h3>
-                            <p class="text-xs font-bold text-gray-500">1{{ $i }}.5k Followers</p>
-                        </div>
-                        <button
-                            class="text-xs font-black uppercase border-2 border-black px-3 py-1 hover:bg-brand-yellow transition-colors">Follow</button>
+                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $loop->iteration }}</div>
+                        <a href="{{ route('users.show', $user->id) }}" class="flex items-center gap-4 flex-grow">
+                            <div
+                                class="w-12 h-12 bg-brand-blue rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-bold uppercase text-sm truncate hover:text-brand-blue">{{ $user->name }}</h3>
+                                <p class="text-xs font-bold text-gray-500">{{ $user->followers_count }} Followers</p>
+                            </div>
+                        </a>
+                        @auth
+                            <button
+                                class="text-xs font-black uppercase border-2 border-black px-3 py-1 hover:bg-brand-yellow transition-colors">Follow</button>
+                        @endauth
                     </div>
-                @endfor
+                @endforeach
             </div>
         </section>
 
@@ -39,16 +47,26 @@
             </div>
 
             <div class="space-y-6">
-                @for ($i = 1; $i <= 5; $i++)
+                @foreach ($topCurators as $user)
                     <div class="neo-card p-4 flex items-center gap-4 hover:translate-x-1 transition-transform">
-                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $i }}</div>
-                        <div class="w-12 h-12 bg-brand-yellow rounded-full border-2 border-black flex-shrink-0"></div>
-                        <div class="flex-grow">
-                            <h3 class="font-bold uppercase text-sm">CuratorKing{{ $i }}</h3>
-                            <p class="text-xs font-bold text-gray-500">{{ 100 - ($i * 10) }} Lists Created</p>
-                        </div>
+                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $loop->iteration }}</div>
+                        <a href="{{ route('users.show', $user->id) }}" class="flex items-center gap-4 flex-grow">
+                            <div
+                                class="w-12 h-12 bg-brand-yellow rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
+                                    class="w-full h-full object-cover">
+                            </div>
+                            <div class="flex-grow">
+                                <h3 class="font-bold uppercase text-sm truncate hover:text-brand-blue">{{ $user->name }}</h3>
+                                <p class="text-xs font-bold text-gray-500">{{ $user->lists_count }} Lists Created</p>
+                            </div>
+                        </a>
+                        @auth
+                            <button
+                                class="text-xs font-black uppercase border-2 border-black px-3 py-1 hover:bg-brand-yellow transition-colors">Follow</button>
+                        @endauth
                     </div>
-                @endfor
+                @endforeach
             </div>
         </section>
 
@@ -59,19 +77,28 @@
             </div>
 
             <div class="space-y-6">
-                @for ($i = 1; $i <= 5; $i++)
+                @foreach ($mostActive as $user)
                     <div class="neo-card p-4 flex items-center gap-4 hover:translate-x-1 transition-transform">
-                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $i }}</div>
-                        <div class="w-12 h-12 bg-gray-200 rounded-full border-2 border-black flex-shrink-0"></div>
-                        <div class="flex-grow">
-                            <h3 class="font-bold uppercase text-sm">HyperReader{{ $i }}</h3>
-                            <div class="flex items-center gap-2 text-xs font-bold text-gray-500">
-                                <span>{{ 500 - ($i * 20) }} Reviews</span>
+                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $loop->iteration }}</div>
+                        <a href="{{ route('users.show', $user->id) }}" class="flex items-center gap-4 flex-grow">
+                            <div class="w-12 h-12 bg-gray-200 rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
+                                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
+                                    class="w-full h-full object-cover">
                             </div>
-                        </div>
-                        <div class="w-3 h-3 bg-green-500 rounded-full border border-black" title="Online now"></div>
+                            <div class="flex-grow">
+                                <h3 class="font-bold uppercase text-sm truncate hover:text-brand-blue">{{ $user->name }}</h3>
+                                <div class="flex items-center gap-2 text-xs font-bold text-gray-500">
+                                    <span>{{ $user->reviews_count }} Reviews</span>
+                                </div>
+                            </div>
+                        </a>
+                        @auth
+                            <button
+                                class="text-xs font-black uppercase border-2 border-black px-3 py-1 hover:bg-brand-yellow transition-colors">Follow</button>
+                        @endauth
+                        <!-- <div class="w-3 h-3 bg-green-500 rounded-full border border-black" title="Online now"></div> -->
                     </div>
-                @endfor
+                @endforeach
             </div>
         </section>
     </div>

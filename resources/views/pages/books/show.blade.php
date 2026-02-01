@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Project Hail Mary - Book Details')
+@section('title', $book->title . ' - Book Details')
 
 @section('content')
     <!-- Hero Section -->
@@ -9,12 +9,14 @@
         <div class="md:col-span-4 lg:col-span-3">
             <div class="neo-card p-0 relative group">
                 <div class="aspect-[2/3] bg-gray-200 border-b-2 border-black relative overflow-hidden">
-                    <!-- Placeholder Cover -->
-                    <div class="absolute inset-0 flex items-center justify-center bg-brand-yellow">
-                        <span class="text-4xl font-black uppercase text-black opacity-20 -rotate-45">Cover</span>
-                    </div>
-                    <img src="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=800"
-                        alt="Project Hail Mary" class="w-full h-full object-cover">
+                    @if($book->cover)
+                        <img src="{{ $book->cover }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
+                    @else
+                        <!-- Placeholder Cover -->
+                        <div class="absolute inset-0 flex items-center justify-center bg-brand-yellow">
+                            <span class="text-4xl font-black uppercase text-black opacity-20 -rotate-45">Cover</span>
+                        </div>
+                    @endif
                 </div>
             </div>
             <!-- Mobile Actions (visible only on small screens) -->
@@ -33,44 +35,49 @@
                     <div>
                         <h1
                             class="text-3xl md:text-5xl font-black font-display uppercase tracking-tighter leading-none mb-2">
-                            Project Hail Mary</h1>
-                        <h2 class="text-xl font-bold uppercase text-gray-600">by <a href="#"
-                                class="text-brand-blue hover:underline">Andy Weir</a></h2>
+                            {{ $book->title }}
+                        </h1>
+                        <h2 class="text-xl font-bold uppercase text-gray-600">by
+                            @foreach($book->authors as $author)
+                                <a href="{{ route('authors.show', $author->id) }}"
+                                    class="text-brand-blue hover:underline">{{ $author->name }}</a>{{ !$loop->last ? ',' : '' }}
+                            @endforeach
+                        </h2>
                     </div>
                     <!-- Rating -->
                     <div class="hidden md:block text-right">
                         <div class="flex items-center gap-1 justify-end">
                             @for($i = 0; $i < 5; $i++)
-                                <svg class="w-8 h-8 text-brand-yellow fill-current drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                                <svg class="w-8 h-8 {{ $i < 4 ? 'text-brand-yellow' : 'text-gray-300' }} fill-current drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]"
                                     viewBox="0 0 24 24">
                                     <path
                                         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
                                 </svg>
                             @endfor
                         </div>
-                        <div class="text-2xl font-black mt-1">4.8 <span class="text-sm font-bold text-gray-500 uppercase">/
+                        <div class="text-2xl font-black mt-1">4.5 <span class="text-sm font-bold text-gray-500 uppercase">/
                                 5.0</span></div>
-                        <div class="text-xs font-bold uppercase text-gray-500">Based on 12.5k ratings</div>
+                        <div class="text-xs font-bold uppercase text-gray-500">Based on {{ $book->reviews->count() }}
+                            ratings</div>
                     </div>
                 </div>
 
                 <!-- Meta Data -->
                 <div class="flex flex-wrap gap-4 mb-8 text-sm font-bold uppercase border-y-2 border-black py-3">
-                    <span class="bg-black text-white px-2 py-0.5">Sci-Fi</span>
-                    <span class="bg-gray-200 border border-black px-2 py-0.5">2021</span>
-                    <span class="bg-gray-200 border border-black px-2 py-0.5">496 Pages</span>
-                    <span class="bg-gray-200 border border-black px-2 py-0.5">English</span>
-                    <span class="text-gray-500 py-0.5">ISBN: {{ $isbn ?? '978-0593135204' }}</span>
+                    @if($book->genre)
+                        <span class="bg-black text-white px-2 py-0.5">{{ $book->genre->name }}</span>
+                    @endif
+                    <span class="bg-gray-200 border border-black px-2 py-0.5">{{ $book->publication_year }}</span>
+                    <span class="bg-gray-200 border border-black px-2 py-0.5">{{ $book->pages ?? 'Unknown' }} Pages</span>
+                    @if($book->language)
+                        <span class="bg-gray-200 border border-black px-2 py-0.5">{{ $book->language->name }}</span>
+                    @endif
+                    <span class="text-gray-500 py-0.5">ISBN: {{ $book->isbn }}</span>
                 </div>
 
                 <!-- Synopsis -->
                 <div class="mb-8 font-medium leading-relaxed text-gray-800">
-                    <p class="mb-4">Ryland Grace is the sole survivor on a desperate, last-chance mission—and if he fails,
-                        humanity and the earth itself will perish.</p>
-                    <p class="mb-4">Except that right now, he doesn't know that. He can't even remember his own name, let
-                        alone the nature of his assignment or how to complete it.</p>
-                    <p>All he knows is that he's been asleep for a very, very long time. And he's just been awakened to find
-                        himself millions of miles from home, with nothing but two corpses for company.</p>
+                    <p class="mb-4">{{ $book->synopsis }}</p>
                 </div>
             </div>
 

@@ -58,6 +58,10 @@
                 class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('admin.lists.*') ? 'bg-gray-900 border-l-4 border-brand-yellow' : '' }}">
                 Reports
             </a>
+            <a href="{{ route('home') }}"
+               class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('home.*') ? 'bg-gray-900 border-l-4 border-brand-yellow' : '' }}">
+                WEB
+            </a>
         </nav>
 
         <div class="p-4 border-t border-gray-800">

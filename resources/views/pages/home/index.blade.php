@@ -15,21 +15,26 @@
         </p>
 
         <!-- Search Bar -->
-        <div class="max-w-2xl mx-auto mb-10 relative">
-            <input type="text" class="neo-input text-lg py-4 pl-12" placeholder="Search for books, authors, or lists...">
-            <svg class="w-6 h-6 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" fill="none" stroke="currentColor"
-                viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-        </div>
-
+        <form action="{{ route('search') }}" method="GET" class="max-w-3xl mx-auto mb-10 flex gap-3">
+            <div class="flex-1 relative">
+                <input type="text" name="q" class="neo-input text-lg py-4 pl-12 w-full" 
+                    placeholder="Search books, authors, users, lists, genres, ISBN..." required>
+                <svg class="w-6 h-6 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" fill="none" stroke="currentColor"
+                    viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+            </div>
+            <button type="submit" class="neo-btn-primary px-8 text-lg">Search</button>
+        </form>
+        <!-- Silenciar
         @guest
             <div class="flex justify-center gap-6">
                 <a href="{{ route('register') }}" class="neo-btn-primary text-lg px-8 py-4">Start Collection</a>
                 <a href="#discovery" class="neo-btn-secondary text-lg px-8 py-4">Explore</a>
             </div>
         @endguest
+        -->
     </section>
 
     <!-- Auth CTA (Guest Only) -->
@@ -56,20 +61,19 @@
         <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
             <h2 class="text-3xl font-display font-black uppercase tracking-tight">Latest <span
                     class="text-brand-blue">Arrivals</span></h2>
-            <a href="/books"
+            <a href="{{ route('books.index') }}"
                 class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VIEW
                 ALL</a>
         </div>
 
         <div class="flex overflow-x-auto pb-10 space-x-6 snap-x hide-scrollbar">
-            @for($i = 0; $i < 6; $i++)
+            @foreach($latestBooks as $book)
                 <div class="w-48 flex-none snap-start">
-                    <!-- Updated to use book-card component -->
-                    <x-book-card id="{{ $i }}" title="Book Title {{ $i }}" author="Author Name"
-                        cover="https://images.unsplash.com/photo-1544947950-fa07a98d237f?auto=format&fit=crop&q=80&w=600"
-                        rating="4.{{$i}}" />
+                    <x-book-card id="{{ $book->isbn }}" :title="$book->title" :author="$book->authors->first()->name ?? 'Unknown'"
+                        :cover="$book->cover ?? 'https://via.placeholder.com/300x450'"
+                        :rating="4.5" />
                 </div>
-            @endfor
+            @endforeach
         </div>
     </section>
 
@@ -78,17 +82,16 @@
         <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
             <h2 class="text-3xl font-display font-black uppercase tracking-tight">Best <span
                     class="text-brand-yellow text-shadow-neo">Rated</span></h2>
-            <a href="/books"
+            <a href="{{ route('books.index') }}"
                 class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VIEW
                 ALL</a>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
-            @for($i = 0; $i < 5; $i++)
-                <!-- Updated to use book-card component -->
-                <x-book-card id="rated-{{ $i }}" title="Masterpiece {{ $i }}" author="Top Author"
-                    cover="https://images.unsplash.com/photo-1512820790803-83ca734da794?auto=format&fit=crop&q=80&w=600"
-                    rating="4.9" />
-            @endfor
+            @foreach($bestRatedBooks as $book)
+                <x-book-card id="{{ $book->isbn }}" :title="$book->title" :author="$book->authors->first()->name ?? 'Unknown'"
+                    :cover="$book->cover ?? 'https://via.placeholder.com/300x450'"
+                    :rating="5.0" />
+            @endforeach
         </div>
     </section>
 
@@ -193,24 +196,57 @@
         </div>
     </div>
 
-    <!-- Featured Users -->
+    <!-- Featured Authors (Rising Stars) -->
     <section class="mb-20">
         <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
-            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Top <span
-                    class="bg-black text-white px-2">Community</span></h2>
-            <a href="/community"
+            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Rising <span
+                    class="bg-black text-white px-2">Authors</span></h2>
+            <a href="{{ route('authors.index') }}"
                 class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VIEW
                 ALL</a>
         </div>
         <div class="flex flex-wrap gap-8 justify-center">
-            @for($i = 0; $i < 5; $i++)
+            @foreach($risingStars as $author)
                 <div class="flex flex-col items-center group cursor-pointer">
-                    <div
-                        class="w-20 h-20 bg-gray-200 rounded-full border-2 border-black mb-2 shadow-[2px_2px_0px_#000] group-hover:-translate-y-1 transition-transform">
-                    </div>
-                    <span class="font-bold uppercase text-sm group-hover:text-brand-blue">User{{ $i }}</span>
+                    <a href="{{ route('authors.show', $author->id) }}">
+                        <div class="w-24 h-24 mx-auto bg-gray-200 rounded-full border-2 border-black mb-2 shadow-[2px_2px_0px_#000] group-hover:-translate-y-1 transition-transform overflow-hidden">
+                            <img src="{{ $author->photo ?? 'https://ui-avatars.com/api/?name=' . urlencode($author->name) . '&background=random' }}"
+                                alt="{{ $author->name }}" class="w-full h-full object-cover">
+                        </div>
+                        <span class="font-bold uppercase text-sm group-hover:text-brand-blue text-center block">{{ $author->name }}</span>
+                    </a>
                 </div>
-            @endfor
+            @endforeach
+        </div>
+    </section>
+
+    <!-- Featured Lists -->
+    <section class="mb-20">
+        <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
+            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Featured <span
+                    class="text-brand-blue">Lists</span></h2>
+            <a href="{{ route('lists.index') }}"
+                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VIEW
+                ALL</a>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            @foreach($featuredLists as $list)
+            <div class="neo-card p-4 hover:-translate-y-1 transition-transform cursor-pointer">
+                <a href="{{ route('lists.show', $list->id) }}">
+                    <h3 class="font-bold uppercase text-lg leading-tight mb-2 truncate group-hover:text-brand-blue">{{ $list->name }}</h3>
+                    <a href="{{ route('users.show', $list->user->id) }}" class="flex items-center gap-2 mb-3 hover:opacity-80 transition-opacity">
+                        <div class="w-6 h-6 rounded-full bg-gray-200 border border-black overflow-hidden">
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($list->user->name ?? 'User') }}&background=random" class="w-full h-full object-cover">
+                        </div>
+                        <span class="text-xs font-bold text-gray-500 uppercase hover:text-brand-blue">{{ $list->user->name ?? 'User' }}</span>
+                    </a>
+                    <div class="border-t-2 border-black pt-2 flex justify-between text-xs font-bold">
+                        <span>{{ $list->books_count }} Books</span>
+                        <span class="text-brand-blue">View List -></span>
+                    </div>
+                </a>
+            </div>
+            @endforeach
         </div>
     </section>
 

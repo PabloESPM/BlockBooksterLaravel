@@ -17,4 +17,9 @@ class Country extends Model
         'continent',
         'timezone'
     ];
+
+    public function authors()
+    {
+        return $this->hasMany(Author::class);
+    }
 }

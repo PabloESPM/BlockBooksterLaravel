@@ -1,57 +1,52 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
 
-Route::get('/', function () {
-    return view('pages.home.index');
-});
+use App\Http\Controllers\BookController;
+use App\Http\Controllers\HomeController;
+
+Route::get('/', [HomeController::class, 'index'])->name('home');
+
+// Search
+use App\Http\Controllers\SearchController;
+Route::get('/search', [SearchController::class, 'search'])->name('search');
+
 // Books
-Route::get('/books', function () {
-    return view('pages.books.index');
-})->name('books.index');
-
-Route::get('/books/{isbn}', function ($isbn) {
-    return view('pages.books.show', ['isbn' => $isbn]);
-})->name('books.show');
+Route::get('/books', [BookController::class, 'index'])->name('books.index');
+Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
 
 // Authors
-Route::get('/authors', function () {
-    return view('pages.authors.index');
-})->name('authors.index');
-
-Route::get('/authors/{id}', function ($id) {
-    return view('pages.authors.show', ['id' => $id]);
-})->name('authors.show');
+use App\Http\Controllers\AuthorController;
+Route::get('/authors', [AuthorController::class, 'index'])->name('authors.index');
+Route::get('/authors/{author}', [AuthorController::class, 'show'])->name('authors.show');
 
 // Listas
-Route::get('/lists', function () {
-    return view('pages.lists.index');
-})->name('lists.index');
+// Listas
+use App\Http\Controllers\FavListController;
+Route::get('/lists', [FavListController::class, 'index'])->name('lists.index');
+Route::get('/lists/{list}', [FavListController::class, 'show'])->name('lists.show');
 
 // Usuarios
-Route::get('/users', function () {
-    return view('pages.users.index');
-});
+use App\Http\Controllers\UserProfileController;
+Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users.show');
 
-Route::get('/community', function () {
-    return view('pages.users.community');
-})->name('community.index');
+Route::get('/community', [UserController::class, 'community'])->name('community.index');
 
 // Login y registro
-Route::get('/login', function () {
-    return view('pages.users.login');
-})->name('login');
+Route::get('/login', [UserController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [UserController::class, 'authenticate']);
+Route::post('/logout', [UserController::class, 'logout'])->name('logout');
 
-Route::get('/register', function () {
-    return view('pages.users.register');
-})->name('register');
+Route::get('/register', [UserController::class, 'showRegisterForm'])->name('register');
+Route::post('/register', [UserController::class, 'store']);
 
 Route::get('/forgot-password', function () {
     return view('pages.users.forgot-password');
 })->name('password.request');
 
-Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-    ->name('password.email');
+// Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
+//    ->name('password.email');
 
 // Espacio de administracion
 // Admin Panel
@@ -119,7 +114,7 @@ Route::get('/terms', function () {
     return view('static.terms');
 })->name('static.terms');
 
-Route::get('/cookies', function (){
+Route::get('/cookies', function () {
     return view('static.cookies');
 })->name('static.cookies');
 

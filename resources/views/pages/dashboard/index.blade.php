@@ -16,8 +16,7 @@
                             class="text-brand-blue">{{ auth()->user()->name ?? 'Reader' }}</span></h1>
                     <p class="text-gray-600 font-bold mt-2">Here's what's happening with your books.</p>
                 </div>
-                <a href="{{ route('books.show', ['isbn' => 'random']) }}"
-                    class="hidden md:inline-block neo-btn-primary text-sm">
+                <a href="{{ route('books.index') }}" class="hidden md:inline-block neo-btn-primary text-sm">
                     + Log New Book
                 </a>
             </header>

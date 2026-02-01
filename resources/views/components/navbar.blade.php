@@ -14,16 +14,16 @@
                         class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
                         Libros
                     </a>
+                    <a href="/authors"
+                       class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
+                        Autores
+                    </a>
                     <a href="/lists"
                         class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
                         Listas
                     </a>
-                    <a href="/authors"
-                        class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
-                        Autores
-                    </a>
                     <a href="/community"
-                       class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
+                        class="text-black font-bold uppercase tracking-wide border-b-4 border-transparent hover:border-brand-yellow px-1 py-2 text-sm transition-all h-full flex items-center">
                         Comunidad
                     </a>
                 </div>
@@ -31,11 +31,12 @@
 
             <!-- Right Side: Search & User -->
             <div class="flex items-center space-x-4">
-                <!-- Desktop Search -->
+                <!-- Desktop Search
                 <div class="hidden sm:block relative">
                     <input type="text" placeholder="SEARCH..."
                         class="w-64 bg-white border-2 border-black rounded-none py-2 px-4 text-sm font-bold placeholder-gray-500 focus:outline-none focus:bg-brand-yellow/10 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
                 </div>
+                -->
 
                 <!-- User Dropdown / Auth Buttons -->
                 @auth
@@ -55,13 +56,22 @@
                             class="origin-top-right absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] py-1 focus:outline-none z-50 transform transition-all"
                             role="menu">
 
+                            @if(auth()->user()->type === 'admin' || auth()->user()->type === 'worker')
+                                <a href="{{ route('admin.dashboard') }}"
+                                    class="block px-4 py-2 text-sm text-brand-blue font-black hover:bg-brand-yellow border-b border-gray-100"
+                                    role="menuitem">ADMIN DASHBOARD</a>
+                            @endif
                             <a href="/dashboard"
                                 class="block px-4 py-2 text-sm text-black font-bold hover:bg-brand-yellow border-b border-gray-100"
                                 role="menuitem">PROFILE</a>
                             <a href="/dashboard/lists"
                                 class="block px-4 py-2 text-sm text-black font-bold hover:bg-brand-yellow border-b border-gray-100"
-                                role="menuitem">LISTS</a>
-                            <a href="/settings" class="block px-4 py-2 text-sm text-black font-bold hover:bg-brand-yellow"
+                                role="menuitem">MY LISTS</a>
+                            <a href="/dashboard/reviews"
+                                class="block px-4 py-2 text-sm text-black font-bold hover:bg-brand-yellow border-b border-gray-100"
+                                role="menuitem">MY REVIEWS</a>
+                            <a href="/dashboard/settings"
+                                class="block px-4 py-2 text-sm text-black font-bold hover:bg-brand-yellow"
                                 role="menuitem">SETTINGS</a>
 
                             <div class="border-t-2 border-black my-1"></div>

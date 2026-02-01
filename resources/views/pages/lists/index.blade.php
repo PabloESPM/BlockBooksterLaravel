@@ -9,95 +9,68 @@
         <p class="text-lg font-bold mt-2 text-gray-600 uppercase tracking-widest">Curated collections by the community</p>
     </div>
 
-    <!-- Section: Most Followed -->
+    <!-- Section: Public Lists -->
     <section class="mb-16">
         <div class="flex items-center justify-between mb-6 border-b-2 border-black pb-2">
             <h2 class="text-2xl font-black uppercase flex items-center gap-2">
                 <span class="w-4 h-4 bg-brand-blue border-2 border-black block"></span>
-                Most Followed
+                Public Lists
             </h2>
-            <a href="#" class="text-sm font-bold uppercase hover:underline hover:text-brand-blue">View all -></a>
+            <div class="text-sm font-bold uppercase">
+                {{ $lists->links('pagination::simple-tailwind') }}
+            </div>
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            <!-- Mock List Card 1 -->
+            @forelse ($lists as $list)
             <div class="neo-card p-0 overflow-hidden group">
-                <div class="h-32 bg-gray-200 border-b-2 border-black relative">
-                    <div class="grid grid-cols-5 h-full">
-                        <!-- Mock covers -->
-                        <div class="bg-gray-300 border-r-2 border-black"></div>
-                        <div class="bg-gray-400 border-r-2 border-black"></div>
-                        <div class="bg-gray-500 border-r-2 border-black"></div>
-                        <div class="bg-gray-600 border-r-2 border-black"></div>
-                        <div class="bg-gray-700"></div>
+                <a href="{{ route('lists.show', $list->id) }}" class="block">
+                    <div class="h-32 bg-gray-200 border-b-2 border-black relative">
+                        <div class="grid grid-cols-5 h-full">
+                            <!-- Preview Covers -->
+                            @foreach($list->books as $book)
+                                <div class="bg-gray-300 border-r-2 border-black overflow-hidden relative">
+                                    @if($book->cover)
+                                        <img src="{{ $book->cover }}" class="w-full h-full object-cover">
+                                    @else
+                                        <div class="absolute inset-0 flex items-center justify-center bg-brand-yellow/50 text-xs font-bold rotate-90">Book</div>
+                                    @endif
+                                </div>
+                            @endforeach
+                            @for($i = $list->books->count(); $i < 5; $i++)
+                                <div class="bg-gray-100 border-r-2 border-black flex items-center justify-center">
+                                    <span class="text-gray-300 text-xs">Empty</span>
+                                </div>
+                            @endfor
+                        </div>
                     </div>
-                </div>
+                </a>
                 <div class="p-6">
-                    <h3 class="text-xl font-bold uppercase mb-1 group-hover:text-brand-blue transition-colors">Cyberpunk
-                        Essentials</h3>
+                    <a href="{{ route('lists.show', $list->id) }}">
+                        <h3 class="text-xl font-bold uppercase mb-1 group-hover:text-brand-blue transition-colors truncate">{{ $list->name }}</h3>
+                    </a>
                     <div class="flex items-center gap-2 mb-4">
-                        <div class="w-6 h-6 rounded-full bg-gray-300 border border-black"></div>
+                        <div class="w-6 h-6 rounded-full bg-gray-300 border border-black overflow-hidden">
+                             <!-- User Avatar (Mock) -->
+                             <img src="https://ui-avatars.com/api/?name={{ urlencode($list->user->name ?? 'User') }}&background=random" class="w-full h-full object-cover">
+                        </div>
                         <span class="text-xs font-bold uppercase text-gray-600">by <span
-                                class="text-black">NeoReader</span></span>
+                                class="text-black">{{ $list->user->name ?? 'Unknown' }}</span></span>
                     </div>
                     <div class="flex items-center justify-between text-xs font-bold border-t-2 border-black pt-4">
-                        <span>42 Books</span>
-                        <span class="text-gray-500">12.5k Followers</span>
+                        <span>{{ $list->books_count }} Books</span>
+                        <span class="text-gray-500">{{ $list->created_at->format('M d, Y') }}</span>
                     </div>
                 </div>
             </div>
-
-            <!-- Mock List Card 2 -->
-            <div class="neo-card p-0 overflow-hidden group">
-                <div class="h-32 bg-gray-200 border-b-2 border-black relative">
-                    <div class="grid grid-cols-5 h-full">
-                        <div class="bg-red-300 border-r-2 border-black"></div>
-                        <div class="bg-red-400 border-r-2 border-black"></div>
-                        <div class="bg-red-500 border-r-2 border-black"></div>
-                        <div class="bg-red-600 border-r-2 border-black"></div>
-                        <div class="bg-red-700"></div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold uppercase mb-1 group-hover:text-brand-blue transition-colors">Top 100
-                        Horror</h3>
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-6 h-6 rounded-full bg-gray-300 border border-black"></div>
-                        <span class="text-xs font-bold uppercase text-gray-600">by <span
-                                class="text-black">ScaryGood</span></span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs font-bold border-t-2 border-black pt-4">
-                        <span>100 Books</span>
-                        <span class="text-gray-500">8.2k Followers</span>
-                    </div>
-                </div>
+            @empty
+            <div class="col-span-full text-center py-10">
+                <h3 class="text-2xl font-black uppercase text-gray-400">No public lists found.</h3>
             </div>
-
-            <!-- Mock List Card 3 -->
-            <div class="neo-card p-0 overflow-hidden group">
-                <div class="h-32 bg-gray-200 border-b-2 border-black relative">
-                    <div class="grid grid-cols-5 h-full">
-                        <div class="bg-blue-300 border-r-2 border-black"></div>
-                        <div class="bg-blue-400 border-r-2 border-black"></div>
-                        <div class="bg-blue-500 border-r-2 border-black"></div>
-                        <div class="bg-blue-600 border-r-2 border-black"></div>
-                        <div class="bg-blue-700"></div>
-                    </div>
-                </div>
-                <div class="p-6">
-                    <h3 class="text-xl font-bold uppercase mb-1 group-hover:text-brand-blue transition-colors">Philosophy
-                        Starters</h3>
-                    <div class="flex items-center gap-2 mb-4">
-                        <div class="w-6 h-6 rounded-full bg-gray-300 border border-black"></div>
-                        <span class="text-xs font-bold uppercase text-gray-600">by <span
-                                class="text-black">Thinker</span></span>
-                    </div>
-                    <div class="flex items-center justify-between text-xs font-bold border-t-2 border-black pt-4">
-                        <span>15 Books</span>
-                        <span class="text-gray-500">5.1k Followers</span>
-                    </div>
-                </div>
-            </div>
+            @endforelse
+        </div>
+        <div class="mt-6">
+            {{ $lists->links() }}
         </div>
     </section>
 

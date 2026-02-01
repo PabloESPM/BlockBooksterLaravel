@@ -11,9 +11,23 @@ class FavListController extends Controller
     /**
      * Display a listing of the resource.
      */
+    /**
+     * Display a listing of the resource.
+     */
     public function index()
     {
-        //
+        $lists = FavList::where('visibility', 'public')
+            ->with([
+                'user',
+                'books' => function ($query) {
+                    $query->take(4); // Preview 4 books for the card
+                }
+            ])
+            ->withCount('books')
+            ->latest()
+            ->paginate(12);
+
+        return view('pages.lists.index', compact('lists'));
     }
 
     /**
@@ -35,9 +49,11 @@ class FavListController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(FavList $favList)
+    public function show(FavList $list)
     {
-        //
+        // Load relationships: user, books (with authors)
+        $list->load(['user', 'books.authors']);
+        return view('pages.lists.show', compact('list'));
     }
 
     /**
