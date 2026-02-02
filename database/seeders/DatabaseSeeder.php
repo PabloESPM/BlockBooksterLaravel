@@ -1,34 +1,36 @@
 <?php
+
 namespace Database\Seeders;
 
-use App\Models\User;
 use Illuminate\Database\Seeder;
-use App\Models\Author;
-use App\Models\Book;
-use App\Models\Purchase;
-use App\Models\Review;
-use App\Models\FavList;
-use App\Models\Recommendation;
-use App\Models\Follow;
-use App\Models\ListLike;
-use App\Models\ReviewLike;
-use App\Models\BookUser;
-use App\Models\Language;
-use App\Models\Genre;
+use App\Models\{
+    User,
+    Author,
+    Book,
+    Purchase,
+    Review,
+    FavList,
+    Recommendation,
+    Follow,
+    ListLike,
+    ReviewLike,
+    BookUser,
+    Language,
+    Genre,
+    Country
+};
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // 0️⃣ Crear países (Importante hacerlo antes de Users/Authors)
-        if(\App\Models\Country::count() == 0){
-             \App\Models\Country::factory(10)->create();
-        }
-        $allCountries = \App\Models\Country::all();
+        /** -------------------------------------------------
+         * 0️⃣ Datos base
+         * ------------------------------------------------- */
+        Country::factory(10)->create();
 
-        // 0.5️⃣ Crear Lenguajes
-        if(Language::count() == 0) {
-            $langs = [
+        if (Language::count() === 0) {
+            collect([
                 ['code' => 'es', 'name' => 'Español'],
                 ['code' => 'en', 'name' => 'Inglés'],
                 ['code' => 'fr', 'name' => 'Francés'],
@@ -39,139 +41,160 @@ class DatabaseSeeder extends Seeder
                 ['code' => 'zh', 'name' => 'Chino'],
                 ['code' => 'ja', 'name' => 'Japonés'],
                 ['code' => 'ot', 'name' => 'Otros'],
-            ];
-            foreach($langs as $l) {
-                Language::create($l);
-            }
+            ])->each(fn ($l) => Language::create($l));
         }
-        $allLanguages = Language::all();
 
-        // 0.8️⃣ Crear Géneros
-        if(\App\Models\Genre::count() == 0) {
-            $genres = [
+        if (Genre::count() === 0) {
+            collect([
                 'Ficción', 'No Ficción', 'Misterio', 'Thriller', 'Romance',
                 'Fantasía', 'Ciencia Ficción', 'Terror', 'Biografía',
                 'Historia', 'Poesía', 'Ensayo', 'Infantil', 'Juvenil', 'Autoayuda'
-            ];
-            foreach($genres as $g) {
-                \App\Models\Genre::create(['name' => $g]);
-            }
+            ])->each(fn ($g) => Genre::create(['name' => $g]));
         }
-        $allGenres = \App\Models\Genre::all();
 
-        // 1️⃣ Crear autores y libros
-        $authors = Author::factory(15)->create();
+        /** -------------------------------------------------
+         * 1️⃣ Autores y libros
+         * ------------------------------------------------- */
+        $authors   = Author::factory(15)->create();
         $allBooks = collect();
+        $countries = Country::all();
 
-        $authors->each(function ($author) use (&$allBooks, $allCountries) {
+        $authors->each(function ($author) use (&$allBooks, $countries) {
             $books = Book::factory(rand(1, 5))->create();
-            $author->books()->attach($books->pluck('isbn')); // pivot table author_book
-
-            // Guardar libros para relacionarlos con usuarios
+            $author->books()->attach($books->pluck('isbn'));
             $allBooks = $allBooks->merge($books);
 
-            // 2️⃣ Crear compras por libro, evitando duplicados
             $providers = ['Amazon', 'Fnac', 'Casa del Libro', 'El Corte Inglés'];
             $formats   = ['paperback', 'hardcover', 'ebook', 'audiobook'];
-            // $countries not needed here as we use country_id now
 
-            $books->each(function ($book) use ($providers, $formats, $allCountries) {
-                $combinations = collect($providers)
-                    ->crossJoin($formats, $allCountries)
+            $books->each(function ($book) use ($providers, $formats, $countries) {
+                collect($providers)
+                    ->crossJoin($formats, $countries)
                     ->shuffle()
-                    ->take(rand(2, 4)); // 2-4 enlaces por libro
+                    ->take(rand(2, 4))
+                    ->each(function ($combo) use ($book) {
+                        [$provider, $format, $country] = $combo;
 
-                foreach ($combinations as [$provider, $format, $country]) {
-                    Purchase::create([
-                        'book_isbn'     => $book->isbn,
-                        'provider'      => $provider,
-                        'format'        => $format,
-                        'country_id'    => $country->id,
-                        'affiliate_url' => fake()->url(),
-                        'active'        => fake()->boolean(80),
-                    ]);
-                }
+                        Purchase::create([
+                            'book_isbn'     => $book->isbn,
+                            'provider'      => $provider,
+                            'format'        => $format,
+                            'country_id'    => $country->id,
+                            'affiliate_url' => fake()->url(),
+                            'active'        => fake()->boolean(80),
+                        ]);
+                    });
             });
         });
 
-        // 3️⃣ Crear usuarios
+        /** -------------------------------------------------
+         * 2️⃣ Usuarios
+         * ------------------------------------------------- */
         $users = User::factory(30)->create();
-        $users[0]->update(['type' => 'admin']);
-        foreach(array_slice($users->toArray(), 1, 5) as $worker){
-            $workerModel = User::where('email', $worker['email'])->first();
-            $workerModel->update(['type' => 'worker']);
-        }
 
-        // 4️⃣ Relacionar usuarios con libros y contenido
-        $users->each(function($user) use ($allBooks, $users) {
+        // Roles
+        $users->first()->update(['type' => 'admin']);
+        $users->skip(1)->take(5)->each(fn ($u) => $u->update(['type' => 'worker']));
 
-            // Libros leídos (BookUser)
-            $readBooks = $allBooks->random(rand(1,5));
-            foreach($readBooks as $book){
+        // Asegurar perfiles visibles para interacción social
+        $users->take(20)->each(
+            fn ($u) => $u->update(['profile_visibility' => 'public'])
+        );
+
+        /** -------------------------------------------------
+         * 3️⃣ Relaciones usuario ↔ libro
+         * ------------------------------------------------- */
+        $users->each(function (User $user) use ($allBooks, $users) {
+            $readBooks = $allBooks->random(rand(1, 5));
+
+            foreach ($readBooks as $book) {
                 BookUser::create([
-                    'user_id' => $user->id,
-                    'book_isbn' => $book->isbn,
-                    'status' => 'read',
-                    'started_at' => now()->subMonths(rand(1,12)),
+                    'user_id'     => $user->id,
+                    'book_isbn'   => $book->isbn,
+                    'status'      => 'read',
+                    'started_at'  => now()->subMonths(rand(1, 12)),
                     'finished_at' => now(),
-                    'rating' => rand(1,5)
+                    'rating'      => rand(1, 5),
                 ]);
             }
 
-            // Reviews
-            $readBooks->each(function($book) use ($user){
-                Review::factory(1)->create([
-                    'user_id' => $user->id,
-                    'book_isbn' => $book->isbn
-                ]);
-            });
+            $readBooks->each(fn ($book) =>
+            Review::factory()->create([
+                'user_id'   => $user->id,
+                'book_isbn'=> $book->isbn,
+            ])
+            );
 
-            // Listas de favoritos
-            $lists = FavList::factory(rand(1,5))->create(['user_id' => $user->id]);
-            $lists->each(function($list) use ($readBooks){
-                $list->books()->attach(
-                    $readBooks->random(rand(1, min(5, $readBooks->count())))->pluck('isbn')
-                );
-            });
+            $lists = FavList::factory(rand(1, 4))->create(['user_id' => $user->id]);
+            $lists->each(fn ($list) =>
+            $list->books()->attach(
+                $readBooks->random(rand(1, min(5, $readBooks->count())))->pluck('isbn')
+            )
+            );
 
-            // Recomendaciones
-            $usersToRecommend = $users->where('id', '!=', $user->id)->random(rand(1,5));
-            foreach($usersToRecommend as $other){
+            /** ---------------------------------------------
+             * Recomendaciones (solo a perfiles visibles)
+             * --------------------------------------------- */
+            $targets = $users
+                ->where('id', '!=', $user->id)
+                ->whereIn('profile_visibility', ['public', 'followers'])
+                ->random(rand(1, 3));
+
+            foreach ($targets as $target) {
                 Recommendation::create([
                     'from_user_id' => $user->id,
-                    'to_user_id' => $other->id,
-                    'book_isbn' => $readBooks->random()->isbn,
-                    'message' => 'Te recomiendo este libro!'
+                    'to_user_id'   => $target->id,
+                    'book_isbn'    => $readBooks->random()->isbn,
+                    'message'      => 'Te recomiendo este libro 📚',
                 ]);
             }
+        });
 
-            // Follows
-            $usersToFollow = $users->where('id', '!=', $user->id)->random(rand(1,5));
-            foreach($usersToFollow as $other){
-                Follow::create([
+        /** -------------------------------------------------
+         * 4️⃣ Follows y Friends (follow mutuo)
+         * ------------------------------------------------- */
+        $users->each(function (User $user) use ($users) {
+            $candidates = $users
+                ->where('id', '!=', $user->id)
+                ->whereIn('profile_visibility', ['public', 'followers'])
+                ->random(rand(1, 4));
+
+            foreach ($candidates as $other) {
+                Follow::firstOrCreate([
                     'follower_id' => $user->id,
                     'followed_id' => $other->id,
                 ]);
-            }
 
-            // Likes en Reviews
-            $allReviews = Review::inRandomOrder()->take(rand(1,5))->get();
-            foreach($allReviews as $review){
-                ReviewLike::create([
-                    'user_id' => $user->id,
-                    'review_id' => $review->id
-                ]);
+                // 30% de probabilidad de amistad (follow mutuo)
+                if (rand(1, 100) <= 30) {
+                    Follow::firstOrCreate([
+                        'follower_id' => $other->id,
+                        'followed_id' => $user->id,
+                    ]);
+                }
             }
+        });
 
-            // Likes en Listas
-            $allLists = FavList::inRandomOrder()->take(rand(1,5))->get();
-            foreach($allLists as $list){
-                ListLike::create([
-                    'user_id' => $user->id,
-                    'list_id' => $list->id
-                ]);
-            }
+        /** -------------------------------------------------
+         * 5️⃣ Likes
+         * ------------------------------------------------- */
+        Review::all()->each(function ($review) use ($users) {
+            $users->random(rand(0, 5))->each(fn ($u) =>
+            ReviewLike::firstOrCreate([
+                'user_id'   => $u->id,
+                'review_id' => $review->id,
+            ])
+            );
+        });
 
+        FavList::all()->each(function ($list) use ($users) {
+            $users->random(rand(0, 5))->each(fn ($u) =>
+            ListLike::firstOrCreate([
+                'user_id' => $u->id,
+                'list_id' => $list->id,
+            ])
+            );
         });
     }
 }
+

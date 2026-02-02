@@ -12,18 +12,38 @@ return new class extends Migration {
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
+
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
+
             $table->string('name');
             $table->string('avatar')->nullable();
+            $table->text('bio')->nullable();
+
             $table->string('telephone');
             $table->string('password');
             $table->date('date_of_birth');
+
             $table->enum('gender', ['Male', 'Female', 'Other']);
-            $table->foreignId('country_id')->constrained()->cascadeOnDelete();
-            $table->enum('type', ['admin', 'worker', 'user'])->default('user');
+
+            $table->foreignId('country_id')
+                ->constrained()
+                ->cascadeOnDelete();
+
+            $table->enum('type', ['admin', 'worker', 'user'])
+                ->default('user');
+
+            $table->enum('profile_visibility', [
+                'public',
+                'followers',
+                'friends',
+                'private'
+            ])->default('public');
+
             $table->rememberToken();
             $table->timestamps();
+
+            $table->index('profile_visibility');
         });
 
         Schema::create('password_reset_tokens', function (Blueprint $table) {
@@ -52,3 +72,4 @@ return new class extends Migration {
         Schema::dropIfExists('sessions');
     }
 };
+
