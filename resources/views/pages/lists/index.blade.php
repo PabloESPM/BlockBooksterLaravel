@@ -16,9 +16,11 @@
                 <span class="w-4 h-4 bg-brand-blue border-2 border-black block"></span>
                 Public Lists
             </h2>
+            <!-- Paginacion superior
             <div class="text-sm font-bold uppercase">
                 {{ $lists->links('pagination::simple-tailwind') }}
             </div>
+            -->
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -69,9 +71,11 @@
             </div>
             @endforelse
         </div>
+        <!-- Paginacion inferior -->
         <div class="mt-6">
             {{ $lists->links() }}
         </div>
+
     </section>
 
     <!-- Section: Best Rated -->

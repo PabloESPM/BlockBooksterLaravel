@@ -30,7 +30,7 @@ class UserProfileController extends Controller
         $user->load([
             'country',
             'lists' => function ($q) {
-                $q->where('is_public', true);
+                $q->where('public', true);
             },
             'reviews.book'
         ]);
