@@ -2,18 +2,22 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\User;
 
 class UserProfileController extends Controller
 {
     /**
-     * Display the specified user's public profile.
+     * Display the specified user's profile.
      */
-    public function show(\App\Models\User $user)
+    public function show(User $user)
     {
         $viewer = auth()->user();
 
-        // Privacy check
+        /*
+        |--------------------------------------------------------------------------
+        | Profile privacy checks
+        |--------------------------------------------------------------------------
+        */
         if ($user->profile_visibility === 'private' && (!$viewer || $viewer->id !== $user->id)) {
             abort(403, 'This profile is private.');
         }
@@ -26,19 +30,63 @@ class UserProfileController extends Controller
             abort(403, 'This profile is visible to friends only.');
         }
 
-        // Fetch data
+        /*
+        |--------------------------------------------------------------------------
+        | Load related data
+        |--------------------------------------------------------------------------
+        */
         $user->load([
             'country',
-            'lists' => function ($q) {
-                $q->where('public', true);
+            'lists' => function ($q) use ($viewer, $user) {
+
+                // El dueño ve todas sus listas
+                if ($viewer && $viewer->id === $user->id) {
+                    return;
+                }
+
+                // Amigos: public + followers + friends
+                if ($viewer && $viewer->isFriend($user)) {
+                    $q->whereIn('visibility', ['public', 'followers', 'friends']);
+                    return;
+                }
+
+                // Seguidores: public + followers
+                if ($viewer && $viewer->isFollowing($user)) {
+                    $q->whereIn('visibility', ['public', 'followers']);
+                    return;
+                }
+
+                // Público general: solo public
+                $q->where('visibility', 'public');
             },
-            'reviews.book'
+            'reviews.book',
         ]);
 
-        $readBooks = $user->books()->where('status', 'read')->with('book')->get();
-        $readingBooks = $user->books()->where('status', 'reading')->with('book')->get();
-        $pendingBooks = $user->books()->where('status', 'pending')->with('book')->get();
+        /*
+        |--------------------------------------------------------------------------
+        | Books by status
+        |--------------------------------------------------------------------------
+        */
+        $readBooks = $user->books()
+            ->where('status', 'read')
+            ->with('book')
+            ->get();
 
+        $readingBooks = $user->books()
+            ->where('status', 'reading')
+            ->with('book')
+            ->get();
+
+        $pendingBooks = $user->books()
+            ->where('status', 'pending')
+            ->with('book')
+            ->get();
+
+        /*
+        |--------------------------------------------------------------------------
+        | Social stats
+        |--------------------------------------------------------------------------
+        */
         $followersCount = $user->followers()->count();
         $followingCount = $user->following()->count();
 
@@ -52,3 +100,4 @@ class UserProfileController extends Controller
         ));
     }
 }
+

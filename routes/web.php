@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -130,13 +131,15 @@ Route::middleware(['auth'])->group(function () {
         return view('pages.dashboard.profile');
     })->name('dashboard.profile');
 
-    Route::get('/dashboard/lists', function () {
-        return view('pages.dashboard.lists');
-    })->name('dashboard.lists');
+    Route::get('/dashboard/lists', [FavListController::class, 'dashboardIndex'])->name('dashboard.lists');
+    Route::post('/dashboard/lists', [FavListController::class, 'store'])->name('dashboard.lists.store');
+    Route::delete('/dashboard/lists/{list}', [FavListController::class, 'destroy'])->name('dashboard.lists.destroy');
+    Route::put('/dashboard/lists/{list}', [FavListController::class, 'update'])->name('dashboard.lists.update');
+    Route::post('/dashboard/lists/{list}/attach', [FavListController::class, 'attachBook'])->name('dashboard.lists.attach');
+    Route::post('/dashboard/lists/create-attach', [FavListController::class, 'storeAndAttach'])->name('dashboard.lists.storeAndAttach');
 
-    Route::get('/dashboard/reviews', function () {
-        return view('pages.dashboard.reviews');
-    })->name('dashboard.reviews');
+    Route::get('/dashboard/reviews', [ReviewController::class, 'dashboardIndex'])->name('dashboard.reviews');
+    Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
 
     Route::get('/dashboard/settings', function () {
         return view('pages.dashboard.settings');

@@ -9,43 +9,12 @@ use App\Models\Review;
 class ReviewController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the user's reviews in the dashboard.
      */
-    public function index()
+    public function dashboardIndex()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreReviewRequest $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Review $review)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Review $review)
-    {
-        //
+        $reviews = auth()->user()->reviews()->with('book.authors')->latest()->get();
+        return view('pages.dashboard.reviews', compact('reviews'));
     }
 
     /**
@@ -53,14 +22,13 @@ class ReviewController extends Controller
      */
     public function update(UpdateReviewRequest $request, Review $review)
     {
-        //
-    }
+        // Ensure user owns the review
+        if ($review->user_id !== auth()->id()) {
+            abort(403);
+        }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Review $review)
-    {
-        //
+        $review->update($request->validated());
+
+        return redirect()->back()->with('success', 'Review updated successfully!');
     }
 }

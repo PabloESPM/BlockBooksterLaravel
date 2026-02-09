@@ -37,6 +37,8 @@
 
     <div id="mobile-menu-container"></div>
 
+    <x-modals.add-to-list />
+    <x-modals.edit-review />
 </body>
 
 </html>

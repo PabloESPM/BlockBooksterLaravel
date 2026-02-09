@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name');
             $table->text('description')->nullable();
 
-            $table->enum('visibility', ['private', 'public', 'friends'])
+            $table->enum('visibility', ['private', 'followers', 'public', 'friends'])
                 ->default('private');
 
             $table->timestamps();

@@ -1,6 +1,6 @@
 @props(['title', 'author', 'cover', 'rating' => 0, 'id'])
 
-<div
+<div x-data
     class="group relative flex flex-col h-full bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all">
     <!-- Full Card Link -->
     <a href="{{ route('books.show', $id) }}" class="absolute inset-0 z-10 focus:outline-none"
@@ -27,7 +27,7 @@
         <!-- Actions (Always visible or hard-toggle, no soft fades) -->
         <div class="mt-auto pt-2 border-t-2 border-black/10 flex justify-between items-center relative z-20">
             @auth
-                <button
+                <button @click.prevent="$dispatch('open-add-to-list-modal', { bookId: '{{ $id }}' })"
                     class="text-xs font-bold uppercase hover:bg-brand-yellow hover:text-black px-2 py-1 -ml-2 transition-colors">
                     + List
                 </button>
