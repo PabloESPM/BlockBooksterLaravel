@@ -28,6 +28,7 @@
 
 ## Enlace para llamada api
 - https://medium.com/geekculture/creating-a-rating-component-with-livewire-laravel-c76fe333ae33
+- https://openlibrary.org/dev/docs/api/search
 
 ## Modales en tailwind para pantalla emergente 
 - https://tailwindcss.com/plus/ui-blocks/application-ui/overlays/modal-dialogs
