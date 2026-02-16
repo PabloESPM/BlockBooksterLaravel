@@ -25,6 +25,7 @@
 - calendario de publicaciones
 - blog en el espacio de los autores para postear
 - incorporar a la tabla country los emojis de las banderas a los paises y revisar por que no pone los prefijos telefonicos
+- listas colaborativas
 
 ## Enlace para llamada api
 - https://medium.com/geekculture/creating-a-rating-component-with-livewire-laravel-c76fe333ae33

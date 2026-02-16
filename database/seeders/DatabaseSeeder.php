@@ -24,9 +24,7 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        /** -------------------------------------------------
-         * 0️⃣ Datos base
-         * ------------------------------------------------- */
+        /** ️⃣ Datos base */
         Country::factory(10)->create();
 
         if (Language::count() === 0) {
@@ -52,9 +50,7 @@ class DatabaseSeeder extends Seeder
             ])->each(fn ($g) => Genre::create(['name' => $g]));
         }
 
-        /** -------------------------------------------------
-         * 1️⃣ Autores y libros
-         * ------------------------------------------------- */
+        /** 1️⃣ Autores y libros */
         $authors   = Author::factory(15)->create();
         $allBooks = collect();
         $countries = Country::all();
@@ -87,9 +83,7 @@ class DatabaseSeeder extends Seeder
             });
         });
 
-        /** -------------------------------------------------
-         * 2️⃣ Usuarios
-         * ------------------------------------------------- */
+        /** Usuarios */
         $users = User::factory(30)->create();
 
         // Roles
@@ -101,9 +95,7 @@ class DatabaseSeeder extends Seeder
             fn ($u) => $u->update(['profile_visibility' => 'public'])
         );
 
-        /** -------------------------------------------------
-         * 3️⃣ Relaciones usuario ↔ libro
-         * ------------------------------------------------- */
+        /** Relaciones usuario ↔ libro */
         $users->each(function (User $user) use ($allBooks, $users) {
             $readBooks = $allBooks->random(rand(1, 5));
 
@@ -132,9 +124,7 @@ class DatabaseSeeder extends Seeder
             )
             );
 
-            /** ---------------------------------------------
-             * Recomendaciones (solo a perfiles visibles)
-             * --------------------------------------------- */
+            /** Recomendaciones (solo a perfiles visibles) */
             $targets = $users
                 ->where('id', '!=', $user->id)
                 ->whereIn('profile_visibility', ['public', 'followers'])
@@ -150,9 +140,7 @@ class DatabaseSeeder extends Seeder
             }
         });
 
-        /** -------------------------------------------------
-         * 4️⃣ Follows y Friends (follow mutuo)
-         * ------------------------------------------------- */
+        /** Follows y Friends (follow mutuo) */
         $users->each(function (User $user) use ($users) {
             $candidates = $users
                 ->where('id', '!=', $user->id)
@@ -175,9 +163,7 @@ class DatabaseSeeder extends Seeder
             }
         });
 
-        /** -------------------------------------------------
-         * 5️⃣ Likes
-         * ------------------------------------------------- */
+        /** Likes */
         Review::all()->each(function ($review) use ($users) {
             $users->random(rand(0, 5))->each(fn ($u) =>
             ReviewLike::firstOrCreate([

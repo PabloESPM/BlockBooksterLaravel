@@ -4,28 +4,27 @@
 
 @section('content')
 
-    <!-- Hero Section -->
+    <!-- Encabezado -->
     <section class="mb-20 text-center border-b-4 border-black pb-16">
         <h1 class="text-5xl md:text-7xl font-display font-black tracking-tighter mb-6 uppercase leading-none">
-            Track <span class="bg-brand-blue text-white px-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">books</span><br>like a
-            prose.
+            Sigue <span class="bg-brand-blue text-white px-2 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">libros</span><br>como si fueran prosa.
         </h1>
         <p class="text-xl font-bold mb-10 max-w-2xl mx-auto text-gray-700">
-            The no-nonsense social network for book lovers. <br>Rate. Review. Share.
+            La red social sin complicaciones para los amantes de los libros. <br>Valora. Opina. Comparte.
         </p>
 
-        <!-- Search Bar -->
+        <!-- Barra de Busqueda -->
         <form action="{{ route('search') }}" method="GET" class="max-w-3xl mx-auto mb-10 flex gap-3">
             <div class="flex-1 relative">
-                <input type="text" name="q" class="neo-input text-lg py-4 pl-12 w-full" 
-                    placeholder="Search books, authors, users, lists, genres, ISBN..." required>
+                <input type="text" name="q" class="neo-input text-lg py-4 pl-12 w-full"
+                    placeholder="Buscar libros, autores, usuarios, listas, géneros, ISBN..." required>
                 <svg class="w-6 h-6 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" fill="none" stroke="currentColor"
                     viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                         d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
                 </svg>
             </div>
-            <button type="submit" class="neo-btn-primary px-8 text-lg">Search</button>
+            <button type="submit" class="neo-btn-primary px-8 text-lg">Buscar</button>
         </form>
         <!-- Silenciar
         @guest
@@ -37,18 +36,18 @@
         -->
     </section>
 
-    <!-- Auth CTA (Guest Only) -->
+    <!-- Únete al club (registrarse)  -->
     @guest
         <section class="mb-20 bg-black text-white p-8 md:p-12 shadow-[8px_8px_0px_#000] relative overflow-hidden">
             <div class="absolute -right-20 -top-20 w-64 h-64 bg-brand-yellow rounded-full opacity-20 blur-3xl"></div>
             <div class="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
                 <div>
-                    <h2 class="text-3xl md:text-4xl font-black uppercase mb-2">Join the Club</h2>
-                    <p class="font-bold text-gray-400">Create your profile, track your reading, and join the discussion.</p>
+                    <h2 class="text-3xl md:text-4xl font-black uppercase mb-2">Únete al club</h2>
+                    <p class="font-bold text-gray-400">Crea tu perfil, lleva un registro de tus lecturas y únete al debate.</p>
                 </div>
                 <a href="{{ route('register') }}"
                     class="bg-brand-yellow text-black border-2 border-white font-black uppercase px-8 py-4 shadow-[4px_4px_0px_#fff] hover:translate-y-[-2px] hover:shadow-[6px_6px_0px_#fff] transition-all">
-                    Create Account
+                    Crear cuenta
                 </a>
             </div>
         </section>
@@ -56,14 +55,13 @@
 
     <div id="discovery"></div>
 
-    <!-- Latest Arrivals -->
+    <!-- Ultimas Novedades -->
     <section class="mb-16">
         <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
-            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Latest <span
-                    class="text-brand-blue">Arrivals</span></h2>
+            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Últimas <span
+                    class="text-brand-blue">Novedades</span></h2>
             <a href="{{ route('books.index') }}"
-                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VIEW
-                ALL</a>
+                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VER TODOS</a>
         </div>
 
         <div class="flex overflow-x-auto pb-10 space-x-6 snap-x hide-scrollbar">
@@ -77,14 +75,14 @@
         </div>
     </section>
 
-    <!-- Best Rated -->
+    <!-- Mejor Valorados -->
     <section class="mb-16">
         <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
-            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Best <span
-                    class="text-brand-yellow text-shadow-neo">Rated</span></h2>
+            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Mejor <span
+                    class="text-brand-yellow text-shadow-neo">Valorados</span></h2>
             <a href="{{ route('books.index') }}"
-                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VIEW
-                ALL</a>
+                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VER
+                TODOS</a>
         </div>
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
             @foreach($bestRatedBooks as $book)
@@ -95,11 +93,11 @@
         </div>
     </section>
 
-    <!-- By Genre -->
+    <!-- Por Géneros -->
     <section class="mb-16">
         <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
             <h2 class="text-3xl font-display font-black uppercase tracking-tight">Top <span
-                    class="underline decoration-4 decoration-brand-blue">Genres</span></h2>
+                    class="underline decoration-4 decoration-brand-blue">Géneros</span></h2>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="neo-card p-6 hover:bg-gray-50 transition-colors cursor-pointer">
@@ -112,11 +110,11 @@
                     <div class="flex justify-between text-sm font-bold border-b border-gray-300 pb-1">
                         <span>Neuromancer</span> <span class="text-gray-500">4.7★</span></div>
                 </div>
-                <a href="#" class="block mt-4 text-xs font-black uppercase text-brand-blue hover:underline">View Genre
+                <a href="#" class="block mt-4 text-xs font-black uppercase text-brand-blue hover:underline">Ver Géneros
                     -></a>
             </div>
             <div class="neo-card p-6 hover:bg-gray-50 transition-colors cursor-pointer">
-                <h3 class="text-2xl font-black uppercase mb-4">Horror</h3>
+                <h3 class="text-2xl font-black uppercase mb-4">Terror</h3>
                 <div class="space-y-3">
                     <div class="flex justify-between text-sm font-bold border-b border-gray-300 pb-1"><span>It</span> <span
                             class="text-gray-500">4.8★</span></div>
@@ -125,11 +123,11 @@
                     <div class="flex justify-between text-sm font-bold border-b border-gray-300 pb-1"><span>Dracula</span>
                         <span class="text-gray-500">4.6★</span></div>
                 </div>
-                <a href="#" class="block mt-4 text-xs font-black uppercase text-brand-blue hover:underline">View Genre
+                <a href="#" class="block mt-4 text-xs font-black uppercase text-brand-blue hover:underline">Ver Géneros
                     -></a>
             </div>
             <div class="neo-card p-6 hover:bg-gray-50 transition-colors cursor-pointer">
-                <h3 class="text-2xl font-black uppercase mb-4">Fantasy</h3>
+                <h3 class="text-2xl font-black uppercase mb-4">Fantasia</h3>
                 <div class="space-y-3">
                     <div class="flex justify-between text-sm font-bold border-b border-gray-300 pb-1"><span>The
                             Hobbit</span> <span class="text-gray-500">5.0★</span></div>
@@ -138,18 +136,18 @@
                     <div class="flex justify-between text-sm font-bold border-b border-gray-300 pb-1"><span>Mistborn</span>
                         <span class="text-gray-500">4.9★</span></div>
                 </div>
-                <a href="#" class="block mt-4 text-xs font-black uppercase text-brand-blue hover:underline">View Genre
+                <a href="#" class="block mt-4 text-xs font-black uppercase text-brand-blue hover:underline">Ver Géneros
                     -></a>
             </div>
         </div>
     </section>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 mb-16">
-        <!-- Most Searched (Left col) -->
+        <!-- Mas buscados -->
         <div class="lg:col-span-4">
             <div class="mb-6 border-b-2 border-black pb-2">
-                <h2 class="text-2xl font-black uppercase">Most Searched</h2>
-                <p class="text-xs font-bold uppercase text-gray-500">Last 30 days</p>
+                <h2 class="text-2xl font-black uppercase">Los Más Buscados</h2>
+                <p class="text-xs font-bold uppercase text-gray-500">ÚLTIMOS 30 DÍAS</p>
             </div>
             <div class="space-y-2">
                 @php $searches = ['The Great Gatsby', '1984', 'Atomic Habits', 'Fourth Wing', 'Iron Flame']; @endphp
@@ -163,11 +161,11 @@
             </div>
         </div>
 
-        <!-- Featured Lists (Right col) -->
+        <!-- Listas Destacadas -->
         <div class="lg:col-span-8">
             <div class="mb-6 border-b-2 border-black pb-2 flex justify-between items-end">
-                <h2 class="text-2xl font-black uppercase">Featured Lists</h2>
-                <a href="/lists" class="text-xs font-bold uppercase underline hover:text-brand-blue">View All</a>
+                <h2 class="text-2xl font-black uppercase">Listas Destacadas</h2>
+                <a href="/lists" class="text-xs font-bold uppercase underline hover:text-brand-blue">Ver Todos</a>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div
@@ -196,14 +194,13 @@
         </div>
     </div>
 
-    <!-- Featured Authors (Rising Stars) -->
+    <!-- Autores emergentes -->
     <section class="mb-20">
         <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
-            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Rising <span
-                    class="bg-black text-white px-2">Authors</span></h2>
+            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Autores <span
+                    class="bg-black text-white px-2">emergentes</span></h2>
             <a href="{{ route('authors.index') }}"
-                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VIEW
-                ALL</a>
+                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VER TODOS</a>
         </div>
         <div class="flex flex-wrap gap-8 justify-center">
             @foreach($risingStars as $author)
@@ -220,14 +217,14 @@
         </div>
     </section>
 
-    <!-- Featured Lists -->
+    <!-- Listas Destacadas -->
     <section class="mb-20">
         <div class="flex items-end justify-between mb-8 border-b-2 border-black pb-2">
-            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Featured <span
-                    class="text-brand-blue">Lists</span></h2>
+            <h2 class="text-3xl font-display font-black uppercase tracking-tight">Listas <span
+                    class="text-brand-blue">Destacadas</span></h2>
             <a href="{{ route('lists.index') }}"
-                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VIEW
-                ALL</a>
+                class="font-bold underline decoration-2 decoration-brand-yellow hover:bg-brand-yellow hover:text-black transition-colors px-2">VER
+                TODOS</a>
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($featuredLists as $list)
