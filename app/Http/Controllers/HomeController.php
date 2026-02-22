@@ -26,6 +26,14 @@ class HomeController extends Controller
             ->take(4)
             ->get();
 
-        return view('pages.home.index', compact('latestBooks', 'bestRatedBooks', 'risingStars', 'featuredLists'));
+        // Brutal Opinions (Top reviews of the month)
+        $brutalOpinions = \App\Models\Review::with(['user', 'book'])
+            ->withCount('likes')
+            ->where('created_at', '>=', now()->subMonth())
+            ->orderByDesc('likes_count')
+            ->take(3)
+            ->get();
+
+        return view('pages.home.index', compact('latestBooks', 'bestRatedBooks', 'risingStars', 'featuredLists', 'brutalOpinions'));
     }
 }

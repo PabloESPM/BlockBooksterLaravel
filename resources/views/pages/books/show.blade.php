@@ -4,7 +4,7 @@
 
 @section('content')
     <!-- Hero Section -->
-    <div class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16">
+    <div x-data class="grid grid-cols-1 md:grid-cols-12 gap-8 mb-16">
         <!-- Cover (Left) -->
         <div class="md:col-span-4 lg:col-span-3">
             <div class="neo-card p-0 relative group">
@@ -46,19 +46,54 @@
                     </div>
                     <!-- Rating -->
                     <div class="hidden md:block text-right">
+
+                        @php
+                            $totalReviewsForRating = $book->reviews->count();
+                            $averageRating = 0;
+                            if ($totalReviewsForRating > 0) {
+                                $sum = $book->reviews->sum('rating');
+                                $average = $sum / $totalReviewsForRating;
+                                $averageRating = round($average * 2) / 2;
+                            }
+                        @endphp
+
                         <div class="flex items-center gap-1 justify-end">
-                            @for($i = 0; $i < 5; $i++)
-                                <svg class="w-8 h-8 {{ $i < 4 ? 'text-brand-yellow' : 'text-gray-300' }} fill-current drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]"
-                                    viewBox="0 0 24 24">
-                                    <path
-                                        d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
-                                </svg>
+                            <svg class="w-0 h-0 absolute">
+                                <defs>
+                                    <linearGradient id="half-star-gradient">
+                                        <stop offset="50%" stop-color="currentColor" class="text-brand-yellow" />
+                                        <stop offset="50%" stop-color="currentColor" class="text-gray-300" />
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                            @for($i = 1; $i <= 5; $i++)
+                                @if($i <= $averageRating)
+                                    <!-- Full Star -->
+                                    <svg class="w-8 h-8 text-brand-yellow fill-current drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                    </svg>
+                                @elseif($i - 0.5 == $averageRating)
+                                    <!-- Half Star -->
+                                    <svg class="w-8 h-8 drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]" viewBox="0 0 24 24">
+                                        <path fill="url(#half-star-gradient)"
+                                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                    </svg>
+                                @else
+                                    <!-- Empty Star -->
+                                    <svg class="w-8 h-8 text-gray-300 fill-current drop-shadow-[2px_2px_0px_rgba(0,0,0,1)]"
+                                        viewBox="0 0 24 24">
+                                        <path
+                                            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                                    </svg>
+                                @endif
                             @endfor
                         </div>
-                        <div class="text-2xl font-black mt-1">4.5 <span class="text-sm font-bold text-gray-500 uppercase">/
-                                5.0</span></div>
-                        <div class="text-xs font-bold uppercase text-gray-500">Based on {{ $book->reviews->count() }}
-                            ratings</div>
+                        <div class="text-2xl font-black mt-1">{{ number_format($averageRating, 1) }} <span
+                                class="text-sm font-bold text-gray-500 uppercase">/ 5.0</span></div>
+                        <div class="text-xs font-bold uppercase text-gray-500">Based on {{ $totalReviewsForRating }} ratings
+                        </div>
                     </div>
                 </div>
 
@@ -68,7 +103,8 @@
                         <span class="bg-black text-white px-2 py-0.5">{{ $book->genre->name }}</span>
                     @endif
                     <span class="bg-gray-200 border border-black px-2 py-0.5">{{ $book->publication_year }}</span>
-                    <span class="bg-gray-200 border border-black px-2 py-0.5">{{ $book->pages ?? 'Unknown' }} Pages</span>
+                    <span class="bg-gray-200 border border-black px-2 py-0.5">{{ $book->number_of_pages ?? 'Unknown' }}
+                        Pages</span>
                     @if($book->language)
                         <span class="bg-gray-200 border border-black px-2 py-0.5">{{ $book->language->name }}</span>
                     @endif
@@ -77,7 +113,7 @@
 
                 <!-- Synopsis -->
                 <div class="mb-8 font-medium leading-relaxed text-gray-800">
-                    <p class="mb-4">{{ $book->synopsis }}</p>
+                    <p class="mb-4">{{ $book->description }}</p>
                 </div>
             </div>
 
@@ -120,7 +156,7 @@
     </div>
 
     <!-- Second Row: Reviews & Related -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-12">
+    <div x-data class="grid grid-cols-1 lg:grid-cols-3 gap-12">
         <!-- Reviews Section (2/3 width) -->
         <div class="lg:col-span-2">
             <div class="flex items-center justify-between mb-6 border-b-2 border-black pb-2">
@@ -129,68 +165,24 @@
                     Community Reviews
                 </h2>
                 @auth
-                    <button class="text-sm font-bold uppercase bg-black text-white px-3 py-1 hover:bg-gray-800">Write
+                    <button @click.prevent="$dispatch('open-add-review-modal', { bookId: '{{ $book->isbn }}' })"
+                        class="text-sm font-bold uppercase bg-black text-white px-3 py-1 hover:bg-gray-800 transition-colors">Write
                         Review</button>
                 @endauth
             </div>
 
             <div class="space-y-6">
-                <!-- Mock Review 1 -->
-                <div class="neo-card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-brand-blue rounded-full border-2 border-black"></div>
-                            <div>
-                                <h4 class="font-bold uppercase text-sm">SpaceCadet99</h4>
-                                <div class="flex text-brand-yellow text-xs gap-0.5">
-                                    <span>★</span><span>★</span><span>★</span><span>★</span><span>★</span>
-                                </div>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold text-gray-500 uppercase">2 days ago</span>
+                @forelse($book->reviews as $review)
+                    <x-review-card :review="$review" />
+                @empty
+                    <div class="text-center py-12 border-2 border-dashed border-gray-300 bg-gray-50">
+                        <p class="text-xl font-bold uppercase text-gray-400">No reviews yet.</p>
+                        @auth
+                            <button @click.prevent="$dispatch('open-add-review-modal', { bookId: '{{ $book->isbn }}' })"
+                                class="neo-btn-primary mt-4 text-sm px-4">Be the first to review</button>
+                        @endauth
                     </div>
-                    <p class="text-sm leading-relaxed mb-4">Absolute masterpiece. The science is hard but accessible, and
-                        the relationship between Grace and Rocky is genuinely touching. Couldn't put it down.</p>
-                    <div class="flex items-center gap-4">
-                        <button class="flex items-center gap-1 text-xs font-bold uppercase hover:text-brand-blue">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5">
-                                </path>
-                            </svg>
-                            Like (124)
-                        </button>
-                    </div>
-                </div>
-
-                <!-- Mock Review 2 -->
-                <div class="neo-card p-6">
-                    <div class="flex items-center justify-between mb-4">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 bg-gray-300 rounded-full border-2 border-black"></div>
-                            <div>
-                                <h4 class="font-bold uppercase text-sm">CriticalReader</h4>
-                                <div class="flex text-brand-yellow text-xs gap-0.5">
-                                    <span>★</span><span>★</span><span>★</span><span>★</span><span
-                                        class="text-gray-300">★</span>
-                                </div>
-                            </div>
-                        </div>
-                        <span class="text-xs font-bold text-gray-500 uppercase">1 week ago</span>
-                    </div>
-                    <p class="text-sm leading-relaxed mb-4">A bit repetitive in the middle, but the ending pays off. Weir
-                        knows how to write problem-solving porn.</p>
-                    <div class="flex items-center gap-4">
-                        <button class="flex items-center gap-1 text-xs font-bold uppercase hover:text-brand-blue">
-                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M14 10h4.764a2 2 0 011.789 2.894l-3.5 7A2 2 0 0115.263 21h-4.017c-.163 0-.326-.02-.485-.06L7 20m7-10V5a2 2 0 00-2-2h-.095c-.5 0-.905.405-.905.905 0 .714-.211 1.412-.608 2.006L7 11v9m7-10h-2M7 20H5a2 2 0 01-2-2v-6a2 2 0 012-2h2.5">
-                                </path>
-                            </svg>
-                            Like (42)
-                        </button>
-                    </div>
-                </div>
+                @endforelse
             </div>
             <button class="w-full mt-6 neo-btn-secondary">Load More Reviews</button>
         </div>

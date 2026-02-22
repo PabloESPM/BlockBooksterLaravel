@@ -59,7 +59,9 @@ class UserProfileController extends Controller
                 // Público general: solo public
                 $q->where('visibility', 'public');
             },
-            'reviews.book',
+            'reviews' => function ($q) {
+                $q->with(['book', 'likes'])->withCount('likes')->latest();
+            },
         ]);
 
         /*

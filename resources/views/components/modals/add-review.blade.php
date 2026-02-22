@@ -1,21 +1,19 @@
 @auth
     <div x-data="{
-                show: false,
-                reviewId: null,
-                title: '',
-                rating: 5,
-                hoverRating: null,
-                body: '',
-                updateUrl: ''
-            }" @open-edit-review-modal.window="
-                show = true; 
-                reviewId = $event.detail.reviewId;
-                title = $event.detail.title;
-                rating = $event.detail.rating;
-                hoverRating = null;
-                body = $event.detail.body;
-                updateUrl = $event.detail.updateUrl;
-            " x-show="show" style="display: none;"
+            show: false,
+            bookId: null,
+            title: '',
+            rating: 0,
+            hoverRating: null,
+            body: ''
+        }" @open-add-review-modal.window="
+            show = true; 
+            bookId = $event.detail.bookId;
+            title = '';
+            rating = 0;
+            hoverRating = null;
+            body = '';
+        " x-show="show" style="display: none;"
         class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 text-left"
         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
@@ -30,16 +28,17 @@
             <button @click="show = false"
                 class="absolute top-4 right-4 text-2xl font-black hover:text-red-600 z-50">&times;</button>
 
-            <h2 class="text-xl font-black uppercase mb-6 font-display">Edit Review</h2>
+            <h2 class="text-xl font-black uppercase mb-6 font-display">Write a Review</h2>
 
-            <form :action="updateUrl" method="POST">
+            <form action="{{ route('reviews.store') }}" method="POST">
                 @csrf
-                @method('PUT')
+
+                <input type="hidden" name="book_isbn" :value="bookId">
 
                 <!-- Title -->
                 <div class="mb-4">
-                    <label for="edit_title" class="block font-bold uppercase text-sm mb-2">Review Title</label>
-                    <input type="text" name="title" id="edit_title" required x-model="title"
+                    <label for="create_title" class="block font-bold uppercase text-sm mb-2">Review Title</label>
+                    <input type="text" name="title" id="create_title" required x-model="title"
                         class="w-full border-2 border-black p-3 focus:outline-none focus:shadow-[4px_4px_0px_#000] focus:ring-0 transition-shadow"
                         placeholder="Brief summary of your review...">
                 </div>
@@ -63,8 +62,8 @@
 
                 <!-- Comment / Body -->
                 <div class="mb-6">
-                    <label for="edit_body" class="block font-bold uppercase text-sm mb-2">Your Review</label>
-                    <textarea name="body" id="edit_body" rows="5" required x-model="body"
+                    <label for="create_body" class="block font-bold uppercase text-sm mb-2">Your Review</label>
+                    <textarea name="body" id="create_body" rows="5" required x-model="body"
                         class="w-full border-2 border-black p-3 focus:outline-none focus:shadow-[4px_4px_0px_#000] focus:ring-0 transition-shadow resize-none"
                         placeholder="Write your review here..."></textarea>
                 </div>
@@ -76,7 +75,7 @@
                     </button>
                     <button type="submit"
                         class="px-6 py-2 bg-[#FFA903] border-2 border-black font-bold uppercase shadow-[4px_4px_0px_#000] hover:translate-y-px hover:translate-x-px hover:shadow-[2px_2px_0px_#000] transition-all">
-                        Update Review
+                        Publish Review
                     </button>
                 </div>
             </form>

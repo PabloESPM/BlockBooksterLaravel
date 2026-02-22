@@ -11,6 +11,16 @@ class BookUser extends Model
     protected $table = 'book_user';
     public $timestamps = false;
 
+    protected $fillable = [
+        'user_id',
+        'book_isbn',
+        'fav_list_id',
+        'status',
+        'rating',
+        'started_at',
+        'finished_at'
+    ];
+
     protected $dates = ['started_at', 'finished_at'];
 
     public function user()

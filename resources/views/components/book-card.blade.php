@@ -12,9 +12,21 @@
             loading="lazy">
 
         <!-- Hard Badge for Rating -->
-        @if($rating > 0)
+        @php
+            $bookForRating = \App\Models\Book::with('reviews')->find($id);
+            $totalReviewsForRating = $bookForRating ? $bookForRating->reviews->count() : 0;
+
+            if ($totalReviewsForRating > 0) {
+                $sum = $bookForRating->reviews->sum('rating');
+                $averageRating = round(($sum / $totalReviewsForRating) * 2) / 2;
+            } else {
+                $averageRating = $rating > 0 ? round($rating * 2) / 2 : 0;
+            }
+        @endphp
+
+        @if($averageRating > 0)
             <div class="absolute top-2 right-2 bg-brand-yellow border-2 border-black px-2 py-1 font-bold text-xs shadow-sm">
-                {{ $rating }} ★
+                {{ number_format($averageRating, 1) }} ★
             </div>
         @endif
     </div>
@@ -35,10 +47,10 @@
                 <div></div> <!-- Spacer -->
             @endauth
             @auth
-                <a href="{{ route('books.show', $id) }}"
+                <button @click.prevent="$dispatch('open-add-review-modal', { bookId: '{{ $id }}' })"
                     class="text-xs font-bold uppercase hover:bg-brand-blue hover:text-white px-2 py-1 -mr-2 transition-colors">
                     + Review
-                </a>
+                </button>
             @endauth
         </div>
     </div>

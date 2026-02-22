@@ -39,6 +39,8 @@
 
     <x-modals.add-to-list />
     <x-modals.edit-review />
+    <x-modals.add-review />
+    <x-modals.delete-review />
 </body>
 
 </html>

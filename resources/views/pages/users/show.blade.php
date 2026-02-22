@@ -180,36 +180,15 @@
                     Reviews
                 </h2>
 
-                <div class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($user->reviews as $review)
-                        <x-card class="flex flex-col md:flex-row gap-6">
-                            <div class="w-20 flex-shrink-0">
-                                <img src="{{ $review->book->cover_image ?? 'https://via.placeholder.com/200x300' }}"
-                                    alt="{{ $review->book->title }}"
-                                    class="w-full border-2 border-black shadow-[2px_2px_0px_#000]">
-                            </div>
-                            <div class="flex-1">
-                                <div class="flex justify-between items-start mb-2">
-                                    <h3 class="font-bold uppercase text-lg leading-tight">{{ $review->book->title }}</h3>
-                                    <div class="flex text-brand-yellow text-xs gap-0.5">
-                                        @for($i = 1; $i <= 5; $i++)
-                                            <span class="{{ $i <= $review->rating ? '' : 'text-gray-300' }}">★</span>
-                                        @endfor
-                                    </div>
-                                </div>
-                                @if($review->comment)
-                                    <p class="text-sm italic text-gray-700 mb-4 bg-gray-50 p-3 border border-gray-200">
-                                        "{{ Str::limit($review->comment, 200) }}"
-                                    </p>
-                                @endif
-
-                                <div class="flex justify-between items-center border-t-2 border-black/10 pt-3">
-                                    <span class="text-xs font-bold text-gray-500 uppercase">{{ $review->created_at->format('M d, Y') }}</span>
-                                </div>
-                            </div>
-                        </x-card>
+                        <x-review-card :review="$review" :showBook="true" />
                     @endforeach
                 </div>
+                
+                @if($user->reviews->count() > 3)
+                    <button class="w-full mt-6 neo-btn-secondary">Load More Reviews</button>
+                @endif
             </section>
         @endif
 

@@ -11,7 +11,7 @@ class StoreReviewRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -22,7 +22,10 @@ class StoreReviewRequest extends FormRequest
     public function rules(): array
     {
         return [
-            //
+            'book_isbn' => ['required', 'string', 'exists:books,isbn'],
+            'title' => ['nullable', 'string', 'max:255'],
+            'rating' => ['required', 'numeric', 'min:1', 'max:5'],
+            'body' => ['required', 'string', 'max:1000'],
         ];
     }
 }

@@ -121,7 +121,14 @@ class BookController extends Controller
      */
     public function show(Book $book)
     {
-        $book->load(['authors', 'reviews.user', 'genre', 'language']);
+        $book->load([
+            'authors',
+            'genre',
+            'language',
+            'reviews' => function ($query) {
+                $query->with('user')->withCount('likes')->orderByDesc('likes_count');
+            }
+        ]);
         return view('pages.books.show', compact('book'));
     }
 

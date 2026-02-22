@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 class Review extends Model
 {
     use HasFactory;
+
+    protected $fillable = [
+        'user_id',
+        'book_isbn',
+        'title',
+        'body'
+    ];
     public function user()
     {
         return $this->belongsTo(User::class);
@@ -22,6 +29,15 @@ class Review extends Model
     public function likes()
     {
         return $this->hasMany(ReviewLike::class);
+    }
+
+    public function getRatingAttribute()
+    {
+        $bookUser = \App\Models\BookUser::where('user_id', $this->user_id)
+            ->where('book_isbn', $this->book_isbn)
+            ->first();
+
+        return $bookUser ? $bookUser->rating : 0;
     }
 }
 

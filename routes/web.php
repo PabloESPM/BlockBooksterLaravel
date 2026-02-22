@@ -139,7 +139,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/dashboard/lists/create-attach', [FavListController::class, 'storeAndAttach'])->name('dashboard.lists.storeAndAttach');
 
     Route::get('/dashboard/reviews', [ReviewController::class, 'dashboardIndex'])->name('dashboard.reviews');
+    Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
     Route::put('/reviews/{review}', [ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
+    Route::post('/reviews/{review}/toggle-like', [ReviewController::class, 'toggleLike'])->name('reviews.toggle-like');
 
     Route::get('/dashboard/settings', function () {
         return view('pages.dashboard.settings');

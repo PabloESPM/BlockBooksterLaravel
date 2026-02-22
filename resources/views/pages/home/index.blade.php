@@ -252,26 +252,13 @@
         <h2 class="text-3xl font-display font-black uppercase tracking-tight mb-8 border-b-2 border-black pb-2">Brutal
             Opinions</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-            @for($i = 0; $i < 3; $i++)
-                <div class="neo-card flex flex-col h-full bg-brand-yellow/10 p-6">
-                    <!-- Variant color & raw card structure for preservation -->
-                    <div class="flex items-center mb-4 border-b-2 border-black pb-2">
-                        <div class="w-10 h-10 bg-black rounded-full mr-3"></div> <!-- Avatar placeholder -->
-                        <div>
-                            <p class="font-bold text-sm uppercase">Reviewer {{$i}}</p>
-                            <div class="flex text-black text-xs gap-0.5">
-                                <span>★</span><span>★</span><span>★</span><span>★</span><span class="text-gray-400">★</span>
-                            </div>
-                        </div>
-                    </div>
-                    <h3 class="font-display font-bold text-xl mb-2 leading-tight">"A wild ride from start to finish"</h3>
-                    <p class="text-sm font-medium line-clamp-4 mb-4 flex-grow">
-                        Normally I don't read sci-fi, but this book completely changed my mind. The pacing was incredible and
-                        the characters felt so real...
-                    </p>
-                    <a href="#" class="text-xs font-black uppercase underline hover:text-brand-blue">Read Full Review</a>
+            @forelse($brutalOpinions as $review)
+                <x-review-card :review="$review" />
+            @empty
+                <div class="col-span-3 text-center py-12 border-2 border-dashed border-gray-300 bg-gray-50">
+                    <p class="text-xl font-bold uppercase text-gray-400">No brutal opinions yet this month.</p>
                 </div>
-            @endfor
+            @endforelse
         </div>
     </section>
 @endsection
