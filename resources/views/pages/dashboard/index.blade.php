@@ -7,12 +7,12 @@
         <!-- Sidebar -->
         @include('pages.dashboard.partials.sidebar')
 
-        <!-- Main Content -->
+        <!-- Contenido Principal -->
         <div class="flex-1 space-y-8">
-            <!-- Header -->
+            <!-- Encabezado -->
             <header class="flex flex-col md:flex-row justify-between items-start md:items-end border-b-4 border-black pb-6">
                 <div>
-                    <h1 class="text-4xl font-black uppercase font-display">Hello, <span
+                    <h1 class="text-4xl font-black uppercase font-display">Hola, <span
                             class="text-brand-blue">{{ auth()->user()->name ?? 'Reader' }}</span></h1>
                     <p class="text-gray-600 font-bold mt-2">Here's what's happening with your books.</p>
                 </div>

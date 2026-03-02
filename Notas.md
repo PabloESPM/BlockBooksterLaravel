@@ -9,6 +9,8 @@
 
 - php artisan make:migration (crear tabla)
 - php artisan make:model (crea el modelo y todo lo que le acompaña)
+- php artisan migrate:fresh --seed
+
 
 ## Correcciones
 - cambiar Log por Review para hacer la review del libro y que esa opcion solo se de si estas logeado

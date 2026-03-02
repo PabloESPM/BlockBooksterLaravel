@@ -8,7 +8,7 @@
                     BlockBookster
                 </a>
                 <p class="mt-4 text-sm font-bold text-gray-600">
-                    The no-nonsense book tracking platform for brutalist readers.
+                    La plataforma de seguimiento de libros sin rodeos para lectores brutalistas.
                 </p>
                 <div class="mt-6 flex gap-4">
                     <a href="#"
@@ -72,23 +72,23 @@
 
             <!-- Links -->
             <div class="col-span-1 border-l-2 border-black pl-8">
-                <h3 class="font-black uppercase mb-4 text-sm bg-brand-yellow inline-block px-1">Discover</h3>
+                <h3 class="font-black uppercase mb-4 text-sm bg-brand-yellow inline-block px-1">Descubrir</h3>
                 <ul class="space-y-2 text-sm font-bold">
-                    <li><a href="{{ route('books.index') }}" class="hover:underline">Books</a></li>
-                    <li><a href="{{ route('authors.index') }}" class="hover:underline">Authors</a></li>
-                    <li><a href="{{ route('lists.index') }}" class="hover:underline">Lists</a></li>
-                    <li><a href="{{ route('community.index') }}" class="hover:underline">Community</a></li>
+                    <li><a href="{{ route('books.index') }}" class="hover:underline">Libros</a></li>
+                    <li><a href="{{ route('authors.index') }}" class="hover:underline">Autores</a></li>
+                    <li><a href="{{ route('lists.index') }}" class="hover:underline">Listas</a></li>
+                    <li><a href="{{ route('community.index') }}" class="hover:underline">Comunidad</a></li>
                 </ul>
             </div>
 
             <!-- Company -->
             <div class="col-span-1 border-l-2 border-black pl-8">
-                <h3 class="font-black uppercase mb-4 text-sm bg-brand-blue text-white inline-block px-1">Company</h3>
+                <h3 class="font-black uppercase mb-4 text-sm bg-brand-blue text-white inline-block px-1">Empresa</h3>
                 <ul class="space-y-2 text-sm font-bold">
-                    <li><a href="{{ route('static.about') }}" class="hover:underline">About Us</a></li>
-                    <li><a href="{{ route('static.contact') }}" class="hover:underline">Contact</a></li>
-                    <li><a href="{{ route('static.faq') }}" class="hover:underline">FAQ</a></li>
-                    <li><a href="#" class="hover:underline">Careers</a></li>
+                    <li><a href="{{ route('static.about') }}" class="hover:underline">Sobre nosotros</a></li>
+                    <li><a href="{{ route('static.contact') }}" class="hover:underline">Contacto</a></li>
+                    <li><a href="{{ route('static.faq') }}" class="hover:underline">Preguntas frecuentes</a></li>
+                    <li><a href="#" class="hover:underline">Empleo</a></li>
                 </ul>
             </div>
 
@@ -96,17 +96,17 @@
             <div class="col-span-1 border-l-2 border-black pl-8">
                 <h3 class="font-black uppercase mb-4 text-sm bg-black text-white inline-block px-1">Legal</h3>
                 <ul class="space-y-2 text-sm font-bold">
-                    <li><a href="{{ route('static.privacy') }}" class="hover:underline">Privacy Policy</a></li>
-                    <li><a href="{{ route('static.terms') }}" class="hover:underline">Terms of Service</a></li>
-                    <li><a href="#" class="hover:underline">Cookie Policy</a></li>
+                    <li><a href="{{ route('static.privacy') }}" class="hover:underline">Política de Privacidad</a></li>
+                    <li><a href="{{ route('static.terms') }}" class="hover:underline">Términos de Servicio</a></li>
+                    <li><a href="#" class="hover:underline">Política de Cookies</a></li>
                 </ul>
             </div>
         </div>
 
         <div
             class="border-t-2 border-black mt-12 pt-8 flex flex-col md:flex-row justify-between items-center text-xs font-bold uppercase text-gray-500">
-            <p>&copy; {{ date('Y') }} BlockBookster. All rights reserved.</p>
-            <p>Made with 🖤 and Laravel.</p>
+            <p>&copy; {{ date('Y') }} BlockBookster. Todos los derechos reservados.</p>
+            <p>Hecho con 🖤 y Laravel.</p>
         </div>
     </div>
 </div>

@@ -31,25 +31,25 @@
         @endif
     </div>
 
-    <!-- Content Panel -->
+    <!-- Panel de control -->
     <div class="p-3 flex flex-col flex-grow">
         <h3 class="font-display font-bold text-lg leading-tight mb-1 truncate">{{ $title }}</h3>
         <p class="text-sm text-gray-600 truncate mb-3">{{ $author }}</p>
 
-        <!-- Actions (Always visible or hard-toggle, no soft fades) -->
+        <!-- Botones de Acción -->
         <div class="mt-auto pt-2 border-t-2 border-black/10 flex justify-between items-center relative z-20">
             @auth
                 <button @click.prevent="$dispatch('open-add-to-list-modal', { bookId: '{{ $id }}' })"
                     class="text-xs font-bold uppercase hover:bg-brand-yellow hover:text-black px-2 py-1 -ml-2 transition-colors">
-                    + List
+                    + Lista
                 </button>
             @else
-                <div></div> <!-- Spacer -->
+                <div></div> <!-- Spacio -->
             @endauth
             @auth
                 <button @click.prevent="$dispatch('open-add-review-modal', { bookId: '{{ $id }}' })"
                     class="text-xs font-bold uppercase hover:bg-brand-blue hover:text-white px-2 py-1 -mr-2 transition-colors">
-                    + Review
+                    + Reseña
                 </button>
             @endauth
         </div>

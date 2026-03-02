@@ -5,7 +5,7 @@
     <a href="{{ route('lists.show', $list->id) }}" class="block">
         <div class="h-32 bg-gray-200 border-b-2 border-black relative">
             <div class="grid grid-cols-5 h-full">
-                <!-- Preview Covers -->
+                <!-- Vista previa de portadas -->
                 @foreach($list->books->take(5) as $book)
                     <div class="bg-gray-300 border-r-2 border-black overflow-hidden relative">
                         @if($book->cover ?? $book->cover_image)
@@ -13,13 +13,13 @@
                         @else
                             <div
                                 class="absolute inset-0 flex items-center justify-center bg-brand-yellow/50 text-xs font-bold rotate-90">
-                                Book</div>
+                                LIBRO</div>
                         @endif
                     </div>
                 @endforeach
                 @for($i = $list->books->count(); $i < 5; $i++)
                     <div class="bg-gray-100 border-r-2 border-black flex items-center justify-center">
-                        <span class="text-gray-300 text-xs">Empty</span>
+                        <span class="text-gray-300 text-[10px] uppercase font-bold">Vacío</span>
                     </div>
                 @endfor
             </div>
@@ -35,43 +35,43 @@
             @if($dashboard && isset($list->visibility))
                 <span
                     class="bg-gray-100 text-gray-800 text-[10px] font-bold uppercase px-1.5 py-0.5 border border-black whitespace-nowrap mt-1">
-                    {{ ucfirst($list->visibility) }}
+                    {{ $list->visibility === 'public' ? 'Pública' : ($list->visibility === 'private' ? 'Privada' : 'Amigos') }}
                 </span>
             @endif
         </div>
 
         <div class="flex items-center gap-2 mb-4">
             <div class="w-6 h-6 rounded-full bg-gray-300 border border-black overflow-hidden flex-shrink-0">
-                <!-- User Avatar (Mock or Real) -->
-                <img src="{{ $list->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($list->user->name ?? 'User') . '&background=random' }}"
-                    class="w-full h-full object-cover">
+                <img src="{{ $list->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($list->user->name ?? 'Usuario') . '&background=random' }}"
+                     class="w-full h-full object-cover">
             </div>
-            <span class="text-xs font-bold uppercase text-gray-600 truncate">by <span
-                    class="text-black">{{ $list->user->name ?? 'Unknown' }}</span></span>
+            <span class="text-xs font-bold uppercase text-gray-600 truncate">por <span
+                    class="text-black">{{ $list->user->name ?? 'Desconocido' }}</span></span>
         </div>
 
         <div class="mt-auto flex items-center justify-between text-xs font-bold border-t-2 border-black pt-4">
-            <span>{{ $list->books_count ?? $list->books->count() }} Books</span>
+            <span>{{ $list->books_count ?? $list->books->count() }} Libros</span>
             @if($dashboard)
-                <span class="text-gray-500 truncate ml-2">Updated {{ $list->updated_at->diffForHumans() }}</span>
+                <span class="text-gray-500 truncate ml-2">Actualizada {{ $list->updated_at->diffForHumans() }}</span>
             @else
-                <span class="text-gray-500 ml-2 whitespace-nowrap">{{ $list->created_at->format('M d, Y') }}</span>
+                <span class="text-gray-500 ml-2 whitespace-nowrap">{{ $list->created_at->translatedFormat('d M, Y') }}</span>
             @endif
         </div>
 
         @if($dashboard)
             <div class="flex gap-2 mt-4 pt-4 border-t-2 border-dashed border-gray-300">
                 <a href="{{ route('lists.show', $list) }}"
-                    class="neo-btn-secondary py-1.5 px-3 text-xs flex-1 text-center">View</a>
-                <button @click.prevent="$dispatch('open-delete-modal', { 
+                   class="neo-btn-secondary py-1.5 px-3 text-xs flex-1 text-center">Ver</a>
+                <button @click.prevent="$dispatch('open-delete-modal', {
                                 deleteUrl: '{{ route('dashboard.lists.destroy', $list) }}',
-                                title: 'Delete List?',
-                                message: 'Are you sure you want to delete this list? This action cannot be undone.'
+                                title: '¿Eliminar lista?',
+                                message: '¿Estás seguro de que quieres eliminar esta lista? Esta acción es irreversible.'
                             })"
-                    class="bg-red-100 border-2 border-black py-1.5 px-3 text-xs font-bold uppercase hover:bg-red-500 hover:text-white transition-colors">
-                    Delete
+                        class="bg-red-100 border-2 border-black py-1.5 px-3 text-xs font-bold uppercase hover:bg-red-500 hover:text-white transition-colors">
+                    Eliminar
                 </button>
             </div>
         @endif
     </div>
 </div>
+

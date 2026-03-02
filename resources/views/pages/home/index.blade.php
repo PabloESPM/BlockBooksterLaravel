@@ -137,16 +137,16 @@
         </div>
     </section>
 
-    <!-- Popular Reviews (Grid) (Brutal Opinions - Preserved) -->
+    <!-- Brutales Opiniones -->
     <section class="mb-16">
-        <h2 class="text-3xl font-display font-black uppercase tracking-tight mb-8 border-b-2 border-black pb-2">Brutal
-            Opinions</h2>
+        <h2 class="text-3xl font-display font-black uppercase tracking-tight mb-8 border-b-2 border-black pb-2">Opiniones
+            Brutales</h2>
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             @forelse($brutalOpinions as $review)
                 <x-review-card :review="$review" />
             @empty
                 <div class="col-span-3 text-center py-12 border-2 border-dashed border-gray-300 bg-gray-50">
-                    <p class="text-xl font-bold uppercase text-gray-400">No brutal opinions yet this month.</p>
+                    <p class="text-xl font-bold uppercase text-gray-400">Sin opiniones brutales todavía este mes.</p>
                 </div>
             @endforelse
         </div>

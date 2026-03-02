@@ -1,27 +1,27 @@
 @extends('layouts.app')
 
-@section('title', 'Browse Books')
+@section('title', 'Explorar Libros')
 
 @section('content')
-    <!-- Top Bar: Advanced Search -->
+    <!-- Barra Superior: Búsqueda Avanzada -->
     <x-advanced-search />
 
     <div class="flex flex-col lg:flex-row gap-12">
 
-        <!-- Sidebar Filters (Desktop) -->
+        <!-- Filtros Laterales (Escritorio) -->
         <x-sidebar-filters :genres="$genres" :countries="$countries" />
 
-        <!-- Main Grid -->
+        <!-- Cuadrícula Principal -->
         <div class="flex-1">
             <div class="flex justify-between items-end mb-8">
                 <h1 class="text-4xl font-display font-black uppercase flex items-center">
                     <span
                         class="bg-brand-yellow px-2 border-2 border-black mr-4 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] text-2xl">{{ $books->total() }}</span>
-                    Books
+                    Libros
                 </h1>
-                <!-- Mobile Filter Toggle (Visible only on small screens) -->
+                <!-- Botón de Filtros Móvil (Visible solo en pantallas pequeñas) -->
                 <button class="lg:hidden font-bold uppercase border-2 border-black px-4 py-2 hover:bg-gray-100">
-                    Filters (+3)
+                    Filtros (+3)
                 </button>
             </div>
 
@@ -30,13 +30,13 @@
                 @forelse($books as $book)
                     <div class="h-full">
                         <x-book-card id="{{$book->isbn}}" :title="$book->title"
-                            :author="$book->authors->first()->name ?? 'Unknown Author'"
-                            :cover="$book->cover ?? 'https://via.placeholder.com/600x900'"
-                            :rating="4.5" />
+                                     :author="$book->authors->first()->name ?? 'Autor Desconocido'"
+                                     :cover="$book->cover ?? 'https://via.placeholder.com/600x900'"
+                                     :rating="4.5" />
                     </div>
                 @empty
                     <div class="col-span-full text-center py-12">
-                        <p class="text-xl font-bold uppercase text-gray-500">No books found.</p>
+                        <p class="text-xl font-bold uppercase text-gray-500">No se han encontrado libros.</p>
                     </div>
                 @endforelse
             </div>

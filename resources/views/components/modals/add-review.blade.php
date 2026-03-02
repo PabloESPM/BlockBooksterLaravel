@@ -7,7 +7,7 @@
             hoverRating: null,
             body: ''
         }" @open-add-review-modal.window="
-            show = true; 
+            show = true;
             bookId = $event.detail.bookId;
             title = '';
             rating = 0;
@@ -28,7 +28,7 @@
             <button @click="show = false"
                 class="absolute top-4 right-4 text-2xl font-black hover:text-red-600 z-50">&times;</button>
 
-            <h2 class="text-xl font-black uppercase mb-6 font-display">Write a Review</h2>
+            <h2 class="text-xl font-black uppercase mb-6 font-display">Escribe una Reseña</h2>
 
             <form action="{{ route('reviews.store') }}" method="POST">
                 @csrf
@@ -37,7 +37,7 @@
 
                 <!-- Title -->
                 <div class="mb-4">
-                    <label for="create_title" class="block font-bold uppercase text-sm mb-2">Review Title</label>
+                    <label for="create_title" class="block font-bold uppercase text-sm mb-2">Titulo de la Reseña</label>
                     <input type="text" name="title" id="create_title" required x-model="title"
                         class="w-full border-2 border-black p-3 focus:outline-none focus:shadow-[4px_4px_0px_#000] focus:ring-0 transition-shadow"
                         placeholder="Brief summary of your review...">
@@ -45,7 +45,7 @@
 
                 <!-- Star Rating -->
                 <div class="mb-6">
-                    <label class="block font-bold uppercase text-sm mb-2">Rating</label>
+                    <label class="block font-bold uppercase text-sm mb-2">Valoración</label>
                     <div class="flex items-center gap-1">
                         <template x-for="i in 5">
                             <button type="button" @click="rating = i" @mouseenter="hoverRating = i"
@@ -62,7 +62,7 @@
 
                 <!-- Comment / Body -->
                 <div class="mb-6">
-                    <label for="create_body" class="block font-bold uppercase text-sm mb-2">Your Review</label>
+                    <label for="create_body" class="block font-bold uppercase text-sm mb-2">Tu Reseña</label>
                     <textarea name="body" id="create_body" rows="5" required x-model="body"
                         class="w-full border-2 border-black p-3 focus:outline-none focus:shadow-[4px_4px_0px_#000] focus:ring-0 transition-shadow resize-none"
                         placeholder="Write your review here..."></textarea>
@@ -71,11 +71,11 @@
                 <div class="flex gap-4 justify-end">
                     <button type="button" @click="show = false"
                         class="px-4 py-2 bg-white border-2 border-black font-bold uppercase hover:bg-gray-100 transition-colors">
-                        Cancel
+                        Cancelar
                     </button>
                     <button type="submit"
                         class="px-6 py-2 bg-[#FFA903] border-2 border-black font-bold uppercase shadow-[4px_4px_0px_#000] hover:translate-y-px hover:translate-x-px hover:shadow-[2px_2px_0px_#000] transition-all">
-                        Publish Review
+                        Publicar Reseña
                     </button>
                 </div>
             </form>

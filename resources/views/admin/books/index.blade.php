@@ -67,7 +67,7 @@
     <!-- Pagination -->
     <div class="mt-6 flex justify-center gap-2">
         <button class="w-8 h-8 border-2 border-black bg-white hover:bg-black hover:text-white transition-colors font-bold">
-            << /button>
+            </button>
                 <button class="w-8 h-8 border-2 border-black bg-brand-blue text-white font-bold">1</button>
                 <button
                     class="w-8 h-8 border-2 border-black bg-white hover:bg-black hover:text-white transition-colors font-bold">2</button>
