@@ -183,5 +183,35 @@ class UserProfileController extends Controller
             'nextPage' => $lists->currentPage() + 1,
         ]);
     }
+
+    /**
+     * AJAX: Load followers list.
+     */
+    public function loadFollowers(User $user)
+    {
+        $followers = $user->followers()->paginate(10);
+        $html = view('components.user-card-list', ['users' => $followers, 'type' => 'followers'])->render();
+
+        return response()->json([
+            'html' => $html,
+            'hasMore' => $followers->hasMorePages(),
+            'nextPage' => $followers->currentPage() + 1,
+        ]);
+    }
+
+    /**
+     * AJAX: Load following list.
+     */
+    public function loadFollowing(User $user)
+    {
+        $following = $user->following()->paginate(10);
+        $html = view('components.user-card-list', ['users' => $following, 'type' => 'following'])->render();
+
+        return response()->json([
+            'html' => $html,
+            'hasMore' => $following->hasMorePages(),
+            'nextPage' => $following->currentPage() + 1,
+        ]);
+    }
 }
 

@@ -172,6 +172,8 @@
                     :count="$followingCount" 
                     :message="$user->name . ' is following ' . $followingCount . ' ' . Str::plural('user', $followingCount)"
                     emptyMessage="Not following anyone yet" 
+                    :userId="$user->id"
+                    type="following"
                 />
 
                 {{-- Followers --}}
@@ -180,9 +182,14 @@
                     :count="$followersCount" 
                     :message="$followersCount . ' ' . Str::plural('user', $followersCount) . ' ' . ($followersCount === 1 ? 'follows' : 'follow') . ' ' . $user->name"
                     emptyMessage="No followers yet" 
+                    :userId="$user->id"
+                    type="followers"
                 />
             </div>
         </section>
+
+        {{-- Modals --}}
+        <x-modals.user-list-modal />
     </div>
 
     {{-- Tab Switching Script --}}

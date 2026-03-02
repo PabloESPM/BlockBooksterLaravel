@@ -35,6 +35,8 @@ Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users
 Route::get('/users/{user}/load-reviews', [UserProfileController::class, 'loadReviews'])->name('users.load-reviews');
 Route::get('/users/{user}/load-books/{status}', [UserProfileController::class, 'loadBooks'])->name('users.load-books');
 Route::get('/users/{user}/load-lists', [UserProfileController::class, 'loadLists'])->name('users.load-lists');
+Route::get('/users/{user}/load-followers', [UserProfileController::class, 'loadFollowers'])->name('users.load-followers');
+Route::get('/users/{user}/load-following', [UserProfileController::class, 'loadFollowing'])->name('users.load-following');
 
 // Follow / Unfollow (auth protected)
 use App\Http\Controllers\FollowController;
