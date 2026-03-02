@@ -60,10 +60,28 @@ class UserProfileController extends Controller
                 $q->where('visibility', 'public');
             },
             'reviews' => function ($q) {
-                $q->with(['book', 'likes'])->withCount('likes')->latest();
+                $q->with(['book', 'likes'])->withCount('likes')->latest()->take(6);
             },
             'followedAuthors',
         ]);
+
+        $reviews = $user->reviews()->with(['book', 'likes'])->withCount('likes')->latest()->paginate(3);
+        $userLists = $user->lists();
+
+        // Use the same visibility logic as load() but for standalone collection if needed 
+        // Or just use the loaded property after pagination logic.
+        // Actually, we need pagination for the "Load More" to work correctly.
+
+        $listsPaginated = $user->lists()
+            ->when($viewer && $viewer->id === $user->id, function ($q) {}, function ($q) use ($viewer, $user) {
+                if ($viewer && $viewer->isFriend($user)) {
+                    $q->whereIn('visibility', ['public', 'followers', 'friends']);
+                } elseif ($viewer && $viewer->isFollowing($user)) {
+                    $q->whereIn('visibility', ['public', 'followers']);
+                } else {
+                    $q->where('visibility', 'public');
+                }
+            })->paginate(3);
 
         /*
         |--------------------------------------------------------------------------
@@ -72,18 +90,18 @@ class UserProfileController extends Controller
         */
         $readBooks = $user->books()
             ->where('status', 'read')
-            ->with('book')
-            ->get();
+            ->with('book.authors')
+            ->paginate(6);
 
         $readingBooks = $user->books()
             ->where('status', 'reading')
-            ->with('book')
-            ->get();
+            ->with('book.authors')
+            ->paginate(6);
 
         $pendingBooks = $user->books()
             ->where('status', 'pending')
-            ->with('book')
-            ->get();
+            ->with('book.authors')
+            ->paginate(6);
 
         /*
         |--------------------------------------------------------------------------
@@ -98,9 +116,72 @@ class UserProfileController extends Controller
             'readBooks',
             'readingBooks',
             'pendingBooks',
+            'reviews',
+            'listsPaginated',
             'followersCount',
             'followingCount'
         ));
+    }
+
+    /**
+     * AJAX: Load more reviews.
+     */
+    public function loadReviews(User $user)
+    {
+        $reviews = $user->reviews()->with(['book', 'likes'])->withCount('likes')->latest()->paginate(3);
+
+        $html = view('components.review-card-list', ['reviews' => $reviews, 'showBook' => true])->render();
+
+        return response()->json([
+            'html' => $html,
+            'hasMore' => $reviews->hasMorePages(),
+            'nextPage' => $reviews->currentPage() + 1,
+        ]);
+    }
+
+    /**
+     * AJAX: Load more books by status.
+     */
+    public function loadBooks(User $user, $status)
+    {
+        $books = $user->books()
+            ->where('status', $status)
+            ->with('book.authors')
+            ->paginate(6);
+
+        $html = view('components.book-card-user-list', ['books' => $books])->render();
+
+        return response()->json([
+            'html' => $html,
+            'hasMore' => $books->hasMorePages(),
+            'nextPage' => $books->currentPage() + 1,
+        ]);
+    }
+
+    /**
+     * AJAX: Load more lists.
+     */
+    public function loadLists(User $user)
+    {
+        $viewer = auth()->user();
+        $lists = $user->lists()
+            ->when($viewer && $viewer->id === $user->id, function ($q) {}, function ($q) use ($viewer, $user) {
+                if ($viewer && $viewer->isFriend($user)) {
+                    $q->whereIn('visibility', ['public', 'followers', 'friends']);
+                } elseif ($viewer && $viewer->isFollowing($user)) {
+                    $q->whereIn('visibility', ['public', 'followers']);
+                } else {
+                    $q->where('visibility', 'public');
+                }
+            })->paginate(3);
+
+        $html = view('components.list-card-list', ['lists' => $lists])->render();
+
+        return response()->json([
+            'html' => $html,
+            'hasMore' => $lists->hasMorePages(),
+            'nextPage' => $lists->currentPage() + 1,
+        ]);
     }
 }
 

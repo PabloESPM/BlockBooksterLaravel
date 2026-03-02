@@ -32,6 +32,9 @@ Route::get('/lists/{list}', [FavListController::class, 'show'])->name('lists.sho
 // Usuarios
 use App\Http\Controllers\UserProfileController;
 Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users.show');
+Route::get('/users/{user}/load-reviews', [UserProfileController::class, 'loadReviews'])->name('users.load-reviews');
+Route::get('/users/{user}/load-books/{status}', [UserProfileController::class, 'loadBooks'])->name('users.load-books');
+Route::get('/users/{user}/load-lists', [UserProfileController::class, 'loadLists'])->name('users.load-lists');
 
 // Follow / Unfollow (auth protected)
 use App\Http\Controllers\FollowController;

@@ -1,6 +1,7 @@
 @props(['list', 'dashboard' => false])
 
-<div class="neo-card p-0 overflow-hidden group flex flex-col h-full">
+<div
+    class="neo-card p-0 overflow-hidden group flex flex-col h-full hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all">
     <a href="{{ route('lists.show', $list->id) }}" class="block">
         <div class="h-32 bg-gray-200 border-b-2 border-black relative">
             <div class="grid grid-cols-5 h-full">
@@ -63,10 +64,10 @@
                 <a href="{{ route('lists.show', $list) }}"
                     class="neo-btn-secondary py-1.5 px-3 text-xs flex-1 text-center">View</a>
                 <button @click.prevent="$dispatch('open-delete-modal', { 
-                            deleteUrl: '{{ route('dashboard.lists.destroy', $list) }}',
-                            title: 'Delete List?',
-                            message: 'Are you sure you want to delete this list? This action cannot be undone.'
-                        })"
+                                deleteUrl: '{{ route('dashboard.lists.destroy', $list) }}',
+                                title: 'Delete List?',
+                                message: 'Are you sure you want to delete this list? This action cannot be undone.'
+                            })"
                     class="bg-red-100 border-2 border-black py-1.5 px-3 text-xs font-bold uppercase hover:bg-red-500 hover:text-white transition-colors">
                     Delete
                 </button>

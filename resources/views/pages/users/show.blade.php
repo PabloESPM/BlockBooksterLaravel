@@ -5,60 +5,11 @@
 @section('content')
     <div class="max-w-7xl mx-auto">
         {{-- Header Section --}}
-        <x-card class="mb-8">
-            <div class="flex flex-col md:flex-row gap-6 items-center md:items-start">
-                {{-- Avatar --}}
-                <div class="w-32 h-32 bg-gray-200 rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
-                    <img src="{{ $user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random' }}"
-                        alt="{{ $user->name }}"
-                        class="w-full h-full object-cover">
-                </div>
-
-                {{-- User Info --}}
-                <div class="flex-1 text-center md:text-left">
-                    <h1 class="text-4xl font-black uppercase font-display mb-2">{{ $user->name }}</h1>
-                    @if($user->country)
-                        <p class="text-sm font-bold text-gray-600 uppercase mb-4">
-                            📍 {{ $user->country->name }}
-                        </p>
-                    @endif
-
-                    {{-- Stats Grid --}}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
-                        <div class="text-center">
-                            <div class="text-3xl font-black">{{ $readBooks->count() }}</div>
-                            <div class="text-xs font-bold uppercase text-gray-600">Books Read</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-black">{{ $readingBooks->count() }}</div>
-                            <div class="text-xs font-bold uppercase text-gray-600">Reading</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-black">{{ $user->lists->count() }}</div>
-                            <div class="text-xs font-bold uppercase text-gray-600">Lists</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-black">{{ $user->reviews->count() }}</div>
-                            <div class="text-xs font-bold uppercase text-gray-600">Reviews</div>
-                        </div>
-                    </div>
-                </div>
-
-                {{-- Follow Button (if not own profile) --}}
-                @auth
-                    @if(auth()->id() !== $user->id)
-                        <div class="flex-shrink-0">
-                            <x-modals.follow-modal
-                                :followableId="$user->id"
-                                followableType="user"
-                                :isFollowing="auth()->user()->isFollowing($user)"
-                                :followUrl="route('users.follow', $user)"
-                            />
-                        </div>
-                    @endif
-                @endauth
-            </div>
-        </x-card>
+        <x-user-profile-header 
+            :user="$user" 
+            :readBooksCount="$readBooks->total()" 
+            :readingBooksCount="$readingBooks->total()" 
+        />
 
         {{-- Reading Activity Section --}}
         <section class="mb-8">
@@ -87,7 +38,7 @@
                         <p class="font-bold uppercase text-sm">No books read yet</p>
                     </x-card>
                 @else
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <div id="read-books-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                         @foreach($readBooks as $bookUser)
                             <x-book-card
                                 :title="$bookUser->book->title"
@@ -98,6 +49,9 @@
                             />
                         @endforeach
                     </div>
+                    @if($readBooks->hasMorePages())
+                        <x-modals.load-more :url="route('users.load-books', [$user, 'read'])" target="read-books-grid" />
+                    @endif
                 @endif
             </div>
 
@@ -108,7 +62,7 @@
                         <p class="font-bold uppercase text-sm">Not currently reading anything</p>
                     </x-card>
                 @else
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <div id="reading-books-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                         @foreach($readingBooks as $bookUser)
                             <x-book-card
                                 :title="$bookUser->book->title"
@@ -119,6 +73,9 @@
                             />
                         @endforeach
                     </div>
+                    @if($readingBooks->hasMorePages())
+                        <x-modals.load-more :url="route('users.load-books', [$user, 'reading'])" target="reading-books-grid" />
+                    @endif
                 @endif
             </div>
 
@@ -129,7 +86,7 @@
                         <p class="font-bold uppercase text-sm">No books in want-to-read list</p>
                     </x-card>
                 @else
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
+                    <div id="pending-books-grid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
                         @foreach($pendingBooks as $bookUser)
                             <x-book-card
                                 :title="$bookUser->book->title"
@@ -140,42 +97,49 @@
                             />
                         @endforeach
                     </div>
+                    @if($pendingBooks->hasMorePages())
+                        <x-modals.load-more :url="route('users.load-books', [$user, 'pending'])" target="pending-books-grid" />
+                    @endif
                 @endif
             </div>
         </section>
 
         {{-- Lists Section --}}
-        @if($user->lists->isNotEmpty())
+        @if($listsPaginated->isNotEmpty())
             <section class="mb-8">
                 <h2 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
                     <span class="w-3 h-3 bg-brand-yellow border border-black"></span>
                     Public Lists
                 </h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($user->lists as $list)
+                <div id="lists-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($listsPaginated as $list)
                         <x-list-card :list="$list" />
                     @endforeach
                 </div>
+
+                @if($listsPaginated->hasMorePages())
+                    <x-modals.load-more :url="route('users.load-lists', $user)" target="lists-grid" />
+                @endif
             </section>
         @endif
 
         {{-- Reviews Section --}}
-        @if($user->reviews->isNotEmpty())
+        @if($reviews->isNotEmpty())
             <section class="mb-8">
                 <h2 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
                     <span class="w-3 h-3 bg-brand-pink border border-black"></span>
                     Reviews
                 </h2>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    @foreach($user->reviews as $review)
+                <div id="reviews-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($reviews as $review)
                         <x-review-card :review="$review" :showBook="true" />
                     @endforeach
                 </div>
                 
-                @if($user->reviews->count() > 3)
-                    <button class="w-full mt-6 neo-btn-secondary">Load More Reviews</button>
+                @if($reviews->hasMorePages())
+                    <x-modals.load-more :url="route('users.load-reviews', $user)" target="reviews-grid" />
                 @endif
             </section>
         @endif
@@ -203,28 +167,20 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {{-- Following --}}
-                <x-card>
-                    <h3 class="font-black uppercase text-lg mb-4 pb-2 border-b-2 border-black/10">
-                        Following ({{ $followingCount }})
-                    </h3>
-                    @if($followingCount > 0)
-                        <p class="text-sm text-gray-600 font-bold">{{ $user->name }} is following {{ $followingCount }} {{ Str::plural('user', $followingCount) }}</p>
-                    @else
-                        <p class="text-sm text-gray-500 italic">Not following anyone yet</p>
-                    @endif
-                </x-card>
+                <x-social-stats-card 
+                    title="Following" 
+                    :count="$followingCount" 
+                    :message="$user->name . ' is following ' . $followingCount . ' ' . Str::plural('user', $followingCount)"
+                    emptyMessage="Not following anyone yet" 
+                />
 
                 {{-- Followers --}}
-                <x-card>
-                    <h3 class="font-black uppercase text-lg mb-4 pb-2 border-b-2 border-black/10">
-                        Followers ({{ $followersCount }})
-                    </h3>
-                    @if($followersCount > 0)
-                        <p class="text-sm text-gray-600 font-bold">{{ $followersCount }} {{ Str::plural('user', $followersCount) }} {{ $followersCount === 1 ? 'follows' : 'follow' }} {{ $user->name }}</p>
-                    @else
-                        <p class="text-sm text-gray-500 italic">No followers yet</p>
-                    @endif
-                </x-card>
+                <x-social-stats-card 
+                    title="Followers" 
+                    :count="$followersCount" 
+                    :message="$followersCount . ' ' . Str::plural('user', $followersCount) . ' ' . ($followersCount === 1 ? 'follows' : 'follow') . ' ' . $user->name"
+                    emptyMessage="No followers yet" 
+                />
             </div>
         </section>
     </div>

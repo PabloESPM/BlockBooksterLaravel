@@ -1,6 +1,7 @@
 @props(['review', 'showBook' => false, 'showActions' => false])
 
-<div class="neo-card flex flex-col h-full bg-[#FFA903]/10 p-6 border-2 border-black shadow-[6px_6px_0px_#000]" x-data="{
+<div class="neo-card flex flex-col h-full bg-[#FFA903]/10 p-6 border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all"
+    x-data="{
         likesCount: {{ $review->likes_count ?? 0 }},
         isLiked: {{ auth()->check() && $review->likes->contains('user_id', auth()->id()) ? 'true' : 'false' }},
         toggleLike() {
@@ -93,19 +94,19 @@
         @if($showActions)
             <div class="flex gap-4">
                 <button @click="$dispatch('open-edit-review-modal', { 
-                                reviewId: '{{ $review->id }}', 
-                                title: '{{ addslashes($review->title) }}',
-                                rating: {{ $review->rating }}, 
-                                body: '{{ addslashes($review->body) }}',
-                                updateUrl: '{{ route('reviews.update', $review) }}'
-                            })" class="text-xs font-black uppercase hover:text-brand-blue underline">
+                                    reviewId: '{{ $review->id }}', 
+                                    title: '{{ addslashes($review->title) }}',
+                                    rating: {{ $review->rating }}, 
+                                    body: '{{ addslashes($review->body) }}',
+                                    updateUrl: '{{ route('reviews.update', $review) }}'
+                                })" class="text-xs font-black uppercase hover:text-brand-blue underline">
                     Edit
                 </button>
                 <button @click="$dispatch('open-delete-modal', { 
-                            deleteUrl: '{{ route('reviews.destroy', $review) }}',
-                            title: 'Delete Review?',
-                            message: 'Are you sure you want to delete this review? This action cannot be undone.'
-                        })" class="text-xs font-black uppercase hover:text-red-600 underline">
+                                deleteUrl: '{{ route('reviews.destroy', $review) }}',
+                                title: 'Delete Review?',
+                                message: 'Are you sure you want to delete this review? This action cannot be undone.'
+                            })" class="text-xs font-black uppercase hover:text-red-600 underline">
                     Delete
                 </button>
             </div>

@@ -15,7 +15,8 @@
             @if($showFollow)
                 <x-modals.follow-modal :followableId="$author->id" followableType="author" :isFollowing="false"
                     :followUrl="route('authors.follow', $author)"
-                    class="mt-3 w-full text-xs font-black uppercase border-2 border-black py-1 hover:bg-black hover:text-white transition-colors" />
+                    class="mt-3 inline-flex items-center justify-center mx-auto px-3 py-1 text-xs font-black uppercase border-2 border-black hover:bg-black hover:text-white transition-all"
+                />
             @endif
         @endauth
     </a>

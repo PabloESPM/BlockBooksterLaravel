@@ -1,18 +1,22 @@
-@props(['url', 'label' => 'Load More'])
+@props(['url', 'label' => 'Load More', 'target' => 'load-more-grid'])
 
 <div x-data="{
         loading: false,
         hasMore: true,
         page: 2,
-        fetchUrl: '{{ $url }}'
-    }" x-show="hasMore" id="load-more-container">
+        fetchUrl: '{{ $url }}',
+        targetId: '{{ $target }}'
+    }" x-show="hasMore">
 
     <button @click="
             loading = true;
             fetch(fetchUrl + '?page=' + page)
                 .then(r => r.json())
                 .then(data => {
-                    document.getElementById('load-more-grid').insertAdjacentHTML('beforeend', data.html);
+                    const grid = document.getElementById(targetId);
+                    if (grid) {
+                        grid.insertAdjacentHTML('beforeend', data.html);
+                    }
                     hasMore = data.hasMore;
                     page = data.nextPage;
                     loading = false;
