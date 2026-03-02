@@ -78,5 +78,53 @@ class User extends Authenticatable
     {
         return $this->following()->where('followed_id', $user->id)->exists();
     }
+
+    /**
+     * Authors followed by this user.
+     */
+    public function followedAuthors()
+    {
+        return $this->belongsToMany(Author::class, 'author_followers', 'user_id', 'author_id')->withTimestamps();
+    }
+
+    /**
+     * Check if this user is following an author.
+     */
+    public function isFollowingAuthor(Author $author): bool
+    {
+        return $this->followedAuthors()->where('author_id', $author->id)->exists();
+    }
+
+    /**
+     * Follow a user.
+     */
+    public function follow(User $user)
+    {
+        return $this->following()->firstOrCreate(['followed_id' => $user->id]);
+    }
+
+    /**
+     * Unfollow a user.
+     */
+    public function unfollow(User $user)
+    {
+        return $this->following()->where('followed_id', $user->id)->delete();
+    }
+
+    /**
+     * Follow an author.
+     */
+    public function followAuthor(Author $author)
+    {
+        return $this->followedAuthors()->attach($author->id);
+    }
+
+    /**
+     * Unfollow an author.
+     */
+    public function unfollowAuthor(Author $author)
+    {
+        return $this->followedAuthors()->detach($author->id);
+    }
 }
 

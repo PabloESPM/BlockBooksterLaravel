@@ -228,21 +228,7 @@
         </div>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
             @foreach($featuredLists as $list)
-            <div class="neo-card p-4 hover:-translate-y-1 transition-transform cursor-pointer">
-                <a href="{{ route('lists.show', $list->id) }}">
-                    <h3 class="font-bold uppercase text-lg leading-tight mb-2 truncate group-hover:text-brand-blue">{{ $list->name }}</h3>
-                    <a href="{{ route('users.show', $list->user->id) }}" class="flex items-center gap-2 mb-3 hover:opacity-80 transition-opacity">
-                        <div class="w-6 h-6 rounded-full bg-gray-200 border border-black overflow-hidden">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($list->user->name ?? 'User') }}&background=random" class="w-full h-full object-cover">
-                        </div>
-                        <span class="text-xs font-bold text-gray-500 uppercase hover:text-brand-blue">{{ $list->user->name ?? 'User' }}</span>
-                    </a>
-                    <div class="border-t-2 border-black pt-2 flex justify-between text-xs font-bold">
-                        <span>{{ $list->books_count }} Books</span>
-                        <span class="text-brand-blue">View List -></span>
-                    </div>
-                </a>
-            </div>
+                <x-list-card :list="$list" />
             @endforeach
         </div>
     </section>

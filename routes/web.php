@@ -21,6 +21,7 @@ Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show')
 use App\Http\Controllers\AuthorController;
 Route::get('/authors', [AuthorController::class, 'index'])->name('authors.index');
 Route::get('/authors/{author}', [AuthorController::class, 'show'])->name('authors.show');
+Route::get('/authors/{author}/books', [AuthorController::class, 'books'])->name('authors.books');
 
 // Listas
 // Listas
@@ -31,6 +32,14 @@ Route::get('/lists/{list}', [FavListController::class, 'show'])->name('lists.sho
 // Usuarios
 use App\Http\Controllers\UserProfileController;
 Route::get('/users/{user}', [UserProfileController::class, 'show'])->name('users.show');
+
+// Follow / Unfollow (auth protected)
+use App\Http\Controllers\FollowController;
+Route::middleware('auth')->group(function () {
+    Route::post('/users/{user}/follow', [FollowController::class, 'toggleUser'])->name('users.follow');
+    Route::post('/authors/{author}/follow', [FollowController::class, 'toggleAuthor'])->name('authors.follow');
+    Route::post('/lists/{list}/follow', [FollowController::class, 'toggleList'])->name('lists.follow');
+});
 
 Route::get('/community', [UserController::class, 'community'])->name('community.index');
 

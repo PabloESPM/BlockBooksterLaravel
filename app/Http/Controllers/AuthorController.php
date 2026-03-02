@@ -54,8 +54,33 @@ class AuthorController extends Controller
      */
     public function show(Author $author)
     {
-        $author->load(['country', 'books.reviews']);
-        return view('pages.authors.show', compact('author'));
+        $author->load(['country']);
+        $books = $author->books()->with('reviews')->paginate(6);
+        return view('pages.authors.show', compact('author', 'books'));
+    }
+
+    /**
+     * Return paginated books for a given author as JSON (for AJAX load more).
+     */
+    public function books(Author $author)
+    {
+        $books = $author->books()->with('reviews')->paginate(6);
+
+        $html = $books->map(function ($book) use ($author) {
+            return view('components.book-card', [
+                'title' => $book->title,
+                'author' => $author->name . ' ' . $author->surname,
+                'cover' => $book->cover,
+                'id' => $book->isbn,
+                'rating' => 0,
+            ])->render();
+        })->implode('');
+
+        return response()->json([
+            'html' => $html,
+            'hasMore' => $books->hasMorePages(),
+            'nextPage' => $books->currentPage() + 1,
+        ]);
     }
 
     /**

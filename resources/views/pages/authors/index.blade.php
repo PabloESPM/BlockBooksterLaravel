@@ -22,20 +22,7 @@
 
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
             @foreach ($popularAuthors as $author)
-                <div class="neo-card p-4 text-center group hover:bg-blue-50 transition-colors cursor-pointer">
-                    <a href="{{ route('authors.show', $author->id) }}">
-                        <div class="w-24 h-24 mx-auto bg-gray-300 rounded-full border-2 border-black mb-3 overflow-hidden">
-                            <img src="{{ $author->photo ?? 'https://ui-avatars.com/api/?name=' . urlencode($author->name) . '&background=random' }}"
-                                alt="{{ $author->name }}" class="w-full h-full object-cover">
-                        </div>
-                        <h3 class="text-sm font-bold uppercase mb-1 group-hover:underline">{{ $author->name }}</h3>
-                        <div class="text-xs font-bold text-gray-500">{{ $author->books_count }} Books</div>
-                        @auth
-                            <button
-                                class="mt-3 w-full text-xs font-black uppercase border-2 border-black py-1 hover:bg-black hover:text-white transition-colors">Follow</button>
-                        @endauth
-                    </a>
-                </div>
+                <x-author-card :author="$author" />
             @endforeach
         </div>
     </section>

@@ -40,7 +40,8 @@
     <x-modals.add-to-list />
     <x-modals.edit-review />
     <x-modals.add-review />
-    <x-modals.delete-review />
+    <x-modals.delete-modal />
+    <x-modals.share-modal />
 </body>
 
 </html>

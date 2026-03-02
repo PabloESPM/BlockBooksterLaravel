@@ -1,23 +1,32 @@
 @auth
-    <div x-data="{ show: false, deleteUrl: '' }"
-        @open-delete-review-modal.window="show = true; deleteUrl = $event.detail.deleteUrl" x-show="show"
-        style="display: none;"
+    <div x-data="{ 
+            show: false, 
+            deleteUrl: '',
+            title: 'Delete Item?',
+            message: 'Are you sure you want to delete this item? This action cannot be undone.'
+        }" @open-delete-modal.window="
+            show = true; 
+            deleteUrl = $event.detail.deleteUrl;
+            if($event.detail.title) title = $event.detail.title;
+            if($event.detail.message) message = $event.detail.message;
+        " x-show="show" style="display: none;"
         class="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 text-left"
         x-transition:enter="transition ease-out duration-200" x-transition:enter-start="opacity-0"
         x-transition:enter-end="opacity-100" x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="opacity-100" x-transition:leave-end="opacity-0" @keydown.escape.window="show = false">
+
         <div @click.away="show = false"
             class="bg-white border-2 border-black shadow-[8px_8px_0px_#000] w-full max-w-md p-6 relative"
             x-transition:enter="transition ease-out duration-200"
             x-transition:enter-start="scale-95 opacity-0 translate-y-4"
             x-transition:enter-end="scale-100 opacity-100 translate-y-0">
+
             <button @click="show = false"
                 class="absolute top-4 right-4 text-2xl font-black hover:text-red-600">&times;</button>
 
-            <h2 class="text-2xl font-black uppercase mb-4 font-display text-red-600">Delete Review?</h2>
+            <h2 class="text-2xl font-black uppercase mb-4 font-display text-red-600" x-text="title"></h2>
 
-            <p class="font-bold text-gray-800 mb-6">Are you sure you want to delete this review? This action cannot be
-                undone.</p>
+            <p class="font-bold text-gray-800 mb-6" x-text="message"></p>
 
             <form :action="deleteUrl" method="POST">
                 @csrf

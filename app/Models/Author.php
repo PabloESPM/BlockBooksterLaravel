@@ -22,5 +22,21 @@ class Author extends Model
     {
         return $this->belongsTo(Country::class);
     }
+
+    /**
+     * Users following this author.
+     */
+    public function followers()
+    {
+        return $this->belongsToMany(User::class, 'author_followers', 'author_id', 'user_id')->withTimestamps();
+    }
+
+    /**
+     * Check if this author is followed by a user.
+     */
+    public function isFollowedBy(User $user): bool
+    {
+        return $this->followers()->where('user_id', $user->id)->exists();
+    }
 }
 

@@ -63,11 +63,12 @@
 
 
                 @auth
-                    <div class="flex gap-4 justify-center md:justify-start">
-                        <button class="neo-btn-primary">
-                            Follow Author
-                        </button>
-                        <button class="neo-btn-secondary">
+                    <div x-data class="flex gap-4 justify-center md:justify-start">
+                        <x-modals.follow-modal :followableId="$author->id" followableType="author" :isFollowing="false"
+                            :followUrl="route('authors.follow', $author)" />
+                        <button
+                            @click="$dispatch('open-share-modal', { title: 'Share Author Profile', url: '{{ route('authors.show', $author->id) }}' })"
+                            class="neo-btn-secondary">
                             Share Profile
                         </button>
                     </div>
@@ -82,7 +83,7 @@
             <div class="mb-4 border-b-2 border-black pb-2">
                 <h2 class="text-2xl font-black uppercase flex items-center gap-2">
                     <span class="w-4 h-4 bg-brand-blue border-2 border-black block"></span>
-                    Biography
+                    Biografia
                 </h2>
             </div>
             <div class="neo-card p-6 text-sm leading-relaxed font-medium">
@@ -99,46 +100,26 @@
             <div class="flex items-center justify-between mb-4 border-b-2 border-black pb-2">
                 <h2 class="text-2xl font-black uppercase flex items-center gap-2">
                     <span class="w-4 h-4 bg-brand-yellow border-2 border-black block"></span>
-                    Bibliography
+                    Bibliografia
                 </h2>
                 <!-- Silenciar filtro tipo de libro
-                    <div class="flex gap-2 text-xs font-bold uppercase">
-                        <button class="bg-black text-white px-3 py-1">All</button>
-                        <button class="bg-white border-2 border-black px-3 py-1 hover:bg-gray-100">Novel</button>
-                    </div>
-                    -->
+                                                <div class="flex gap-2 text-xs font-bold uppercase">
+                                                    <button class="bg-black text-white px-3 py-1">All</button>
+                                                    <button class="bg-white border-2 border-black px-3 py-1 hover:bg-gray-100">Novel</button>
+                                                </div>
+                                                -->
             </div>
 
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-6">
-                @foreach($author->books as $book)
-                    <div class="neo-card p-0 group cursor-pointer hover:-translate-y-1 transition-transform">
-                        <a href="{{ route('books.show', $book->isbn) }}">
-                            <div class="aspect-[2/3] bg-gray-200 border-b-2 border-black relative overflow-hidden">
-                                @if($book->cover)
-                                    <img src="{{ $book->cover }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
-                                @else
-                                    <div
-                                        class="absolute inset-0 flex items-center justify-center bg-brand-yellow text-black font-black text-2xl uppercase rotate-45 opacity-20">
-                                        Cover
-                                    </div>
-                                @endif
-                            </div>
-                            <div class="p-3">
-                                <div class="flex justify-between items-start mb-1">
-                                    <h3
-                                        class="font-bold uppercase text-sm leading-tight group-hover:text-brand-blue line-clamp-2">
-                                        {{ $book->title }}
-                                    </h3>
-                                    <span class="text-xs font-black bg-brand-yellow px-1 border border-black">4.8</span>
-                                </div>
-                                <p class="text-xs text-gray-500 uppercase">{{ $book->publication_year }}</p>
-                            </div>
-                        </a>
-                    </div>
+            <div class="grid grid-cols-2 md:grid-cols-3 gap-6" id="load-more-grid">
+                @foreach($books as $book)
+                    <x-book-card :title="$book->title" :author="$author->name . ' ' . $author->surname" :cover="$book->cover"
+                        :id="$book->isbn" />
                 @endforeach
             </div>
 
-            <button class="w-full mt-6 neo-btn-secondary">Load More Books</button>
+            @if($books->hasMorePages())
+                <x-modals.load-more :url="route('authors.books', $author)" label="Load More Books" />
+            @endif
         </div>
     </div>
 @endsection

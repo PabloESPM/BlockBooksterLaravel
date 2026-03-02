@@ -34,7 +34,17 @@
                 </div>
                 
                 <div class="flex-shrink-0 flex gap-2">
-                     <button class="neo-btn-primary text-sm px-4 py-2">
+                    @auth
+                        @if(Auth::id() !== $list->user_id)
+                            <x-modals.follow-modal
+                                :followableId="$list->id"
+                                followableType="list"
+                                :isFollowing="false"
+                                :followUrl="route('lists.follow', $list->id)"
+                            />
+                        @endif
+                    @endauth
+                     <button @click="$dispatch('open-share-modal', { title: 'Share List', url: '{{ route('lists.show', $list->id) }}' })" class="neo-btn-primary text-sm px-4 py-2">
                         Share
                     </button>
                      @if(Auth::id() === $list->user_id)

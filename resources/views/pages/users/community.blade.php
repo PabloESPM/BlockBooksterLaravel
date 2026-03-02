@@ -18,24 +18,13 @@
 
             <div class="space-y-6">
                 @foreach ($mostFollowed as $user)
-                    <div class="neo-card p-4 flex items-center gap-4 hover:translate-x-1 transition-transform">
-                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $loop->iteration }}</div>
-                        <a href="{{ route('users.show', $user->id) }}" class="flex items-center gap-4 flex-grow">
-                            <div
-                                class="w-12 h-12 bg-brand-blue rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
-                                    class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-grow">
-                                <h3 class="font-bold uppercase text-sm truncate hover:text-brand-blue">{{ $user->name }}</h3>
-                                <p class="text-xs font-bold text-gray-500">{{ $user->followers_count }} Followers</p>
-                            </div>
-                        </a>
-                        @auth
-                            <button
-                                class="text-xs font-black uppercase border-2 border-black px-3 py-1 hover:bg-brand-yellow transition-colors">Follow</button>
-                        @endauth
-                    </div>
+                    <x-user-card 
+                        :user="$user" 
+                        :rank="$loop->iteration" 
+                        statLabel="Followers" 
+                        :statValue="$user->followers_count" 
+                        avatarBg="bg-brand-blue"
+                    />
                 @endforeach
             </div>
         </section>
@@ -48,24 +37,13 @@
 
             <div class="space-y-6">
                 @foreach ($topCurators as $user)
-                    <div class="neo-card p-4 flex items-center gap-4 hover:translate-x-1 transition-transform">
-                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $loop->iteration }}</div>
-                        <a href="{{ route('users.show', $user->id) }}" class="flex items-center gap-4 flex-grow">
-                            <div
-                                class="w-12 h-12 bg-brand-yellow rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
-                                    class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-grow">
-                                <h3 class="font-bold uppercase text-sm truncate hover:text-brand-blue">{{ $user->name }}</h3>
-                                <p class="text-xs font-bold text-gray-500">{{ $user->lists_count }} Lists Created</p>
-                            </div>
-                        </a>
-                        @auth
-                            <button
-                                class="text-xs font-black uppercase border-2 border-black px-3 py-1 hover:bg-brand-yellow transition-colors">Follow</button>
-                        @endauth
-                    </div>
+                    <x-user-card 
+                        :user="$user" 
+                        :rank="$loop->iteration" 
+                        statLabel="Lists Created" 
+                        :statValue="$user->lists_count" 
+                        avatarBg="bg-brand-yellow"
+                    />
                 @endforeach
             </div>
         </section>
@@ -78,26 +56,13 @@
 
             <div class="space-y-6">
                 @foreach ($mostActive as $user)
-                    <div class="neo-card p-4 flex items-center gap-4 hover:translate-x-1 transition-transform">
-                        <div class="text-2xl font-black text-gray-300 w-8">#{{ $loop->iteration }}</div>
-                        <a href="{{ route('users.show', $user->id) }}" class="flex items-center gap-4 flex-grow">
-                            <div class="w-12 h-12 bg-gray-200 rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
-                                <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
-                                    class="w-full h-full object-cover">
-                            </div>
-                            <div class="flex-grow">
-                                <h3 class="font-bold uppercase text-sm truncate hover:text-brand-blue">{{ $user->name }}</h3>
-                                <div class="flex items-center gap-2 text-xs font-bold text-gray-500">
-                                    <span>{{ $user->reviews_count }} Reviews</span>
-                                </div>
-                            </div>
-                        </a>
-                        @auth
-                            <button
-                                class="text-xs font-black uppercase border-2 border-black px-3 py-1 hover:bg-brand-yellow transition-colors">Follow</button>
-                        @endauth
-                        <!-- <div class="w-3 h-3 bg-green-500 rounded-full border border-black" title="Online now"></div> -->
-                    </div>
+                    <x-user-card 
+                        :user="$user" 
+                        :rank="$loop->iteration" 
+                        statLabel="Reviews" 
+                        :statValue="$user->reviews_count" 
+                        avatarBg="bg-gray-200"
+                    />
                 @endforeach
             </div>
         </section>

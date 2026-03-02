@@ -147,6 +147,13 @@
                     </div>
                 @endauth
 
+                <!-- Share -->
+                <button
+                    @click="$dispatch('open-share-modal', { title: 'Share Book', url: '{{ route('books.show', $book->isbn) }}' })"
+                    class="neo-btn-secondary text-sm flex items-center gap-2">
+                    Share
+                </button>
+
                 <!-- Affiliate Links -->
                 <a href="#" class="neo-btn-secondary text-sm flex items-center gap-2">
                     Buy on Amazon
@@ -166,8 +173,8 @@
                 </h2>
                 @auth
                     <button @click.prevent="$dispatch('open-add-review-modal', { bookId: '{{ $book->isbn }}' })"
-                        class="text-sm font-bold uppercase bg-black text-white px-3 py-1 hover:bg-gray-800 transition-colors">Write
-                        Review</button>
+                        class="text-sm font-bold uppercase bg-brand-blue text-white px-3 py-1 hover:bg-gray-800 transition-colors">Escribir
+                        Reseña</button>
                 @endauth
             </div>
 

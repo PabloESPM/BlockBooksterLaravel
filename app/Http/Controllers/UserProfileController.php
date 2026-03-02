@@ -62,6 +62,7 @@ class UserProfileController extends Controller
             'reviews' => function ($q) {
                 $q->with(['book', 'likes'])->withCount('likes')->latest();
             },
+            'followedAuthors',
         ]);
 
         /*

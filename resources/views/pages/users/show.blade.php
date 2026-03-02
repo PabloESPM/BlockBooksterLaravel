@@ -48,13 +48,12 @@
                 @auth
                     @if(auth()->id() !== $user->id)
                         <div class="flex-shrink-0">
-                            <button class="neo-btn-primary">
-                                @if(auth()->user()->isFollowing($user))
-                                    Unfollow
-                                @else
-                                    + Follow
-                                @endif
-                            </button>
+                            <x-modals.follow-modal
+                                :followableId="$user->id"
+                                followableType="user"
+                                :isFollowing="auth()->user()->isFollowing($user)"
+                                :followUrl="route('users.follow', $user)"
+                            />
                         </div>
                     @endif
                 @endauth
@@ -155,18 +154,7 @@
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     @foreach($user->lists as $list)
-                        <x-card class="group hover:-translate-y-1 transition-transform cursor-pointer">
-                            <a href="{{ route('lists.show', $list->id) }}">
-                                <div class="flex items-center justify-between mb-4 pb-2 border-b-2 border-black/10">
-                                    <h3 class="font-black uppercase text-lg group-hover:text-brand-blue">{{ $list->name }}</h3>
-                                    <span class="bg-green-100 text-green-800 text-xs font-bold uppercase px-2 py-0.5 border border-black">Public</span>
-                                </div>
-                                <div class="flex justify-between items-center text-xs font-bold text-gray-500 uppercase">
-                                    <span>{{ $list->books->count() }} Books</span>
-                                    <span>{{ $list->updated_at->diffForHumans() }}</span>
-                                </div>
-                            </a>
-                        </x-card>
+                        <x-list-card :list="$list" />
                     @endforeach
                 </div>
             </section>
@@ -189,6 +177,20 @@
                 @if($user->reviews->count() > 3)
                     <button class="w-full mt-6 neo-btn-secondary">Load More Reviews</button>
                 @endif
+            </section>
+        @endif
+        @if($user->followedAuthors->isNotEmpty())
+            <section class="mb-8">
+                <h2 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
+                    <span class="w-3 h-3 bg-brand-blue border border-black"></span>
+                    Following Authors
+                </h2>
+
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
+                    @foreach($user->followedAuthors as $followedAuthor)
+                        <x-author-card :author="$followedAuthor" :showFollow="auth()->id() !== $user->id" />
+                    @endforeach
+                </div>
             </section>
         @endif
 

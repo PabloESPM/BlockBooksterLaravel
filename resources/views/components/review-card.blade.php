@@ -93,17 +93,19 @@
         @if($showActions)
             <div class="flex gap-4">
                 <button @click="$dispatch('open-edit-review-modal', { 
-                            reviewId: '{{ $review->id }}', 
-                            title: '{{ addslashes($review->title) }}',
-                            rating: {{ $review->rating }}, 
-                            body: '{{ addslashes($review->body) }}',
-                            updateUrl: '{{ route('reviews.update', $review) }}'
-                        })" class="text-xs font-black uppercase hover:text-brand-blue underline">
+                                reviewId: '{{ $review->id }}', 
+                                title: '{{ addslashes($review->title) }}',
+                                rating: {{ $review->rating }}, 
+                                body: '{{ addslashes($review->body) }}',
+                                updateUrl: '{{ route('reviews.update', $review) }}'
+                            })" class="text-xs font-black uppercase hover:text-brand-blue underline">
                     Edit
                 </button>
-                <button
-                    @click="$dispatch('open-delete-review-modal', { deleteUrl: '{{ route('reviews.destroy', $review) }}' })"
-                    class="text-xs font-black uppercase hover:text-red-600 underline">
+                <button @click="$dispatch('open-delete-modal', { 
+                            deleteUrl: '{{ route('reviews.destroy', $review) }}',
+                            title: 'Delete Review?',
+                            message: 'Are you sure you want to delete this review? This action cannot be undone.'
+                        })" class="text-xs font-black uppercase hover:text-red-600 underline">
                     Delete
                 </button>
             </div>
