@@ -1,63 +1,67 @@
 @extends('layouts.app')
 
-@section('title', 'FAQ')
+@section('title', 'Preguntas Frecuentes')
 
 @section('content')
     <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-black uppercase font-display mb-12 text-center">Frequently Asked Questions</h1>
+        <h1 class="text-4xl font-black uppercase font-display mb-12 text-center">
+            Preguntas Frecuentes
+        </h1>
 
         <div x-data="{ active: null }" class="space-y-4">
 
-            <!-- QA 1 -->
+            <!-- Pregunta 1 -->
             <div class="border-2 border-black bg-white shadow-[4px_4px_0px_#000]">
                 <button @click="active = (active === 1 ? null : 1)"
-                    class="w-full text-left p-6 font-black uppercase flex justify-between items-center hover:bg-gray-50 transition-colors">
-                    <span>Is BlockBookster free to use?</span>
+                        class="w-full text-left p-6 font-black uppercase flex justify-between items-center hover:bg-gray-50 transition-colors">
+                    <span>¿Es BlockBookster gratuito?</span>
                     <span x-text="active === 1 ? '-' : '+'" class="text-xl"></span>
                 </button>
                 <div x-show="active === 1" class="p-6 pt-0 text-sm leading-relaxed border-t-2 border-black/10">
-                    Yes! BlockBookster is completely free for all users. You can track your reading, create lists, and
-                    review books without paying a dime. We may introduce premium features in the future, but the core
-                    experience will always be free.
+                    ¡Sí! BlockBookster es completamente gratuito para todos los usuarios. Puedes llevar el seguimiento
+                    de tus lecturas, crear listas y reseñar libros sin pagar nada. Es posible que introduzcamos
+                    funcionalidades premium en el futuro, pero la experiencia principal siempre será gratuita.
                 </div>
             </div>
 
-            <!-- QA 2 -->
+            <!-- Pregunta 2 -->
             <div class="border-2 border-black bg-white shadow-[4px_4px_0px_#000]">
                 <button @click="active = (active === 2 ? null : 2)"
-                    class="w-full text-left p-6 font-black uppercase flex justify-between items-center hover:bg-gray-50 transition-colors">
-                    <span>How do I add a book that's missing?</span>
+                        class="w-full text-left p-6 font-black uppercase flex justify-between items-center hover:bg-gray-50 transition-colors">
+                    <span>¿Cómo puedo añadir un libro que no aparece?</span>
                     <span x-text="active === 2 ? '-' : '+'" class="text-xl"></span>
                 </button>
                 <div x-show="active === 2" class="p-6 pt-0 text-sm leading-relaxed border-t-2 border-black/10">
-                    Currently, only administrators can add new books to the database to ensure data quality. You can request
-                    a book addition through our Contact page, and our team will add it within 24-48 hours.
+                    Actualmente, solo los administradores pueden añadir nuevos libros a la base de datos para garantizar
+                    la calidad de la información. Puedes solicitar la incorporación de un libro a través de nuestra
+                    página de Contacto y nuestro equipo lo añadirá en un plazo de 24 a 48 horas.
                 </div>
             </div>
 
-            <!-- QA 3 -->
+            <!-- Pregunta 3 -->
             <div class="border-2 border-black bg-white shadow-[4px_4px_0px_#000]">
                 <button @click="active = (active === 3 ? null : 3)"
-                    class="w-full text-left p-6 font-black uppercase flex justify-between items-center hover:bg-gray-50 transition-colors">
-                    <span>Can I export my data?</span>
+                        class="w-full text-left p-6 font-black uppercase flex justify-between items-center hover:bg-gray-50 transition-colors">
+                    <span>¿Puedo exportar mis datos?</span>
                     <span x-text="active === 3 ? '-' : '+'" class="text-xl"></span>
                 </button>
                 <div x-show="active === 3" class="p-6 pt-0 text-sm leading-relaxed border-t-2 border-black/10">
-                    We are working on an export feature! Soon you will be able to download a CSV file containing your
-                    library, reviews, and reading history from your Account Settings page.
+                    ¡Estamos trabajando en una función de exportación! Próximamente podrás descargar un archivo CSV con
+                    tu biblioteca, reseñas e historial de lectura desde la página de Configuración de tu cuenta.
                 </div>
             </div>
 
-            <!-- QA 4 -->
+            <!-- Pregunta 4 -->
             <div class="border-2 border-black bg-white shadow-[4px_4px_0px_#000]">
                 <button @click="active = (active === 4 ? null : 4)"
-                    class="w-full text-left p-6 font-black uppercase flex justify-between items-center hover:bg-gray-50 transition-colors">
-                    <span>How is the 'Popularity' score calculated?</span>
+                        class="w-full text-left p-6 font-black uppercase flex justify-between items-center hover:bg-gray-50 transition-colors">
+                    <span>¿Cómo se calcula la puntuación de «Popularidad»?</span>
                     <span x-text="active === 4 ? '-' : '+'" class="text-xl"></span>
                 </button>
                 <div x-show="active === 4" class="p-6 pt-0 text-sm leading-relaxed border-t-2 border-black/10">
-                    Popularity is based on a combination of factors including the number of users currently reading the
-                    book, recent reviews, and list additions over the last 30 days.
+                    La popularidad se basa en una combinación de factores, incluyendo el número de usuarios que están
+                    leyendo actualmente el libro, las reseñas recientes y las incorporaciones a listas durante los
+                    últimos 30 días.
                 </div>
             </div>
 

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name')->unique();
             $table->string('phone_code');
-            $table->string('iso_code', 3)->unique(); // ISO 3166-1 alpha-2 or 3
+            $table->string('iso_code', 3)->unique();
             $table->string('currency', 3);
             $table->string('continent');
             $table->string('timezone');

@@ -8,9 +8,7 @@ use App\Models\Book;
 
 class BookController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     /**
      * Display a listing of the resource.
      */
@@ -18,7 +16,7 @@ class BookController extends Controller
     {
         $query = Book::with('authors');
 
-        // Search (Title/Author/ISBN) from Advanced Search or simple search
+        // Búsqueda (Título/Autor/ISBN) desde Búsqueda Avanzada o búsqueda simple
         if ($request->filled('title')) {
             $query->where('title', 'like', '%' . $request->title . '%');
         }
@@ -31,7 +29,7 @@ class BookController extends Controller
             $query->where('isbn', 'like', '%' . $request->isbn . '%');
         }
 
-        // Sidebar Filters
+        // Filtros del sidebar
         if ($request->filled('genre')) {
             $query->where('genre_id', $request->genre);
         }
@@ -63,16 +61,22 @@ class BookController extends Controller
             $query->where('publication_year', '<=', $request->year_to);
         }
 
-        // Rating (Mock logic since we don't have a computed rating column yet, or assuming we might)
-        // For now, if we had a rating column: $query->where('average_rating', '>=', $request->rating);
-        // I will omit strict rating filtering logic on DB if column doesn't exist, 
-        // effectively ignoring it to prevent SQL errors, 
-        // OR assuming there IS a column/relation. 
-        // Based on `Book` model viewing earlier, I didn't see explicit columns. 
-        // I'll skip adding the where clause for rating unless I'm sure, to avoid crashing. 
-        // Wait, the show view uses static ratings. I'll skip DB filtering for rating for now.
+        // Calculamos la valoración media para tenerla disponible en la vista
+        // La almacenamos con el alias 'average_rating'
+        $query->withAvg('users as average_rating', 'book_user.rating');
 
-        // Sort
+        // Filtrado por valoración
+        // Comprobamos si el usuario ha seleccionado una valoración (ej. 4 estrellas)
+        // Usamos una subconsulta en el 'where' para evitar problemas de paginación que suelen ocurrir al usar 'having'
+        if ($request->filled('rating')) {
+            $query->where(function ($subquery) {
+                $subquery->selectRaw('avg(rating)')
+                    ->from('book_user')
+                    ->whereColumn('book_isbn', 'books.isbn');
+            }, '>=', $request->rating);
+        }
+
+        // Ordenación al mostrar
         switch ($request->input('sort')) {
             case 'newest':
                 $query->orderBy('publication_year', 'desc');
@@ -124,12 +128,36 @@ class BookController extends Controller
         $book->load([
             'authors',
             'genre',
-            'language',
-            'reviews' => function ($query) {
-                $query->with('user')->withCount('likes')->orderByDesc('likes_count');
-            }
+            'language'
         ]);
-        return view('pages.books.show', compact('book'));
+
+        $reviews = $book->reviews()
+            ->with('user')
+            ->withCount('likes')
+            ->orderByDesc('likes_count')
+            ->paginate(3);
+
+        return view('pages.books.show', compact('book', 'reviews'));
+    }
+
+    /**
+     * AJAX: Cargar más reseñas.
+     */
+    public function loadReviews(Book $book)
+    {
+        $reviews = $book->reviews()
+            ->with('user')
+            ->withCount('likes')
+            ->orderByDesc('likes_count')
+            ->paginate(3);
+
+        $html = view('components.review-card-list', ['reviews' => $reviews, 'showBook' => false])->render();
+
+        return response()->json([
+            'html' => $html,
+            'hasMore' => $reviews->hasMorePages(),
+            'nextPage' => $reviews->currentPage() + 1,
+        ]);
     }
 
     /**

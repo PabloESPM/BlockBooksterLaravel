@@ -9,21 +9,21 @@ use App\Http\Controllers\HomeController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 
-// Search
+// Buscador
 use App\Http\Controllers\SearchController;
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
-// Books
+// Libros
 Route::get('/books', [BookController::class, 'index'])->name('books.index');
 Route::get('/books/{book}', [BookController::class, 'show'])->name('books.show');
+Route::get('/books/{book}/load-reviews', [BookController::class, 'loadReviews'])->name('books.load-reviews');
 
-// Authors
+// Autores
 use App\Http\Controllers\AuthorController;
 Route::get('/authors', [AuthorController::class, 'index'])->name('authors.index');
 Route::get('/authors/{author}', [AuthorController::class, 'show'])->name('authors.show');
 Route::get('/authors/{author}/books', [AuthorController::class, 'books'])->name('authors.books');
 
-// Listas
 // Listas
 use App\Http\Controllers\FavListController;
 Route::get('/lists', [FavListController::class, 'index'])->name('lists.index');
@@ -60,17 +60,15 @@ Route::get('/forgot-password', function () {
     return view('pages.users.forgot-password');
 })->name('password.request');
 
-// Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])
-//    ->name('password.email');
 
 // Espacio de administracion
-// Admin Panel
+// Panel Administracion
 Route::prefix('admin')->middleware(['auth'])->group(function () {
     Route::get('/', function () {
         return view('admin.dashboard');
     })->name('admin.dashboard');
 
-    // Books
+    // Libros
     Route::get('/books', function () {
         return view('admin.books.index');
     })->name('admin.books.index');
@@ -84,17 +82,17 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
         return view('admin.books.edit');
     })->name('admin.books.edit');
 
-    // Authors
+    // Autores
     Route::get('/authors', function () {
         return view('admin.authors.index');
     })->name('admin.authors.index');
 
-    // Users
+    // Usuarios
     Route::get('/users', function () {
         return view('admin.users.index');
     })->name('admin.users.index');
 
-    // Moderation
+    // Moderacion
     Route::get('/reviews', function () {
         return view('admin.reviews.moderation');
     })->name('admin.reviews.moderation');
@@ -104,7 +102,7 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
     })->name('admin.lists.reports');
 });
 
-// Static Pages
+// Paginas Estaticas
 Route::get('/about', function () {
     return view('static.aboutus');
 })->name('static.about');
@@ -134,16 +132,14 @@ Route::get('/cookies', function () {
 })->name('static.cookies');
 
 
+use App\Http\Controllers\DashboardController;
 
-// User Dashboard
+// Panel administración del Usuario
 Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('pages.dashboard.index');
-    })->name('dashboard.index');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
-    Route::get('/dashboard/profile', function () {
-        return view('pages.dashboard.profile');
-    })->name('dashboard.profile');
+    Route::get('/dashboard/profile', [DashboardController::class, 'profile'])->name('dashboard.profile');
+    Route::put('/dashboard/profile', [DashboardController::class, 'updateProfile'])->name('dashboard.profile.update');
 
     Route::get('/dashboard/lists', [FavListController::class, 'dashboardIndex'])->name('dashboard.lists');
     Route::post('/dashboard/lists', [FavListController::class, 'store'])->name('dashboard.lists.store');
@@ -151,6 +147,7 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/dashboard/lists/{list}', [FavListController::class, 'update'])->name('dashboard.lists.update');
     Route::post('/dashboard/lists/{list}/attach', [FavListController::class, 'attachBook'])->name('dashboard.lists.attach');
     Route::post('/dashboard/lists/create-attach', [FavListController::class, 'storeAndAttach'])->name('dashboard.lists.storeAndAttach');
+    Route::post('/dashboard/lists/{list}/toggle-like', [FavListController::class, 'toggleLike'])->name('dashboard.lists.toggle-like');
 
     Route::get('/dashboard/reviews', [ReviewController::class, 'dashboardIndex'])->name('dashboard.reviews');
     Route::post('/reviews', [ReviewController::class, 'store'])->name('reviews.store');
@@ -158,7 +155,8 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/reviews/{review}', [ReviewController::class, 'destroy'])->name('reviews.destroy');
     Route::post('/reviews/{review}/toggle-like', [ReviewController::class, 'toggleLike'])->name('reviews.toggle-like');
 
-    Route::get('/dashboard/settings', function () {
-        return view('pages.dashboard.settings');
-    })->name('dashboard.settings');
+    Route::get('/dashboard/settings', [DashboardController::class, 'settings'])->name('dashboard.settings');
+    Route::put('/dashboard/settings', [DashboardController::class, 'updateSettings'])->name('dashboard.settings.update');
+    Route::put('/dashboard/settings/privacy', [DashboardController::class, 'updatePrivacy'])->name('dashboard.settings.privacy');
+    Route::delete('/dashboard/settings/destroy', [DashboardController::class, 'destroyAccount'])->name('dashboard.settings.destroy');
 });

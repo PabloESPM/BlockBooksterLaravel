@@ -33,7 +33,14 @@ class Book extends Model
     {
         return $this->belongsTo(Genre::class);
     }
-    // App/Models/Book.php
+    // Relación con los usuarios a través de la tabla pivote book_user
+    // Esto permite acceder a las valoraciones (rating) que los usuarios han dado al libro
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'book_user', 'book_isbn', 'user_id')
+            ->withPivot(['rating', 'status', 'started_at', 'finished_at']);
+    }
+
     public function lists()
     {
         return $this->belongsToMany(

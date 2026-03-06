@@ -13,7 +13,7 @@ use Illuminate\Http\JsonResponse;
 class FollowController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Muestra un listado del recurso.
      */
     public function index()
     {
@@ -21,7 +21,7 @@ class FollowController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Muestra el formulario para crear un nuevo recurso.
      */
     public function create()
     {
@@ -29,7 +29,7 @@ class FollowController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un recurso recién creado en el almacenamiento.
      */
     public function store(StoreFollowRequest $request)
     {
@@ -37,7 +37,7 @@ class FollowController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Muestra el recurso especificado.
      */
     public function show(Follow $follow)
     {
@@ -45,7 +45,7 @@ class FollowController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Muestra el formulario para editar el recurso especificado.
      */
     public function edit(Follow $follow)
     {
@@ -53,7 +53,7 @@ class FollowController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza el recurso especificado en el almacenamiento.
      */
     public function update(UpdateFollowRequest $request, Follow $follow)
     {
@@ -61,7 +61,7 @@ class FollowController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina el recurso especificado del almacenamiento.
      */
     public function destroy(Follow $follow)
     {
@@ -69,14 +69,14 @@ class FollowController extends Controller
     }
 
     /**
-     * Toggle follow/unfollow for a User (AJAX).
+     * Alterna seguir/dejar de seguir a un Usuario (AJAX).
      */
     public function toggleUser(User $user): JsonResponse
     {
         $auth = auth()->user();
 
         if ($auth->id === $user->id) {
-            return response()->json(['error' => 'Cannot follow yourself.'], 403);
+            return response()->json(['error' => 'No puedes seguirte a ti mismo.'], 403);
         }
 
         if ($auth->isFollowing($user)) {
@@ -91,7 +91,7 @@ class FollowController extends Controller
     }
 
     /**
-     * Toggle follow/unfollow for an Author (AJAX).
+     * Alterna seguir/dejar de seguir a un Autor (AJAX).
      */
     public function toggleAuthor(Author $author): JsonResponse
     {
@@ -109,12 +109,12 @@ class FollowController extends Controller
     }
 
     /**
-     * Toggle follow/unfollow for a List (AJAX).
-     * Stubbed until a List followers relationship is implemented.
+     * Alterna seguir/dejar de seguir una Lista (AJAX).
      */
     public function toggleList(FavList $list): JsonResponse
     {
-        // TODO: implement when List follow relationship is added
+        // TODO: implementar cuando se añada la relación de seguimiento a Lista
         return response()->json(['following' => true]);
     }
 }
+

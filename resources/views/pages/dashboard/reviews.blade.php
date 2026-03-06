@@ -1,17 +1,17 @@
 @extends('layouts.app')
 
-@section('title', 'My Reviews')
+@section('title', 'Mis Reseñas')
 
 @section('content')
     <div x-data class="flex flex-col lg:flex-row gap-8">
-        <!-- Sidebar -->
+        <!-- Barra Lateral -->
         @include('pages.dashboard.partials.sidebar')
 
-        <!-- Main Content -->
+        <!-- Contenido Principal -->
         <div class="flex-1">
             <header class="mb-8 border-b-4 border-black pb-4">
-                <h1 class="text-3xl font-black uppercase font-display">My Reviews</h1>
-                <p class="text-gray-600 font-bold mt-1">Manage your book ratings</p>
+                <h1 class="text-3xl font-black uppercase font-display">Mis Reseñas</h1>
+                <p class="text-gray-600 font-bold mt-1">Gestiona tus valoraciones de libros</p>
             </header>
 
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -20,8 +20,8 @@
                 @empty
                     <div
                         class="col-span-1 md:col-span-2 lg:col-span-3 text-center py-12 border-2 border-dashed border-gray-300 bg-gray-50">
-                        <p class="text-xl font-bold uppercase text-gray-400 mb-2">No reviews yet</p>
-                        <a href="{{ route('books.index') }}" class="neo-btn-primary inline-block text-sm">Browse Books</a>
+                        <p class="text-xl font-bold uppercase text-gray-400 mb-2">Aún no hay reseñas</p>
+                        <a href="{{ route('books.index') }}" class="neo-btn-primary inline-block text-sm">Explorar Libros</a>
                     </div>
                 @endforelse
             </div>

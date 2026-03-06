@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('authors', function (Blueprint $table) {
-            $table->id(); // bigint autoincremental (PostgreSQL-friendly)
+            $table->id(); // autoincremental
 
             $table->string('name');
             $table->string('surname')->nullable();

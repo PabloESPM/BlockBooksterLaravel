@@ -25,7 +25,11 @@ class User extends Authenticatable
         'country_id',
         'type',
         'avatar',
-        'profile_visibility'
+        'profile_visibility',
+        'bio',
+        'location',
+        'website',
+        'twitter',
     ];
 
     protected $hidden = ['password', 'remember_token'];
@@ -72,7 +76,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Check if this user is following another user.
+     * Chequea que este usuario es seguido por otros usuarios.
      */
     public function isFollowing(User $user): bool
     {
@@ -80,7 +84,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Authors followed by this user.
+     * Autores seguidos por este usuario.
      */
     public function followedAuthors()
     {
@@ -96,7 +100,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Follow a user.
+     * Seguir usaurio.
      */
     public function follow(User $user)
     {
@@ -104,7 +108,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Unfollow a user.
+     * Unfollow a usuario.
      */
     public function unfollow(User $user)
     {
@@ -112,7 +116,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Follow an author.
+     * Seguir a un autor.
      */
     public function followAuthor(Author $author)
     {
@@ -120,7 +124,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Unfollow an author.
+     * dejar de seguir a un autor.
      */
     public function unfollowAuthor(Author $author)
     {

@@ -16,32 +16,32 @@
 </head>
 
 <body class="font-body bg-brand-blue flex items-center justify-center min-h-screen p-4"
-    style="background-image: radial-gradient(#1e3a8a 1px, transparent 1px); background-size: 20px 20px;">
+      style="background-image: radial-gradient(#1e3a8a 1px, transparent 1px); background-size: 20px 20px;">
 
-    <div class="w-full max-w-md">
-        <!-- Logo -->
-        <div class="flex justify-center mb-8">
-            <a href="/" class="text-4xl font-display font-black text-white tracking-tighter uppercase"
-                style="text-shadow: 4px 4px 0px #000;">
-                Block<span class="text-brand-yellow text-shadow-black">Book</span>ster
-            </a>
-        </div>
-
-        <!-- Auth Card -->
-        <div class="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
-            @yield('content')
-
-            @if(View::hasSection('footer-link'))
-                <div class="mt-8 pt-4 border-t-2 border-black text-center text-sm font-bold">
-                    @yield('footer-link')
-                </div>
-            @endif
-        </div>
-
-        <div class="mt-8 text-center text-xs font-bold text-white uppercase tracking-widest">
-            Identity Verified
-        </div>
+<div class="w-full max-w-md">
+    <!-- Logo -->
+    <div class="flex justify-center mb-8">
+        <a href="/" class="text-4xl font-display font-black text-white tracking-tighter uppercase"
+           style="text-shadow: 4px 4px 0px #000;">
+            Block<span class="text-brand-yellow text-shadow-black">Book</span>ster
+        </a>
     </div>
+
+    <!-- Tarjeta de autenticación -->
+    <div class="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
+        @yield('content')
+
+        @if(View::hasSection('footer-link'))
+            <div class="mt-8 pt-4 border-t-2 border-black text-center text-sm font-bold">
+                @yield('footer-link')
+            </div>
+        @endif
+    </div>
+
+    <div class="mt-8 text-center text-xs font-bold text-white uppercase tracking-widest">
+        Identidad verificada
+    </div>
+</div>
 
 </body>
 

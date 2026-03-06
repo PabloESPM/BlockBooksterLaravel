@@ -1,47 +1,71 @@
 @extends('layouts.app')
 
-@section('title', 'Privacy Policy')
+@section('title', 'Política de Privacidad')
 
 @section('content')
     <div class="max-w-4xl mx-auto">
-        <h1 class="text-4xl font-black uppercase font-display mb-8 text-center text-brand-blue">Privacy Policy</h1>
+        <h1 class="text-4xl font-black uppercase font-display mb-8 text-center text-brand-blue">
+            Política de Privacidad
+        </h1>
 
         <x-card class="prose max-w-none">
-            <p class="font-bold">Last updated: January 25, 2026</p>
+            <p class="font-bold">Última actualización: 25 de enero de 2026</p>
 
-            <h3>1. Introduction</h3>
-            <p>Welcome to BlockBookster. We value your privacy and are committed to protecting your personal data. This
-                privacy policy will inform you as to how we look after your personal data when you visit our website and
-                tell you about your privacy rights.</p>
+            <h3>1. Introducción</h3>
+            <p>
+                Bienvenido a BlockBookster. Valoramos tu privacidad y nos comprometemos a proteger tus datos personales.
+                Esta política de privacidad te informará sobre cómo cuidamos tus datos personales cuando visitas nuestro
+                sitio web y te explicará cuáles son tus derechos en materia de privacidad.
+            </p>
 
-            <h3>2. Data We Collect</h3>
-            <p>We may collect, use, store and transfer different kinds of personal data about you which we have grouped
-                together follows:</p>
+            <h3>2. Datos que recopilamos</h3>
+            <p>
+                Podemos recopilar, utilizar, almacenar y transferir diferentes tipos de datos personales sobre ti,
+                que hemos agrupado de la siguiente manera:
+            </p>
             <ul>
-                <li><strong>Identity Data</strong> includes first name, last name, username or similar identifier.</li>
-                <li><strong>Contact Data</strong> includes email address.</li>
-                <li><strong>Technical Data</strong> includes internet protocol (IP) address, your login data, browser type
-                    and version.</li>
-                <li><strong>Profile Data</strong> includes your username and password, books read, lists created, and
-                    reviews made.</li>
+                <li>
+                    <strong>Datos de Identidad</strong>: incluyen nombre, apellidos, nombre de usuario u otro identificador similar.
+                </li>
+                <li>
+                    <strong>Datos de Contacto</strong>: incluyen dirección de correo electrónico.
+                </li>
+                <li>
+                    <strong>Datos Técnicos</strong>: incluyen dirección de protocolo de Internet (IP), datos de inicio de sesión,
+                    tipo y versión del navegador.
+                </li>
+                <li>
+                    <strong>Datos de Perfil</strong>: incluyen tu nombre de usuario y contraseña, libros leídos, listas creadas
+                    y reseñas realizadas.
+                </li>
             </ul>
 
-            <h3>3. How We Use Your Data</h3>
-            <p>We will only use your personal data when the law allows us to. Most commonly, we will use your personal data
-                in the following circumstances:</p>
+            <h3>3. Cómo utilizamos tus datos</h3>
+            <p>
+                Solo utilizaremos tus datos personales cuando la ley nos lo permita. Normalmente, utilizaremos tus datos
+                personales en las siguientes circunstancias:
+            </p>
             <ul>
-                <li>Where we need to perform the contract we are about to enter into or have entered into with you.</li>
-                <li>Where it is necessary for our legitimate interests (or those of a third party) and your interests and
-                    fundamental rights do not override those interests.</li>
+                <li>
+                    Cuando necesitemos ejecutar el contrato que estamos a punto de celebrar o que ya hemos celebrado contigo.
+                </li>
+                <li>
+                    Cuando sea necesario para nuestros intereses legítimos (o los de un tercero) y tus intereses y derechos
+                    fundamentales no prevalezcan sobre dichos intereses.
+                </li>
             </ul>
 
-            <h3>4. Data Security</h3>
-            <p>We have put in place appropriate security measures to prevent your personal data from being accidentally
-                lost, used or accessed in an unauthorized way, altered or disclosed.</p>
+            <h3>4. Seguridad de los datos</h3>
+            <p>
+                Hemos implementado medidas de seguridad adecuadas para evitar que tus datos personales se pierdan,
+                utilicen o accedan de forma no autorizada, se modifiquen o se divulguen accidentalmente.
+            </p>
 
-            <h3>5. Contact Us</h3>
-            <p>If you have any questions about this privacy policy or our privacy practices, please contact us at
-                privacy@blockbookster.com.</p>
+            <h3>5. Contacto</h3>
+            <p>
+                Si tienes alguna pregunta sobre esta política de privacidad o sobre nuestras prácticas en materia de
+                privacidad, puedes contactarnos en privacy@blockbookster.com.
+            </p>
         </x-card>
     </div>
 @endsection

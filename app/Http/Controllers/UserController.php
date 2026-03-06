@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Hash;
 class UserController extends Controller
 {
     /**
-     * Show the registration form.
+     * Muestra el formulario de registro.
      */
     public function showRegisterForm()
     {
@@ -20,7 +20,7 @@ class UserController extends Controller
     }
 
     /**
-     * Handle user registration.
+     * Maneja el registro de usuario.
      */
     public function store(Request $request)
     {
@@ -42,8 +42,8 @@ class UserController extends Controller
             'gender' => $validatedData['gender'],
             'country_id' => $validatedData['country_id'],
             'telephone' => $validatedData['telephone'],
-            'type' => 'user', // Default type
-            'avatar' => null, // Default or handle upload if added later
+            'type' => 'user', // Tipo por defecto
+            'avatar' => null, // Valor por defecto o manejar carga si se añade más adelante
         ]);
 
         Auth::login($user);
@@ -52,7 +52,7 @@ class UserController extends Controller
     }
 
     /**
-     * Show the login form.
+     * Muestra el formulario de inicio de sesión.
      */
     public function showLoginForm()
     {
@@ -60,7 +60,7 @@ class UserController extends Controller
     }
 
     /**
-     * Handle user login.
+     * Maneja el inicio de sesión del usuario.
      */
     public function authenticate(Request $request)
     {
@@ -72,7 +72,7 @@ class UserController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            // Redirect to admin dashboard if admin or worker, else home
+            // Redirige al panel de administración si es admin o trabajador, de lo contrario a inicio
             if (Auth::user()->type === 'admin' || Auth::user()->type === 'worker') {
                 return redirect()->intended(route('admin.dashboard'));
             }
@@ -81,12 +81,12 @@ class UserController extends Controller
         }
 
         return back()->withErrors([
-            'email' => 'The provided credentials do not match our records.',
+            'email' => 'Las credenciales proporcionadas no coinciden con nuestros registros.',
         ])->onlyInput('email');
     }
 
     /**
-     * Log the user out.
+     * Cierra la sesión del usuario.
      */
     public function logout(Request $request)
     {
@@ -97,21 +97,22 @@ class UserController extends Controller
 
         return redirect('/');
     }
+
     public function community()
     {
-        // Most Followed: Users with most followers
+        // Más seguidos: usuarios con más seguidores
         $mostFollowed = User::withCount('followers')
             ->orderBy('followers_count', 'desc')
             ->take(5)
             ->get();
 
-        // Top Curators: Users with most lists created
+        // Mejores curadores: usuarios con más listas creadas
         $topCurators = User::withCount('lists')
             ->orderBy('lists_count', 'desc')
             ->take(5)
             ->get();
 
-        // Most Active: Users with most reviews
+        // Más activos: usuarios con más reseñas
         $mostActive = User::withCount('reviews')
             ->orderBy('reviews_count', 'desc')
             ->take(5)

@@ -7,40 +7,35 @@ use App\Models\User;
 class UserProfileController extends Controller
 {
     /**
-     * Display the specified user's profile.
+     * Muestra el perfil del usuario especificado.
+     * El encabezado siempre es visible; las secciones de contenido dependen de la visibilidad del perfil.
      */
     public function show(User $user)
     {
         $viewer = auth()->user();
+        $isOwner = $viewer && $viewer->id === $user->id;
 
-        /*
-        |--------------------------------------------------------------------------
-        | Profile privacy checks
-        |--------------------------------------------------------------------------
-        */
-        if ($user->profile_visibility === 'private' && (!$viewer || $viewer->id !== $user->id)) {
-            abort(403, 'This profile is private.');
-        }
+        // Determinamos si el visitante puede ver el contenido completo del perfil
+        $canViewContent = match ($user->profile_visibility) {
+            // Público: cualquiera puede ver
+            'public' => true,
+            // Solo seguidores: el dueño o alguien que le sigue
+            'followers' => $isOwner || ($viewer && $viewer->isFollowing($user)),
+            // Solo amigos (seguimiento mutuo): el dueño o un amigo
+            'friends' => $isOwner || ($viewer && $viewer->isFriend($user)),
+            // Privado: solo el dueño del perfil
+            'private' => $isOwner,
+            // Por defecto permitimos el acceso
+            default => true,
+        };
 
-        if ($user->profile_visibility === 'followers' && (!$viewer || !$viewer->isFollowing($user))) {
-            abort(403, 'This profile is visible to followers only.');
-        }
-
-        if ($user->profile_visibility === 'friends' && (!$viewer || !$viewer->isFriend($user))) {
-            abort(403, 'This profile is visible to friends only.');
-        }
-
-        /*
-        |--------------------------------------------------------------------------
-        | Load related data
-        |--------------------------------------------------------------------------
-        */
+        // Cargamos los datos relacionados solo si hay permiso para mostrarlos
         $user->load([
             'country',
-            'lists' => function ($q) use ($viewer, $user) {
+            'lists' => function ($q) use ($viewer, $user, $isOwner) {
 
                 // El dueño ve todas sus listas
-                if ($viewer && $viewer->id === $user->id) {
+                if ($isOwner) {
                     return;
                 }
 
@@ -66,14 +61,12 @@ class UserProfileController extends Controller
         ]);
 
         $reviews = $user->reviews()->with(['book', 'likes'])->withCount('likes')->latest()->paginate(3);
-        $userLists = $user->lists();
 
-        // Use the same visibility logic as load() but for standalone collection if needed 
-        // Or just use the loaded property after pagination logic.
-        // Actually, we need pagination for the "Load More" to work correctly.
-
+        // Listas paginadas con la misma lógica de visibilidad
         $listsPaginated = $user->lists()
-            ->when($viewer && $viewer->id === $user->id, function ($q) {}, function ($q) use ($viewer, $user) {
+            ->with(['likes', 'user'])
+            ->withCount(['books', 'likes'])
+            ->when($isOwner, function ($q) {}, function ($q) use ($viewer, $user) {
                 if ($viewer && $viewer->isFriend($user)) {
                     $q->whereIn('visibility', ['public', 'followers', 'friends']);
                 } elseif ($viewer && $viewer->isFollowing($user)) {
@@ -83,36 +76,18 @@ class UserProfileController extends Controller
                 }
             })->paginate(3);
 
-        /*
-        |--------------------------------------------------------------------------
-        | Books by status
-        |--------------------------------------------------------------------------
-        */
-        $readBooks = $user->books()
-            ->where('status', 'read')
-            ->with('book.authors')
-            ->paginate(6);
+        // Libros por estado
+        $readBooks = $user->books()->where('status', 'read')->with('book.authors')->paginate(6);
+        $readingBooks = $user->books()->where('status', 'reading')->with('book.authors')->paginate(6);
+        $pendingBooks = $user->books()->where('status', 'pending')->with('book.authors')->paginate(6);
 
-        $readingBooks = $user->books()
-            ->where('status', 'reading')
-            ->with('book.authors')
-            ->paginate(6);
-
-        $pendingBooks = $user->books()
-            ->where('status', 'pending')
-            ->with('book.authors')
-            ->paginate(6);
-
-        /*
-        |--------------------------------------------------------------------------
-        | Social stats
-        |--------------------------------------------------------------------------
-        */
+        // Estadísticas sociales
         $followersCount = $user->followers()->count();
         $followingCount = $user->following()->count();
 
         return view('pages.users.show', compact(
             'user',
+            'canViewContent',
             'readBooks',
             'readingBooks',
             'pendingBooks',
@@ -124,7 +99,7 @@ class UserProfileController extends Controller
     }
 
     /**
-     * AJAX: Load more reviews.
+     * AJAX: Cargar más reseñas.
      */
     public function loadReviews(User $user)
     {
@@ -140,7 +115,7 @@ class UserProfileController extends Controller
     }
 
     /**
-     * AJAX: Load more books by status.
+     * AJAX: Cargar más libros por estado.
      */
     public function loadBooks(User $user, $status)
     {
@@ -159,12 +134,15 @@ class UserProfileController extends Controller
     }
 
     /**
-     * AJAX: Load more lists.
+     * AJAX: Cargar más listas.
      */
     public function loadLists(User $user)
     {
         $viewer = auth()->user();
+
         $lists = $user->lists()
+            ->with(['likes', 'user'])
+            ->withCount(['books', 'likes'])
             ->when($viewer && $viewer->id === $user->id, function ($q) {}, function ($q) use ($viewer, $user) {
                 if ($viewer && $viewer->isFriend($user)) {
                     $q->whereIn('visibility', ['public', 'followers', 'friends']);
@@ -185,7 +163,7 @@ class UserProfileController extends Controller
     }
 
     /**
-     * AJAX: Load followers list.
+     * AJAX: Cargar lista de seguidores.
      */
     public function loadFollowers(User $user)
     {
@@ -200,7 +178,7 @@ class UserProfileController extends Controller
     }
 
     /**
-     * AJAX: Load following list.
+     * AJAX: Cargar lista de seguidos.
      */
     public function loadFollowing(User $user)
     {
@@ -214,4 +192,5 @@ class UserProfileController extends Controller
         ]);
     }
 }
+
 

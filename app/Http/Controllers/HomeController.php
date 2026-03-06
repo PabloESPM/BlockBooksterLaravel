@@ -10,12 +10,11 @@ class HomeController extends Controller
     public function index()
     {
         $latestBooks = Book::with('authors')->latest()->take(6)->get();
-        // Assuming we want to show some "best rated", but without a calculated rating column,
-        // we'll just take some books. Adding 'reviews' if we want to calculate it in view or
-        // if we implement a scope later.
+
+        // Mostrar algunos "mejor valorados",
         $bestRatedBooks = Book::with('authors')->take(5)->get();
 
-        // Rising Stars Authors for Home (Top 7 by followers in last 30 days)
+        // Autores emergentes para la página de inicio (Top 7 por seguidores en los últimos 30 días)
         $risingStars = \App\Models\Author::withCount([
             'followers' => function ($query) {
                 $query->where('author_followers.created_at', '>=', now()->subDays(30));
@@ -26,15 +25,21 @@ class HomeController extends Controller
             ->take(7)
             ->get();
 
-        // New Lists
-        $featuredLists = \App\Models\FavList::where('visibility', 'public')
-            ->with(['user'])
-            ->withCount('books')
-            ->latest()
+        // Listas Destacadas (Top 4 públicas con más likes en los últimos 30 días)
+        $featuredLists = \App\Models\FavList::select('fav_lists.*')
+            ->where('visibility', 'public')
+            ->with(['user', 'likes'])
+            ->withCount(['books', 'likes'])
+            ->leftJoin('list_likes', function ($join) {
+                $join->on('fav_lists.id', '=', 'list_likes.list_id')
+                    ->where('list_likes.created_at', '>=', now()->subDays(30));
+            })
+            ->groupBy('fav_lists.id')
+            ->orderByDesc(\DB::raw('COUNT(list_likes.id)'))
             ->take(4)
             ->get();
 
-        // Brutal Opinions (Top reviews of the month)
+        // Opiniones brutales (Mejores reseñas del mes)
         $brutalOpinions = \App\Models\Review::with(['user', 'book'])
             ->withCount('likes')
             ->where('created_at', '>=', now()->subMonth())
@@ -42,7 +47,7 @@ class HomeController extends Controller
             ->take(3)
             ->get();
 
-        // Top Genres (Top 6 by avg rating in last 30 days)
+        // Géneros principales (Top 6 por valoración promedio en los últimos 30 días)
         $topGenres = \App\Models\Genre::select('genres.*')
             ->join('books', 'genres.id', '=', 'books.genre_id')
             ->join('reviews', 'books.isbn', '=', 'reviews.book_isbn')
@@ -82,3 +87,4 @@ class HomeController extends Controller
         ));
     }
 }
+

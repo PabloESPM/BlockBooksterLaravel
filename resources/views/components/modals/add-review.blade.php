@@ -35,7 +35,7 @@
 
                 <input type="hidden" name="book_isbn" :value="bookId">
 
-                <!-- Title -->
+                <!-- Titulo -->
                 <div class="mb-4">
                     <label for="create_title" class="block font-bold uppercase text-sm mb-2">Titulo de la Reseña</label>
                     <input type="text" name="title" id="create_title" required x-model="title"
@@ -43,7 +43,7 @@
                         placeholder="Brief summary of your review...">
                 </div>
 
-                <!-- Star Rating -->
+                <!-- Ratio de estrellas -->
                 <div class="mb-6">
                     <label class="block font-bold uppercase text-sm mb-2">Valoración</label>
                     <div class="flex items-center gap-1">
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <!-- Comment / Body -->
+                <!-- Comentarios / Cuerpo -->
                 <div class="mb-6">
                     <label for="create_body" class="block font-bold uppercase text-sm mb-2">Tu Reseña</label>
                     <textarea name="body" id="create_body" rows="5" required x-model="body"

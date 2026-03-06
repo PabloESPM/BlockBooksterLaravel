@@ -1,7 +1,7 @@
 <div class="border-t-4 border-black bg-white mt-auto">
     <div class="container mx-auto px-4 py-12">
         <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
-            <!-- Brand -->
+            <!-- Marca -->
             <div class="col-span-1 md:col-span-1">
                 <a href="/"
                     class="text-2xl font-black font-display uppercase tracking-tighter hover:text-brand-blue transition-colors">
@@ -81,7 +81,7 @@
                 </ul>
             </div>
 
-            <!-- Company -->
+            <!-- Compañia -->
             <div class="col-span-1 border-l-2 border-black pl-8">
                 <h3 class="font-black uppercase mb-4 text-sm bg-brand-blue text-white inline-block px-1">Empresa</h3>
                 <ul class="space-y-2 text-sm font-bold">

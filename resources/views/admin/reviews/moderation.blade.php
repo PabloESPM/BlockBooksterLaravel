@@ -1,9 +1,9 @@
 @extends('layouts.admin')
 
-@section('title', 'Review Moderation')
+@section('title', 'Moderación de Reseñas')
 
 @section('content')
-    <h1 class="text-4xl font-black uppercase font-display mb-8">Review Moderation</h1>
+    <h1 class="text-4xl font-black uppercase font-display mb-8">Moderación de Reseñas</h1>
 
     <div class="grid grid-cols-1 gap-6">
         @for($i = 0; $i < 3; $i++)
@@ -15,30 +15,30 @@
                         </div>
                         <div>
                             <div class="font-bold uppercase text-sm">User_{{$i}}</div>
-                            <div class="text-xs text-gray-500">Reported for: <span class="text-red-600 font-bold">Spam /
-                                    Advertising</span></div>
+                            <div class="text-xs text-gray-500">Reportado por: <span class="text-red-600 font-bold">Spam /
+                                    Publicidad</span></div>
                         </div>
                     </div>
-                    <span class="text-xs font-bold text-gray-400 uppercase">2 hours ago</span>
+                    <span class="text-xs font-bold text-gray-400 uppercase">Hace 2 horas</span>
                 </div>
 
                 <div class="bg-gray-50 p-4 border border-gray-200 mb-4">
-                    <h4 class="font-bold text-sm mb-1">Review on "The Great Gatsby"</h4>
-                    <p class="text-sm italic text-gray-600">"Buy cheap sunglasses at [suspicious link]..."</p>
+                    <h4 class="font-bold text-sm mb-1">Reseña en "El Gran Gatsby"</h4>
+                    <p class="text-sm italic text-gray-600">"Compra gafas de sol baratas en [enlace sospechoso]..."</p>
                 </div>
 
                 <div class="flex items-center gap-4">
                     <button
-                        class="neo-btn-secondary py-1 px-4 text-xs bg-red-100 text-red-800 hover:bg-red-600 hover:text-white border-red-800">Delete
-                        Review</button>
-                    <button class="neo-btn-secondary py-1 px-4 text-xs bg-white hover:bg-gray-100">Ignore Report</button>
-                    <button class="text-xs font-bold uppercase text-black hover:underline ml-auto">View User Profile</button>
+                        class="neo-btn-secondary py-1 px-4 text-xs bg-red-100 text-red-800 hover:bg-red-600 hover:text-white border-red-800">Eliminar
+                        Reseña</button>
+                    <button class="neo-btn-secondary py-1 px-4 text-xs bg-white hover:bg-gray-100">Ignorar Reporte</button>
+                    <button class="text-xs font-bold uppercase text-black hover:underline ml-auto">Ver Perfil de Usuario</button>
                 </div>
             </x-card>
         @endfor
 
         <div class="text-center text-gray-500 font-bold uppercase text-xs py-8">
-            No more pending reports
+            No hay más reportes pendientes
         </div>
     </div>
 @endsection

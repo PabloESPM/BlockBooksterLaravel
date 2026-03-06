@@ -24,7 +24,7 @@ class Author extends Model
     }
 
     /**
-     * Users following this author.
+     * Usuario sigue a este autor.
      */
     public function followers()
     {
@@ -32,7 +32,7 @@ class Author extends Model
     }
 
     /**
-     * Check if this author is followed by a user.
+     * Chequea si el autor esta seguido por usuarios.
      */
     public function isFollowedBy(User $user): bool
     {

@@ -1,9 +1,9 @@
 @props([
-    'followableId',         // e.g. $user->id or $author->id
-    'followableType',       // 'user' or 'author'
-    'isFollowing' => false, // pass auth()->user()->isFollowing($target)
-    'followUrl',            // route to POST follow
-    'unfollowUrl' => null,  // route to DELETE/POST unfollow (defaults to followUrl)
+    'followableId',         // por ejemplo, $user->id o $author->id
+    'followableType',       // 'user' o 'author'
+    'isFollowing' => false, // pasar auth()->user()->isFollowing($target)
+    'followUrl',            // ruta para POST de seguir
+    'unfollowUrl' => null,  // ruta para DELETE/POST de dejar de seguir (por defecto sigue la misma que followUrl)
     'class' => 'neo-btn-primary',
 ])
 
@@ -46,7 +46,8 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
             </svg>
-            <span x-text="following ? 'Unfollow' : 'Follow'"></span>
+            <span x-text="following ? 'Dejar de seguir' : 'Seguir'"></span>
         </button>
     </div>
 @endauth
+

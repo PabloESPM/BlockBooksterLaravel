@@ -16,18 +16,16 @@ class AuthorController extends Controller
      */
     public function index()
     {
-        // Popular: Authors with most books (approximation for popular)
+        // Populares: autores con más libros (aproximación para definir "popular")
         $popularAuthors = Author::withCount('books')->orderBy('books_count', 'desc')->take(6)->get();
 
-        // Classics: Authors with oldest books (approximation) or just random old ones. 
-        // For now, let's take some random ones as we don't have birthdate easily queryable or "classic" tag.
-        // Or we can just take the first few IDs.
+        // Clásicos: autores con libros más antiguos (aproximación) o simplemente algunos antiguos aleatorios.
         $classicAuthors = Author::take(3)->get();
 
-        // Most Rated: Authors with most reviews on their books (complex query, we'll mock with random or top books count for now)
+        // Más valorados: autores con más reseñas en sus libros
         $mostRatedAuthors = Author::withCount('books')->inRandomOrder()->take(5)->get();
 
-        // Rising Stars / New: Latest added authors
+        // Estrellas emergentes / Nuevos: últimos autores añadidos
         $newAuthors = Author::latest()->take(4)->get();
 
         return view('pages.authors.index', compact('popularAuthors', 'classicAuthors', 'mostRatedAuthors', 'newAuthors'));

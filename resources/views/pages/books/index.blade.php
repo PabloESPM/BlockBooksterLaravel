@@ -30,9 +30,9 @@
                 @forelse($books as $book)
                     <div class="h-full">
                         <x-book-card id="{{$book->isbn}}" :title="$book->title"
-                                     :author="$book->authors->first()->name ?? 'Autor Desconocido'"
+                                     :author="$book->authors->first()->name ?? 'Unknown Author'"
                                      :cover="$book->cover ?? 'https://via.placeholder.com/600x900'"
-                                     :rating="4.5" />
+                                     :rating="round($book->average_rating ?? 0, 1)" />
                     </div>
                 @empty
                     <div class="col-span-full text-center py-12">

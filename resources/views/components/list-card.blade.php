@@ -1,6 +1,6 @@
 @props(['list', 'dashboard' => false])
 
-<div
+<div x-data
     class="neo-card p-0 overflow-hidden group flex flex-col h-full hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all">
     <a href="{{ route('lists.show', $list->id) }}" class="block">
         <div class="h-32 bg-gray-200 border-b-2 border-black relative">
@@ -27,23 +27,30 @@
     </a>
     <div class="p-6 flex flex-col flex-grow">
         <div class="flex items-start justify-between mb-1 gap-2">
-            <a href="{{ route('lists.show', $list->id) }}" class="min-w-0">
+            <a href="{{ route('lists.show', $list->id) }}" class="min-w-0 flex-grow">
                 <h3 class="text-xl font-bold uppercase group-hover:text-brand-blue transition-colors truncate">
                     {{ $list->name }}
                 </h3>
             </a>
-            @if($dashboard && isset($list->visibility))
-                <span
-                    class="bg-gray-100 text-gray-800 text-[10px] font-bold uppercase px-1.5 py-0.5 border border-black whitespace-nowrap mt-1">
-                    {{ $list->visibility === 'public' ? 'Pública' : ($list->visibility === 'private' ? 'Privada' : 'Amigos') }}
-                </span>
-            @endif
+            <div class="flex items-center gap-3 flex-shrink-0">
+                @if($dashboard && isset($list->visibility))
+                    <span
+                        class="bg-gray-100 text-gray-800 text-[10px] font-bold uppercase px-1.5 py-0.5 border border-black whitespace-nowrap">
+                        {{ $list->visibility === 'public' ? 'Pública' : ($list->visibility === 'private' ? 'Privada' : 'Amigos') }}
+                    </span>
+                @endif
+
+                <!-- Botón de Me Gusta Genérico -->
+                <div class="relative z-10 scale-90 origin-right">
+                    <x-modals.like-button :item="$list" :url="route('dashboard.lists.toggle-like', $list)" />
+                </div>
+            </div>
         </div>
 
         <div class="flex items-center gap-2 mb-4">
             <div class="w-6 h-6 rounded-full bg-gray-300 border border-black overflow-hidden flex-shrink-0">
                 <img src="{{ $list->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($list->user->name ?? 'Usuario') . '&background=random' }}"
-                     class="w-full h-full object-cover">
+                    class="w-full h-full object-cover">
             </div>
             <span class="text-xs font-bold uppercase text-gray-600 truncate">por <span
                     class="text-black">{{ $list->user->name ?? 'Desconocido' }}</span></span>
@@ -54,24 +61,25 @@
             @if($dashboard)
                 <span class="text-gray-500 truncate ml-2">Actualizada {{ $list->updated_at->diffForHumans() }}</span>
             @else
-                <span class="text-gray-500 ml-2 whitespace-nowrap">{{ $list->created_at->translatedFormat('d M, Y') }}</span>
+                <span
+                    class="text-gray-500 ml-2 whitespace-nowrap">{{ $list->created_at->translatedFormat('d M, Y') }}</span>
             @endif
         </div>
 
         @if($dashboard)
+            <!-- Botones de Acción del Dashboard -->
             <div class="flex gap-2 mt-4 pt-4 border-t-2 border-dashed border-gray-300">
-                <a href="{{ route('lists.show', $list) }}"
-                   class="neo-btn-secondary py-1.5 px-3 text-xs flex-1 text-center">Ver</a>
+                <!-- <a href="{{ route('lists.show', $list) }}"
+                    class="neo-btn-secondary py-1.5 px-3 text-xs flex-1 text-center">Ver</a> -->
                 <button @click.prevent="$dispatch('open-delete-modal', {
-                                deleteUrl: '{{ route('dashboard.lists.destroy', $list) }}',
-                                title: '¿Eliminar lista?',
-                                message: '¿Estás seguro de que quieres eliminar esta lista? Esta acción es irreversible.'
-                            })"
-                        class="bg-red-100 border-2 border-black py-1.5 px-3 text-xs font-bold uppercase hover:bg-red-500 hover:text-white transition-colors">
+                                        deleteUrl: '{{ route('dashboard.lists.destroy', $list) }}',
+                                        title: '¿Eliminar lista?',
+                                        message: '¿Estás seguro de que quieres eliminar esta lista? Esta acción es irreversible.'
+                                    })"
+                    class="bg-red-100 border-2 border-black py-1.5 px-3 text-xs font-bold uppercase hover:bg-red-500 hover:text-white transition-colors">
                     Eliminar
                 </button>
             </div>
         @endif
     </div>
 </div>
-

@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>@yield('title', 'BlockBookster')</title>
 
-    <!-- Fonts: Space Grotesk + Inter -->
+    <!-- Fuentes: Space Grotesk + Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
@@ -19,29 +19,29 @@
 
 <body class="font-body bg-gray-50 text-black antialiased flex flex-col min-h-screen">
 
-    <header class="sticky top-0 z-50">
-        @include('components.navbar')
-    </header>
+<header class="sticky top-0 z-50">
+    @include('components.navbar')
+</header>
 
-    <main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        @if (session('status'))
-            <x-alert type="success" :message="session('status')" />
-        @endif
+<main class="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    @if (session('status'))
+        <x-alert type="success" :message="session('status')" />
+    @endif
 
-        @yield('content')
-    </main>
+    @yield('content')
+</main>
 
-    <footer>
-        @include('components.footer')
-    </footer>
+<footer>
+    @include('components.footer')
+</footer>
 
-    <div id="mobile-menu-container"></div>
+<div id="mobile-menu-container"></div>
 
-    <x-modals.add-to-list />
-    <x-modals.edit-review />
-    <x-modals.add-review />
-    <x-modals.delete-modal />
-    <x-modals.share-modal />
+<x-modals.add-to-list />
+<x-modals.edit-review />
+<x-modals.add-review />
+<x-modals.delete-modal />
+<x-modals.share-modal />
 </body>
 
 </html>

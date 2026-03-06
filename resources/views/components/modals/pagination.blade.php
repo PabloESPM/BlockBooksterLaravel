@@ -3,7 +3,7 @@
 @if ($paginator->hasPages())
     <div class="mt-16 flex justify-center items-center gap-2">
 
-        {{-- Previous --}}
+        {{-- Anterior --}}
         @if ($paginator->onFirstPage())
             <span class="w-10 h-10 flex items-center justify-center border-2 border-black bg-gray-100 font-bold text-gray-400 cursor-not-allowed">
                 &lt;
@@ -15,7 +15,7 @@
             </a>
         @endif
 
-        {{-- Page Numbers --}}
+        {{-- Números de página --}}
         @foreach ($paginator->getUrlRange(
             max(1, $paginator->currentPage() - 2),
             min($paginator->lastPage(), $paginator->currentPage() + 2)
@@ -32,7 +32,7 @@
             @endif
         @endforeach
 
-        {{-- Ellipsis + Last Page --}}
+        {{-- Puntos suspensivos + Última página --}}
         @if ($paginator->currentPage() + 2 < $paginator->lastPage())
             <span class="flex items-end font-bold px-2">...</span>
             <a href="{{ $paginator->url($paginator->lastPage()) }}"
@@ -41,7 +41,7 @@
             </a>
         @endif
 
-        {{-- Next --}}
+        {{-- Siguiente --}}
         @if ($paginator->hasMorePages())
             <a href="{{ $paginator->nextPageUrl() }}"
                class="w-10 h-10 flex items-center justify-center border-2 border-black bg-white font-bold hover:bg-black hover:text-white transition-colors">
@@ -55,3 +55,4 @@
 
     </div>
 @endif
+

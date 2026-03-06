@@ -9,7 +9,7 @@ use App\Models\Review;
 class ReviewController extends Controller
 {
     /**
-     * Display the user's reviews in the dashboard.
+     * Muestra las reseñas del usuario en el panel de control.
      */
     public function dashboardIndex()
     {
@@ -18,11 +18,11 @@ class ReviewController extends Controller
     }
 
     /**
-     * Update the specified resource in storage.
+     * Actualiza el recurso especificado en el almacenamiento.
      */
     public function update(UpdateReviewRequest $request, Review $review)
     {
-        // Ensure user owns the review
+        // Asegura que el usuario sea el propietario de la reseña
         if ($review->user_id !== auth()->id()) {
             abort(403);
         }
@@ -39,11 +39,11 @@ class ReviewController extends Controller
             ['rating' => $validated['rating']]
         );
 
-        return redirect()->back()->with('success', 'Review updated successfully!');
+        return redirect()->back()->with('success', '¡Reseña actualizada correctamente!');
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena un recurso recién creado en el almacenamiento.
      */
     public function store(StoreReviewRequest $request)
     {
@@ -62,26 +62,26 @@ class ReviewController extends Controller
             ['rating' => $validated['rating']]
         );
 
-        return redirect()->back()->with('success', 'Review published successfully!');
+        return redirect()->back()->with('success', '¡Reseña publicada correctamente!');
     }
 
     /**
-     * Remove the specified resource from storage.
+     * Elimina el recurso especificado del almacenamiento.
      */
     public function destroy(Review $review)
     {
-        // Ensure user owns the review
+        // Asegura que el usuario sea el propietario de la reseña
         if ($review->user_id !== auth()->id()) {
             abort(403);
         }
 
         $review->delete();
 
-        return redirect()->back()->with('success', 'Review deleted successfully!');
+        return redirect()->back()->with('success', '¡Reseña eliminada correctamente!');
     }
 
     /**
-     * Toggle the like status for a review.
+     * Alterna el estado de "me gusta" para una reseña.
      */
     public function toggleLike(\Illuminate\Http\Request $request, Review $review)
     {
@@ -107,3 +107,4 @@ class ReviewController extends Controller
         ]);
     }
 }
+
