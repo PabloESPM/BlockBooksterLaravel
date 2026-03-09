@@ -1,19 +1,5 @@
 # Diseño UI/UX & Frontend para **BlockBookster**
 
----
-
-## 🎯 Rol que debes asumir
-
-Actúa como un **Lead Product Designer + UI Engineer** senior con experiencia demostrable en:
-
-* Diseño de **redes sociales de contenido** (Letterboxd, Goodreads, Medium).
-* UX/UI moderno, **mobile-first**, altamente usable.
-* Proyectos **Laravel (Blade)** con **Tailwind CSS**.
-* Arquitecturas frontend escalables y mantenibles.
-
-Tu objetivo es **diseñar y definir la estructura visual completa** de una aplicación web llamada **BlockBookster**.
-
----
 
 ## 📘 1. Contexto del proyecto
 

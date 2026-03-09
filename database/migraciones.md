@@ -1,10 +1,8 @@
 # Create Tablas del Proyecto **BlockBookster**
 
-Este documento consolida **todas las migraciones del proyecto** en un formato limpio, consistente y orientado a documentación técnica.
 
-* Código **funcionalmente idéntico** al original.
+
 * Estilo **PSR-12 / Laravel**.
-* Comentarios preservados y ampliados cuando aporta claridad.
 * Bloques clasificados por **rol arquitectónico** (core, pivote, social, etc.).
 
 ---
