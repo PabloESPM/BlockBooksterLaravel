@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Panel de Administración - @yield('title', 'BlockBookster')</title>
+    <title>Panel de Administración - {{ $title ?? 'BlockBookster' }}</title>
 
     <!-- Fuentes -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -22,7 +22,7 @@
 <!-- Barra lateral -->
 <aside class="w-64 bg-black text-white flex-shrink-0 flex flex-col">
     <div class="p-6 border-b border-gray-800">
-        <a href="/"
+        <a href="/" wire:navigate
            class="text-2xl font-black font-display uppercase tracking-tighter text-white hover:text-brand-yellow transition-colors">
             BlockBookster
             <span class="text-xs block font-bold text-brand-blue">Panel de Administración</span>
@@ -30,37 +30,33 @@
     </div>
 
     <nav class="flex-1 overflow-y-auto py-4 space-y-1">
-        <a href="{{ route('admin.dashboard') }}"
+        <a href="{{ route('admin.dashboard') }}" wire:navigate
            class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('admin.dashboard') ? 'bg-brand-blue text-white' : '' }}">
             Panel principal
         </a>
 
         <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase mt-4">Contenido</div>
-        <a href="{{ route('admin.books.index') }}"
+        <a href="{{ route('admin.books.index') }}" wire:navigate
            class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('admin.books.*') ? 'bg-gray-900 border-l-4 border-brand-yellow' : '' }}">
             Libros
         </a>
-        <a href="{{ route('admin.authors.index') }}"
+        <a href="{{ route('admin.authors.index') }}" wire:navigate
            class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('admin.authors.*') ? 'bg-gray-900 border-l-4 border-brand-yellow' : '' }}">
             Autores
         </a>
 
         <div class="px-6 py-2 text-xs font-bold text-gray-500 uppercase mt-4">Comunidad</div>
-        <a href="{{ route('admin.users.index') }}"
+        <a href="{{ route('admin.users.index') }}" wire:navigate
            class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('admin.users.*') ? 'bg-gray-900 border-l-4 border-brand-yellow' : '' }}">
             Usuarios
         </a>
-        <a href="{{ route('admin.reviews.moderation') }}"
+        <a href="{{ route('admin.reviews.moderation') }}" wire:navigate
            class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('admin.reviews.*') ? 'bg-gray-900 border-l-4 border-brand-yellow' : '' }}">
             Moderación
         </a>
-        <a href="{{ route('admin.lists.reports') }}"
+        <a href="{{ route('admin.lists.reports') }}" wire:navigate
            class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('admin.lists.*') ? 'bg-gray-900 border-l-4 border-brand-yellow' : '' }}">
             Reportes
-        </a>
-        <a href="{{ route('home') }}"
-           class="block px-6 py-3 font-bold uppercase hover:bg-gray-900 {{ request()->routeIs('home.*') ? 'bg-gray-900 border-l-4 border-brand-yellow' : '' }}">
-            WEB
         </a>
     </nav>
 
@@ -69,7 +65,7 @@
             <div class="w-8 h-8 bg-brand-yellow rounded-full border border-white"></div>
             <div>
                 <div class="text-sm font-bold">{{ auth()->user()->name ?? 'Admin' }}</div>
-                <a href="/" class="text-xs text-brand-blue hover:underline">Volver al sitio -></a>
+                <a href="/" wire:navigate class="text-xs text-brand-blue hover:underline">Volver al sitio -></a>
             </div>
         </div>
     </div>
@@ -77,7 +73,7 @@
 
 <!-- Contenido principal -->
 <main class="flex-1 overflow-y-auto p-8">
-    @yield('content')
+    {{ $slot }}
 </main>
 
 </body>

@@ -64,42 +64,23 @@ Route::get('/forgot-password', function () {
 // Espacio de administracion
 // Panel Administracion
 Route::prefix('admin')->middleware(['auth'])->group(function () {
-    Route::get('/', function () {
-        return view('admin.dashboard');
-    })->name('admin.dashboard');
+    Route::livewire('/', 'admin.dashboard')->name('admin.dashboard');
 
     // Libros
-    Route::get('/books', function () {
-        return view('admin.books.index');
-    })->name('admin.books.index');
+    Route::livewire('/books', 'admin.books.index')->name('admin.books.index');
 
-    Route::get('/books/create', function () {
-        return view('admin.books.edit');
-    })->name('admin.books.create');
-
-    Route::get('/books/{id}/edit', function ($id) {
-        // Mock data usually passed here
-        return view('admin.books.edit');
-    })->name('admin.books.edit');
+    Route::livewire('/books/create', 'admin.books.edit')->name('admin.books.create');
+    Route::livewire('/books/{id}/edit', 'admin.books.edit')->name('admin.books.edit');
 
     // Autores
-    Route::get('/authors', function () {
-        return view('admin.authors.index');
-    })->name('admin.authors.index');
+    Route::livewire('/authors', 'admin.authors.index')->name('admin.authors.index');
 
     // Usuarios
-    Route::get('/users', function () {
-        return view('admin.users.index');
-    })->name('admin.users.index');
+    Route::livewire('/users', 'admin.users.index')->name('admin.users.index');
 
-    // Moderacion
-    Route::get('/reviews', function () {
-        return view('admin.reviews.moderation');
-    })->name('admin.reviews.moderation');
+    Route::livewire('/reviews', 'admin.reviews.moderation')->name('admin.reviews.moderation');
 
-    Route::get('/lists/reports', function () {
-        return view('admin.lists.reports');
-    })->name('admin.lists.reports');
+    Route::livewire('/lists/reports', 'admin.lists.reports')->name('admin.lists.reports');
 });
 
 // Paginas Estaticas
