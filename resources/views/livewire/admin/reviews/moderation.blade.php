@@ -2,6 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Review;
@@ -9,6 +10,7 @@ use App\Models\Review;
 new #[Layout('layouts.admin')] #[Title('Moderación de Reseñas')] class extends Component {
     use WithPagination;
 
+    #[On('deleteReview')]
     public function deleteReview($id)
     {
         $review = Review::find($id);
@@ -67,7 +69,7 @@ new #[Layout('layouts.admin')] #[Title('Moderación de Reseñas')] class extends
                 </div>
 
                 <div class="flex items-center gap-4">
-                    <button wire:click="deleteReview({{ $review->id }})"
+                    <button @click="$dispatch('open-delete-modal', { action: 'deleteReview', params: {{ $review->id }}, title: 'Eliminar Reseña', message: '¿Estás seguro de querer eliminar permanentemente esta reseña reportada?' })"
                         class="neo-btn-secondary py-1 px-4 text-xs bg-red-100 text-red-800 hover:bg-red-600 hover:text-white border-red-800 transition-colors">
                         Eliminar Reseña
                     </button>
@@ -89,7 +91,10 @@ new #[Layout('layouts.admin')] #[Title('Moderación de Reseñas')] class extends
         @endforelse
 
         <div class="mt-4">
-            {{ $reviews->links() }}
+            {{ $reviews->links('livewire.components.modals.pagination') }}
         </div>
     </div>
+
+    <!-- Modal de Eliminación -->
+    @include('livewire.components.modals.delete-modal')
 </div>

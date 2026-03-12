@@ -2,6 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\Book;
@@ -23,9 +24,10 @@ new #[Layout('layouts.admin')] #[Title('Gestión de Libros')] class extends Comp
         $this->resetPage();
     }
 
-    public function deleteBook($isbn)
+    #[On('deleteBook')]
+    public function deleteBook($id) // El objeto del evento usa la key 'id'
     {
-        $book = Book::find($isbn);
+        $book = Book::find($id);
         if ($book) {
             $book->delete();
             session()->flash("message", "Libro eliminado correctamente.");
@@ -122,8 +124,7 @@ new #[Layout('layouts.admin')] #[Title('Gestión de Libros')] class extends Comp
                             <div class="flex justify-end gap-3">
                                 <a href="{{ route('admin.books.edit', ['id' => $book->isbn]) }}"
                                    class="text-xs font-black uppercase text-brand-blue hover:underline">Editar</a>
-                                <button wire:click="deleteBook('{{ $book->isbn }}')" 
-                                        wire:confirm="¿Estás seguro que deseas eliminar este libro permanentemente?"
+                                <button @click="$dispatch('open-delete-modal', { action: 'deleteBook', params: '{{ $book->isbn }}', title: 'Eliminar Libro', message: '¿Estás seguro que deseas eliminar permanentemente este libro y todas sus reseñas asociadas? Esta acción no se puede deshacer.' })" 
                                         class="text-xs font-black uppercase text-red-600 hover:underline border-l border-gray-300 pl-3">
                                     Eliminar
                                 </button>
@@ -143,6 +144,9 @@ new #[Layout('layouts.admin')] #[Title('Gestión de Libros')] class extends Comp
 
     <!-- Paginación -->
     <div class="mt-4">
-        {{ $books->links() }}
+        {{ $books->links('livewire.components.modals.pagination') }}
     </div>
+
+    <!-- Modal Neo-Brutalista de Eliminación -->
+    @include('livewire.components.modals.delete-modal')
 </div>

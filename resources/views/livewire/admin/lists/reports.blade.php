@@ -2,6 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 use App\Models\FavList;
@@ -9,6 +10,7 @@ use App\Models\FavList;
 new #[Layout('layouts.admin')] #[Title('Listas Reportadas')] class extends Component {
     use WithPagination;
 
+    #[On('deleteList')]
     public function deleteList($id)
     {
         $list = FavList::find($id);
@@ -58,7 +60,7 @@ new #[Layout('layouts.admin')] #[Title('Listas Reportadas')] class extends Compo
                 </p>
 
                 <div class="flex items-center gap-4 mt-auto">
-                    <button wire:click="deleteList({{ $list->id }})" wire:confirm="¿Seguro que deseas eliminar la lista?"
+                    <button @click="$dispatch('open-delete-modal', { action: 'deleteList', params: {{ $list->id }}, title: 'Eliminar Lista', message: '¿Seguro que deseas eliminar esta lista permanentemente?' })"
                         class="neo-btn-secondary py-1 px-4 text-xs bg-red-600 text-white hover:bg-red-700 border-black transition-colors">
                         Eliminar Lista
                     </button>
@@ -80,6 +82,9 @@ new #[Layout('layouts.admin')] #[Title('Listas Reportadas')] class extends Compo
     </div>
     
     <div class="mt-8">
-        {{ $lists->links() }}
+        {{ $lists->links('livewire.components.modals.pagination') }}
     </div>
+
+    <!-- Modal de Eliminación -->
+    @include('livewire.components.modals.delete-modal')
 </div>

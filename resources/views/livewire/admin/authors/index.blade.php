@@ -3,6 +3,7 @@
 use Livewire\Component;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use Livewire\WithPagination;
 use App\Models\Author;
 
@@ -13,6 +14,7 @@ class extends Component {
 
     use WithPagination;
 
+    #[On('deleteAuthor')]
     public function deleteAuthor($id)
     {
         $author = Author::find($id);
@@ -29,11 +31,13 @@ class extends Component {
         }
     }
 
-    public function authors()
+    public function with()
     {
-        return Author::withCount('books')
-            ->orderBy('name')
-            ->paginate(12);
+        return [
+            'authors' => Author::withCount('books')
+                ->orderBy('name')
+                ->paginate(12)
+        ];
     }
 };
 ?>
@@ -55,7 +59,7 @@ class extends Component {
 
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
 
-        @forelse($this->authors() as $author)
+        @forelse($authors as $author)
 
             <x-card class="group" wire:key="author-{{ $author->id }}">
 
@@ -89,8 +93,7 @@ class extends Component {
                     </button>
 
                     <button
-                        wire:click="deleteAuthor({{ $author->id }})"
-                        wire:confirm="¿Estás seguro de que deseas eliminar este autor?"
+                        @click="$dispatch('open-delete-modal', { action: 'deleteAuthor', params: {{ $author->id }}, title: 'Eliminar Autor', message: '¿Estás seguro de que deseas eliminar permanentemente a este autor y todos los libros asociados de su lista?' })"
                         class="bg-red-50 border-2 border-black px-3 py-1 text-xs font-bold uppercase text-red-600 hover:bg-red-600 hover:text-white transition-colors">
 
                         Eliminar
@@ -112,7 +115,9 @@ class extends Component {
     </div>
 
     <div class="mt-6">
-        {{ $this->authors()->links() }}
+        {{ $authors->links('livewire.components.modals.pagination') }}
     </div>
 
+    <!-- Modal de Eliminación -->
+    @include('livewire.components.modals.delete-modal')
 </div>

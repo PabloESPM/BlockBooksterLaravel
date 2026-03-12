@@ -2,6 +2,7 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Models\Book;
 use App\Models\Author;
@@ -82,7 +83,8 @@ new #[Layout('layouts.admin')] #[Title('Formulario de Libro')] class extends Com
         return $this->redirectRoute('admin.books.index');
     }
 
-    public function deleteBook()
+    #[On('deleteBook')]
+    public function deleteBook($id = null)
     {
         if ($this->book) {
             $this->book->delete();
@@ -219,8 +221,7 @@ new #[Layout('layouts.admin')] #[Title('Formulario de Libro')] class extends Com
                 <button wire:click="save" class="w-full neo-btn-primary py-4 text-lg">Guardar Cambios</button>
                 
                 @if($book)
-                <button wire:click="deleteBook"
-                    wire:confirm="¿Estás seguro de que deseas eliminar este libro permanentemente?"
+                <button type="button" @click="$dispatch('open-delete-modal', { action: 'deleteBook', title: 'Eliminar Libro', message: '¿Estás seguro de que deseas eliminar este libro permanentemente?' })"
                     class="w-full bg-white border-2 border-black py-4 font-black uppercase hover:bg-red-50 hover:text-red-600 hover:border-red-600 transition-colors">
                     Eliminar Libro
                 </button>
@@ -228,4 +229,7 @@ new #[Layout('layouts.admin')] #[Title('Formulario de Libro')] class extends Com
             </div>
         </div>
     </div>
+
+    <!-- Modal de Eliminación -->
+    @include('livewire.components.modals.delete-modal')
 </div>
