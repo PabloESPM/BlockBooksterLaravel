@@ -9,8 +9,19 @@
         <div class="md:col-span-4 lg:col-span-3">
             <div class="neo-card p-0 relative group">
                 <div class="aspect-[2/3] bg-gray-200 border-b-2 border-black relative overflow-hidden">
-                    @if($book->cover)
-                        <img src="{{ $book->cover }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
+                    @php
+                        $realCover = null;
+                        if ($book->cover_path) {
+                            $realCover = \Illuminate\Support\Facades\Storage::url($book->cover_path);
+                        } elseif ($book->cover_image) {
+                            $realCover = $book->cover_image;
+                        } elseif ($book->cover) {
+                            $realCover = $book->cover;
+                        }
+                    @endphp
+
+                    @if($realCover)
+                        <img src="{{ $realCover }}" alt="{{ $book->title }}" class="w-full h-full object-cover">
                     @else
                         <!-- Portada de ejemplo -->
                         <div class="absolute inset-0 flex items-center justify-center bg-brand-yellow">
@@ -40,7 +51,7 @@
                         <h2 class="text-xl font-bold uppercase text-gray-600">por
                             @foreach($book->authors as $author)
                                 <a href="{{ route('authors.show', $author->id) }}"
-                                    class="text-brand-blue hover:underline">{{ $author->name }}</a>{{ !$loop->last ? ',' : '' }}
+                                    class="text-brand-blue hover:underline">{{ $author->name }} {{ $author->surname }}</a>{{ !$loop->last ? ',' : '' }}
                             @endforeach
                         </h2>
                     </div>

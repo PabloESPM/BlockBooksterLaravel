@@ -72,6 +72,33 @@ new #[Layout('layouts.admin')] #[Title('Editar Usuario')] class extends Componen
         session()->flash('success', '¡Perfil de usuario actualizado correctamente!');
     }
 
+    public function deleteAvatar()
+    {
+        // 1. Comprobar si tiene avatar personalizado (no nulo y distinto al gravatar de UI)
+        if ($this->user->avatar && !str_contains($this->user->avatar, 'ui-avatars.com')) {
+            // Extraer el path relativo para el disco 'public' eliminando '/storage/' si está presente en la URL
+            $relativePath = str_replace('/storage/', '', $this->user->avatar);
+            $disco = \Illuminate\Support\Facades\Storage::disk('public');
+            
+            // Si el archivo existe físicamente en storage/app/public/..., lo borramos
+            if ($disco->exists($relativePath)) {
+                $disco->delete($relativePath);
+
+                // Borramos también la subcarpeta del usuario (siendo 'userimg/nombre_usuario') si quedó vacía
+                $carpeta = dirname($relativePath);
+                if ($carpeta !== 'userimg' && $disco->exists($carpeta) && count($disco->files($carpeta)) === 0) {
+                    $disco->deleteDirectory($carpeta);
+                }
+            }
+        }
+
+        // 2. Limpiamos la base de datos (esto obligará a usar el UI-Avatar automático por defecto)
+        $this->user->avatar = null;
+        $this->user->save();
+
+        session()->flash('success', 'El avatar ha sido eliminado por moderación.');
+    }
+
     #[On('deleteProfile')]
     public function deleteProfile($id = null)
     {
@@ -230,9 +257,18 @@ new #[Layout('layouts.admin')] #[Title('Editar Usuario')] class extends Componen
         <!-- Barra Lateral Informativa -->
         <div class="w-full lg:w-80 space-y-6">
             <div class="bg-white border-2 border-black p-6 shadow-[4px_4px_0px_#000] text-center">
-                <div class="w-32 h-32 mx-auto bg-gray-200 rounded-full border-4 border-black mb-4 overflow-hidden">
+                <div class="w-32 h-32 mx-auto bg-gray-200 rounded-full border-4 border-black mb-4 overflow-hidden relative group">
                     <img src="{{ $user->avatar ?? 'https://ui-avatars.com/api/?name='.urlencode($user->name).'&background=random' }}" class="w-full h-full object-cover">
                 </div>
+                
+                @if($user->avatar && !str_contains($user->avatar, 'ui-avatars.com'))
+                    <button wire:click="deleteAvatar"
+                        class="text-xs font-black uppercase text-red-600 hover:text-white hover:bg-red-600 border border-red-600 px-3 py-1 neo-transition mb-4 w-full"
+                        title="Eliminar avatar por contenido inapropiado">
+                        Eliminar Avatar (Moderación)
+                    </button>
+                @endif
+                
                 <h3 class="font-black text-xl uppercase">{{ $user->name }}</h3>
                 <p class="text-sm font-mono text-gray-500 mb-4">{{ $user->email }}</p>
                 

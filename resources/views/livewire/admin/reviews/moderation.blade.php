@@ -10,6 +10,13 @@ use App\Models\Review;
 new #[Layout('layouts.admin')] #[Title('Moderación de Reseñas')] class extends Component {
     use WithPagination;
 
+    public $search = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     #[On('deleteReview')]
     public function deleteReview($id)
     {
@@ -31,6 +38,16 @@ new #[Layout('layouts.admin')] #[Title('Moderación de Reseñas')] class extends
         return [
             // Cargamos con relations para evitar N+1
             'reviews' => Review::with(['user', 'book'])
+                ->when($this->search, function ($query) {
+                    $query->where(function ($q) {
+                        $q->whereHas('user', function ($userQuery) {
+                              $userQuery->whereLikeAccentInsensitive('name', $this->search);
+                        })
+                        ->orWhereHas('book', function ($bookQuery) {
+                              $bookQuery->whereLikeAccentInsensitive('title', $this->search);
+                        });
+                    });
+                })
                 ->orderBy('created_at', 'desc')
                 ->paginate(10)
         ];
@@ -46,6 +63,12 @@ new #[Layout('layouts.admin')] #[Title('Moderación de Reseñas')] class extends
             {{ session('message') }}
         </div>
     @endif
+
+    <!-- Filtros Búsqueda -->
+    <div class="bg-white border-2 border-black p-4 mb-8 flex gap-4">
+        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Buscar por usuario o título del libro..."
+            class="neo-input flex-1 bg-white">
+    </div>
 
     <div class="grid grid-cols-1 gap-6">
         @forelse($reviews as $review)

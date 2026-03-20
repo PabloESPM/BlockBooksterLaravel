@@ -7,22 +7,30 @@
         aria-label="View {{ $title }}"></a>
     <!-- Imagen de portada (ratio de aspecto 2:3) -->
     <div class="aspect-[2/3] w-full border-b-2 border-black relative overflow-hidden bg-gray-100">
-        <img src="{{ $cover ?? 'https://via.placeholder.com/300x450' }}" alt="{{ $title }}"
-            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
-            loading="lazy">
-
-        <!-- Hard Badge for Rating -->
+        <!-- Hard Badge for Rating e Imagen Dinámica -->
         @php
-            $bookForRating = \App\Models\Book::with('reviews')->find($id);
-            $totalReviewsForRating = $bookForRating ? $bookForRating->reviews->count() : 0;
+            $bookEntity = \App\Models\Book::with('reviews')->find($id);
+            $totalReviewsForRating = $bookEntity ? $bookEntity->reviews->count() : 0;
 
             if ($totalReviewsForRating > 0) {
-                $sum = $bookForRating->reviews->sum('rating');
+                $sum = $bookEntity->reviews->sum('rating');
                 $averageRating = round(($sum / $totalReviewsForRating) * 2) / 2;
             } else {
                 $averageRating = $rating > 0 ? round($rating * 2) / 2 : 0;
             }
+
+            // Resolver la portada real
+            $realCover = 'https://via.placeholder.com/300x450';
+            if ($bookEntity && $bookEntity->cover_path) {
+                $realCover = \Illuminate\Support\Facades\Storage::url($bookEntity->cover_path);
+            } elseif (!empty($cover) && str_starts_with($cover, 'http')) {
+                $realCover = $cover;
+            }
         @endphp
+
+        <img src="{{ $realCover }}" alt="{{ $title }}"
+            class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-300"
+            loading="lazy">
 
         @if($averageRating > 0)
             <div class="absolute top-2 right-2 bg-brand-yellow border-2 border-black px-2 py-1 font-bold text-xs shadow-sm">

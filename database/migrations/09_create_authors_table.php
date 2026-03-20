@@ -19,6 +19,7 @@ return new class extends Migration
             $table->date('birth_date')->nullable();
             $table->foreignId('country_id')->nullable()->constrained()->onDelete('set null');
             $table->text('biography')->nullable();
+            $table->string('photo_url')->nullable();
 
             $table->timestamps();
         });

@@ -9,6 +9,20 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 class Author extends Model
 {
     use HasFactory;
+
+    /**
+     * Campos permitidos para asignación masiva (Author::create / Author::fill)
+     * según la migración: 09_create_authors_table.php
+     */
+    protected $fillable = [
+        'name',
+        'surname',
+        'birth_date',
+        'country_id',
+        'biography',
+        'photo_url',
+    ];
+
     public function books()
     {
         return $this->belongsToMany(

@@ -74,6 +74,8 @@ Route::prefix('admin')->middleware(['auth'])->group(function () {
 
     // Autores
     Route::livewire('/authors', 'admin.authors.index')->name('admin.authors.index');
+    Route::livewire('/authors/create', 'admin.authors.edit')->name('admin.authors.create');
+    Route::livewire('/authors/{id}/edit', 'admin.authors.edit')->name('admin.authors.edit');
 
     // Usuarios
     Route::livewire('/users', 'admin.users.index')->name('admin.users.index');

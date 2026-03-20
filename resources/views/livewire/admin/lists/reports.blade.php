@@ -10,6 +10,13 @@ use App\Models\FavList;
 new #[Layout('layouts.admin')] #[Title('Listas Reportadas')] class extends Component {
     use WithPagination;
 
+    public $search = '';
+
+    public function updatingSearch()
+    {
+        $this->resetPage();
+    }
+
     #[On('deleteList')]
     public function deleteList($id)
     {
@@ -29,7 +36,17 @@ new #[Layout('layouts.admin')] #[Title('Listas Reportadas')] class extends Compo
     {
         return [
             // Listas recientes representamos como reportadas para el ejemplo
-            'lists' => FavList::with('user')->orderBy('created_at', 'desc')->paginate(10)
+            'lists' => FavList::with('user')
+                ->when($this->search, function ($query) {
+                    $query->where(function ($q) {
+                        $q->whereLikeAccentInsensitive('name', $this->search)
+                          ->orWhereHas('user', function ($userQuery) {
+                              $userQuery->whereLikeAccentInsensitive('name', $this->search);
+                          });
+                    });
+                })
+                ->orderBy('created_at', 'desc')
+                ->paginate(10)
         ];
     }
 };
@@ -43,6 +60,12 @@ new #[Layout('layouts.admin')] #[Title('Listas Reportadas')] class extends Compo
             {{ session('message') }}
         </div>
     @endif
+
+    <!-- Filtros Búsqueda -->
+    <div class="bg-white border-2 border-black p-4 mb-8 flex gap-4">
+        <input type="text" wire:model.live.debounce.300ms="search" placeholder="Buscar por título de la lista o usuario..."
+            class="neo-input flex-1 bg-white">
+    </div>
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         @forelse($lists as $list)

@@ -15,8 +15,14 @@
             <div class="flex-shrink-0">
                 <div
                     class="w-48 h-48 bg-gray-300 rounded-full border-4 border-black shadow-[8px_8px_0px_#000] overflow-hidden">
-                    <img src="{{ $author->photo ?? 'https://ui-avatars.com/api/?name=' . urlencode($author->name) . '&background=random&size=256' }}"
-                         alt="{{ $author->name }}" class="w-full h-full object-cover">
+                    @php
+                        $authorPhoto = 'https://ui-avatars.com/api/?name=' . urlencode($author->name . ' ' . $author->surname) . '&background=random&size=256';
+                        if ($author->photo_url) {
+                            $authorPhoto = \Illuminate\Support\Facades\Storage::url($author->photo_url);
+                        }
+                    @endphp
+                    <img src="{{ $authorPhoto }}"
+                         alt="{{ $author->name }} {{ $author->surname }}" class="w-full h-full object-cover">
                 </div>
             </div>
 
