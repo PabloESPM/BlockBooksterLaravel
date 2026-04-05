@@ -30,9 +30,19 @@ class User extends Authenticatable
         'location',
         'website',
         'twitter',
+        'is_blocked',
     ];
 
     protected $hidden = ['password', 'remember_token'];
+
+    protected function casts(): array
+    {
+        return [
+            'email_verified_at' => 'datetime',
+            'password' => 'hashed',
+            'is_blocked' => 'boolean',
+        ];
+    }
 
     /* Relaciones */
 
@@ -58,12 +68,12 @@ class User extends Authenticatable
 
     public function followers()
     {
-        return $this->hasMany(Follow::class, 'followed_id');
+        return $this->hasMany(Follow::class , 'followed_id');
     }
 
     public function following()
     {
-        return $this->hasMany(Follow::class, 'follower_id');
+        return $this->hasMany(Follow::class , 'follower_id');
     }
 
     /**
@@ -88,7 +98,15 @@ class User extends Authenticatable
      */
     public function followedAuthors()
     {
-        return $this->belongsToMany(Author::class, 'author_followers', 'user_id', 'author_id')->withTimestamps();
+        return $this->belongsToMany(Author::class , 'author_followers', 'user_id', 'author_id')->withTimestamps();
+    }
+
+    /**
+     * Listas seguidas (con like) por este usuario.
+     */
+    public function likedLists()
+    {
+        return $this->belongsToMany(FavList::class , 'list_likes', 'user_id', 'list_id')->withTimestamps();
     }
 
     /**
@@ -97,6 +115,14 @@ class User extends Authenticatable
     public function isFollowingAuthor(Author $author): bool
     {
         return $this->followedAuthors()->where('author_id', $author->id)->exists();
+    }
+
+    /**
+     * Check if this user is following (liked) a list.
+     */
+    public function isFollowingList(FavList $list): bool
+    {
+        return $this->likedLists()->where('list_id', $list->id)->exists();
     }
 
     /**
@@ -130,5 +156,20 @@ class User extends Authenticatable
     {
         return $this->followedAuthors()->detach($author->id);
     }
-}
 
+    /**
+     * Seguir una lista (dar like).
+     */
+    public function followList(FavList $list)
+    {
+        return $this->likedLists()->attach($list->id);
+    }
+
+    /**
+     * Dejar de seguir una lista (quitar like).
+     */
+    public function unfollowList(FavList $list)
+    {
+        return $this->likedLists()->detach($list->id);
+    }
+}

@@ -9,6 +9,7 @@ use App\Models\FavList;
 use App\Models\Follow;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 
 class FollowController extends Controller
 {
@@ -17,7 +18,7 @@ class FollowController extends Controller
      */
     public function index()
     {
-        //
+    //
     }
 
     /**
@@ -25,7 +26,7 @@ class FollowController extends Controller
      */
     public function create()
     {
-        //
+    //
     }
 
     /**
@@ -33,7 +34,7 @@ class FollowController extends Controller
      */
     public function store(StoreFollowRequest $request)
     {
-        //
+    //
     }
 
     /**
@@ -41,7 +42,7 @@ class FollowController extends Controller
      */
     public function show(Follow $follow)
     {
-        //
+    //
     }
 
     /**
@@ -49,7 +50,7 @@ class FollowController extends Controller
      */
     public function edit(Follow $follow)
     {
-        //
+    //
     }
 
     /**
@@ -57,7 +58,7 @@ class FollowController extends Controller
      */
     public function update(UpdateFollowRequest $request, Follow $follow)
     {
-        //
+    //
     }
 
     /**
@@ -65,7 +66,7 @@ class FollowController extends Controller
      */
     public function destroy(Follow $follow)
     {
-        //
+    //
     }
 
     /**
@@ -73,7 +74,7 @@ class FollowController extends Controller
      */
     public function toggleUser(User $user): JsonResponse
     {
-        $auth = auth()->user();
+        $auth = Auth::user();
 
         if ($auth->id === $user->id) {
             return response()->json(['error' => 'No puedes seguirte a ti mismo.'], 403);
@@ -82,7 +83,8 @@ class FollowController extends Controller
         if ($auth->isFollowing($user)) {
             $auth->unfollow($user);
             $following = false;
-        } else {
+        }
+        else {
             $auth->follow($user);
             $following = true;
         }
@@ -95,12 +97,13 @@ class FollowController extends Controller
      */
     public function toggleAuthor(Author $author): JsonResponse
     {
-        $auth = auth()->user();
+        $auth = Auth::user();
 
         if ($auth->isFollowingAuthor($author)) {
             $auth->unfollowAuthor($author);
             $following = false;
-        } else {
+        }
+        else {
             $auth->followAuthor($author);
             $following = true;
         }
@@ -113,8 +116,19 @@ class FollowController extends Controller
      */
     public function toggleList(FavList $list): JsonResponse
     {
-        // TODO: implementar cuando se añada la relación de seguimiento a Lista
-        return response()->json(['following' => true]);
+        $auth = Auth::user();
+        
+        if ($auth->isFollowingList($list)) {
+            $auth->unfollowList($list);
+            $following = false;
+        } else {
+            $auth->followList($list);
+            $following = true;
+        }
+
+        return response()->json([
+            'following' => $following,
+            'likes_count' => $list->likes()->count()
+        ]);
     }
 }
-

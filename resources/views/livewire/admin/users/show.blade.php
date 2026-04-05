@@ -114,6 +114,22 @@ new #[Layout('layouts.admin')] #[Title('Editar Usuario')] class extends Componen
         return $this->redirectRoute('admin.users.index', navigate: true);
     }
 
+    #[On('toggleBlockStatus')]
+    public function toggleBlockStatus()
+    {
+        // Seguridad: evitarmos auto-bloqueos
+        if ($this->user->id === auth()->id()) {
+            session()->flash('error', 'No puedes bloquearte a ti mismo.');
+            return;
+        }
+
+        $this->user->is_blocked = !$this->user->is_blocked;
+        $this->user->save();
+
+        $actionWord = $this->user->is_blocked ? 'bloqueado' : 'desbloqueado';
+        session()->flash('success', "El usuario ha sido {$actionWord} exitosamente.");
+    }
+
     public function with()
     {
         return [
@@ -241,11 +257,34 @@ new #[Layout('layouts.admin')] #[Title('Editar Usuario')] class extends Componen
                 </form>
             </div>
 
-            <!-- Zona de Peligro -->
-            <div class="border-2 border-red-600 p-6 bg-red-50 shadow-[4px_4px_0px_#dc2626]">
-                <h3 class="font-black text-lg uppercase mb-4 text-red-600">Eliminación de Cuenta</h3>
-                <p class="text-sm font-bold text-gray-800 mb-6">Al eliminar esta cuenta, se borrará toda su información asociada permanentemente. Esta acción no se puede deshacer.</p>
-                <div class="flex justify-start">
+            <!-- Zona de Peligro & Bloqueo -->
+            <div class="{{ $user->is_blocked ? 'bg-orange-50 border-orange-500' : 'bg-red-50 border-red-600' }} border-2 p-6 shadow-[4px_4px_0px_{{ $user->is_blocked ? '#f97316' : '#dc2626' }}] transition-colors">
+                <h3 class="font-black text-lg uppercase mb-4 {{ $user->is_blocked ? 'text-orange-600' : 'text-red-600' }}">
+                    {{ $user->is_blocked ? 'Gestión de Acceso (Usuario Bloqueado)' : 'Zona de Peligro y Restricción' }}
+                </h3>
+                <p class="text-sm font-bold text-gray-800 mb-6">
+                    @if($user->is_blocked)
+                        Este usuario está baneado y no puede acceder a la plataforma. ¿Deseas restablecer su acceso completo?
+                    @else
+                        Eliminar una cuenta o restringir el acceso temporalmente afectará directamente la capacidad del usuario para publicar contenido e iniciar sesión en BooksterBlock. 
+                        <strong>El bloqueo mantendrá sus datos íntegros impidiendo accesos mediante email o teléfono único.</strong>
+                    @endif
+                </p>
+                <div class="flex justify-start gap-4">
+                    {{-- Botón de Bloqueo/Desbloqueo --}}
+                    @if($user->is_blocked)
+                    <button @click="$dispatch('open-block-modal', { action: 'toggleBlockStatus', isBlocking: false, title: '¿Desbloquear Usuario?', message: 'Se reestablecerá inmediatamente el acceso normal a {{ $user->name }}.' })"
+                            class="bg-green-500 text-white font-black uppercase px-6 py-2 border-2 border-black shadow-[2px_2px_0px_#000] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] transition-all">
+                        Desbloquear {{ $user->name }}
+                    </button>
+                    @else
+                    <button @click="$dispatch('open-block-modal', { action: 'toggleBlockStatus', isBlocking: true, title: '¿Bloquear Usuario?', message: 'Esto le negará el acceso a la plataforma al usuario impidiéndole iniciar sesión por completo.' })"
+                            class="bg-orange-500 text-white font-black uppercase px-6 py-2 border-2 border-black shadow-[2px_2px_0px_#000] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] transition-all">
+                        Bloquear {{ $user->name }}
+                    </button>
+                    @endif
+
+                    {{-- Botón de Eliminación (Solo visible si no está bloqueado para no amontonar, o siempre visible, depende diseño) --}}
                     <button @click="$dispatch('open-delete-modal', { action: 'deleteProfile', title: 'Eliminar Usuario', message: '¿Estás seguro de que deseas eliminar permanentemente a este usuario? Esta acción borrará todas sus listas, reviews y likes.' })"
                             class="bg-red-600 text-white font-black uppercase px-6 py-2 border-2 border-black shadow-[2px_2px_0px_#000] hover:translate-y-[-1px] hover:shadow-[4px_4px_0px_#000] transition-all">
                         Eliminar {{ $user->name }}
@@ -288,4 +327,6 @@ new #[Layout('layouts.admin')] #[Title('Editar Usuario')] class extends Componen
 
     <!-- Modal Neo-Brutalista de Eliminación -->
     @include('livewire.components.modals.delete-modal')
+    <!-- Modal Neo-Brutalista de Bloqueo -->
+    @include('livewire.components.modals.block-modal')
 </div>

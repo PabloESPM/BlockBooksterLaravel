@@ -51,12 +51,7 @@
         @auth
             @if(auth()->id() !== $user->id)
                 <div class="flex-shrink-0">
-                    <x-modals.follow-modal
-                        :followableId="$user->id"
-                        followableType="user"
-                        :isFollowing="auth()->user()->isFollowing($user)"
-                        :followUrl="route('users.follow', $user)"
-                    />
+                    <livewire:components.follow-button :model="$user" type="user" />
                 </div>
             @endif
         @endauth

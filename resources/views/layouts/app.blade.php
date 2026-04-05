@@ -29,7 +29,11 @@
         <x-alert type="success" :message="session('status')" />
     @endif
 
-    @yield('content')
+    @if(isset($slot))
+        {{ $slot }}
+    @else
+        @yield('content')
+    @endif
 </main>
 
 <footer>

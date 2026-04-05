@@ -29,11 +29,19 @@
 
     <!-- Tarjeta de autenticación -->
     <div class="bg-white border-4 border-black shadow-[8px_8px_0px_0px_rgba(0,0,0,1)] p-8">
-        @yield('content')
+        @if(isset($slot))
+            {{ $slot }}
+        @else
+            @yield('content')
+        @endif
 
-        @if(View::hasSection('footer-link'))
+        @if(isset($footer) || View::hasSection('footer-link'))
             <div class="mt-8 pt-4 border-t-2 border-black text-center text-sm font-bold">
-                @yield('footer-link')
+                @isset($footer)
+                    {{ $footer }}
+                @else
+                    @yield('footer-link')
+                @endisset
             </div>
         @endif
     </div>

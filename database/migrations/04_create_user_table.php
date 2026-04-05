@@ -20,7 +20,7 @@ return new class extends Migration {
             $table->string('avatar')->nullable();
             $table->text('bio')->nullable();
 
-            $table->string('telephone');
+            $table->string('telephone')->unique();
             $table->string('password');
             $table->date('date_of_birth');
 
@@ -40,6 +40,7 @@ return new class extends Migration {
                 'private'
             ])->default('public');
 
+            $table->boolean('is_blocked')->default(false);
             $table->rememberToken();
             $table->timestamps();
 
