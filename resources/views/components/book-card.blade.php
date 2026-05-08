@@ -47,7 +47,7 @@
         <!-- Botones de Acción Lista y Reseña-->
         <div class="mt-auto pt-2 border-t-2 border-black/10 flex justify-between items-center relative z-20">
             @auth
-                <button @click.prevent="$dispatch('open-add-to-list-modal', { bookId: '{{ $id }}' })"
+                <button @click.prevent="Livewire.dispatch('open-add-to-list-modal', { bookId: '{{ $id }}' })"
                     class="text-xs font-bold uppercase hover:bg-brand-yellow hover:text-black px-2 py-1 -ml-2 transition-colors">
                     + Lista
                 </button>
@@ -55,7 +55,7 @@
                 <div></div> <!-- espacio -->
             @endauth
             @auth
-                <button @click.prevent="$dispatch('open-add-review-modal', { bookId: '{{ $id }}' })"
+                <button @click.prevent="Livewire.dispatch('open-add-review-modal', { bookId: '{{ $id }}' })"
                     class="text-xs font-bold uppercase hover:bg-brand-blue hover:text-white px-2 py-1 -mr-2 transition-colors">
                     + Reseña
                 </button>

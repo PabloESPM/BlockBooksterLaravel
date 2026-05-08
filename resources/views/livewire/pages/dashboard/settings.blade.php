@@ -1,13 +1,33 @@
-@extends('layouts.app')
+<?php
+/**
+ * Página Livewire SFC — Configuración de Cuenta
+ *
+ * Muestra los formularios de seguridad (email, contraseña), privacidad
+ * del perfil y la zona de peligro (eliminar cuenta).
+ * Absorbe la lógica de DashboardController@settings.
+ *
+ * Los formularios envían POST clásico a DashboardController — NO se
+ * convierten a wire:submit.
+ */
 
-@section('title', 'Configuración de Cuenta')
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Component;
 
-@section('content')
+new #[Layout('layouts.app')] #[Title('Configuración de Cuenta')] class extends Component {
+
+    public function mount(): void
+    {
+        if (auth()->guest()) {
+            $this->redirectRoute('login', navigate: true);
+        }
+    }
+}; ?>
+
+<div>
     <div class="flex flex-col lg:flex-row gap-8">
-        <!-- Barra Lateral -->
-        @include('pages.dashboard.partials.sidebar')
+        @include('livewire.pages.dashboard.partials.sidebar')
 
-        <!-- Contenido Principal -->
         <div class="flex-1">
             <header class="mb-8 border-b-4 border-black pb-4">
                 <h1 class="text-3xl font-black uppercase font-display">Configuración de Cuenta</h1>
@@ -15,14 +35,13 @@
             </header>
 
             <div class="space-y-8">
-                <!-- Email y Contraseña -->
+                {{-- Email y Contraseña --}}
                 <x-card>
                     <h3 class="font-black text-lg uppercase mb-6 flex items-center gap-2">
                         <span class="w-3 h-3 bg-brand-blue border border-black"></span>
                         Inicio de Sesión y Seguridad
                     </h3>
 
-                    {{-- Mensaje de éxito tras actualizar credenciales --}}
                     @if(session('success'))
                         <div class="mb-6 p-4 bg-green-100 border-2 border-green-600 text-green-700 font-bold uppercase text-sm">
                             {{ session('success') }}
@@ -33,7 +52,6 @@
                         @csrf
                         @method('PUT')
 
-                        {{-- Campo: Correo Electrónico --}}
                         <div>
                             <label class="block text-xs font-bold uppercase mb-2">Correo Electrónico</label>
                             <input type="email" name="email" value="{{ old('email', auth()->user()->email) }}"
@@ -43,7 +61,6 @@
                             @enderror
                         </div>
 
-                        {{-- Campo: Número de Teléfono --}}
                         <div>
                             <label class="block text-xs font-bold uppercase mb-2">Número de Teléfono</label>
                             <input type="tel" name="telephone" value="{{ old('telephone', auth()->user()->telephone) }}"
@@ -53,7 +70,6 @@
                             @enderror
                         </div>
 
-                        {{-- Campos: Nueva Contraseña (opcional) --}}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-4 border-t border-gray-200">
                             <div>
                                 <label class="block text-xs font-bold uppercase mb-2">Nueva Contraseña</label>
@@ -76,26 +92,23 @@
                     </form>
                 </x-card>
 
-                <!-- Privacidad del Perfil -->
+                {{-- Privacidad del Perfil --}}
                 <x-card>
                     <h3 class="font-black text-lg uppercase mb-6 flex items-center gap-2">
                         <span class="w-3 h-3 bg-brand-yellow border border-black"></span>
                         Privacidad del Perfil
                     </h3>
 
-                    {{-- Mensaje de éxito --}}
                     @if(session('privacy_success'))
                         <div class="mb-6 p-4 bg-green-100 border-2 border-green-600 text-green-700 font-bold uppercase text-sm">
                             {{ session('privacy_success') }}
                         </div>
                     @endif
 
-                    {{-- Formulario de visibilidad del perfil --}}
                     <form action="{{ route('dashboard.settings.privacy') }}" method="POST" class="space-y-3">
                         @csrf
                         @method('PUT')
 
-                        {{-- Opción: Público (cualquier visitante puede ver el perfil) --}}
                         <label class="flex items-start gap-4 cursor-pointer p-4 border-2 {{ auth()->user()->profile_visibility === 'public' ? 'border-black bg-brand-yellow/10' : 'border-gray-200' }} hover:border-black transition-colors">
                             <input type="radio" name="profile_visibility" value="public"
                                 {{ auth()->user()->profile_visibility === 'public' ? 'checked' : '' }}
@@ -106,7 +119,6 @@
                             </div>
                         </label>
 
-                        {{-- Opción: Seguidores (solo los usuarios que te siguen) --}}
                         <label class="flex items-start gap-4 cursor-pointer p-4 border-2 {{ auth()->user()->profile_visibility === 'followers' ? 'border-black bg-brand-yellow/10' : 'border-gray-200' }} hover:border-black transition-colors">
                             <input type="radio" name="profile_visibility" value="followers"
                                 {{ auth()->user()->profile_visibility === 'followers' ? 'checked' : '' }}
@@ -117,7 +129,6 @@
                             </div>
                         </label>
 
-                        {{-- Opción: Amigos (seguimiento mutuo) --}}
                         <label class="flex items-start gap-4 cursor-pointer p-4 border-2 {{ auth()->user()->profile_visibility === 'friends' ? 'border-black bg-brand-yellow/10' : 'border-gray-200' }} hover:border-black transition-colors">
                             <input type="radio" name="profile_visibility" value="friends"
                                 {{ auth()->user()->profile_visibility === 'friends' ? 'checked' : '' }}
@@ -128,7 +139,6 @@
                             </div>
                         </label>
 
-                        {{-- Opción: Privado (nadie excepto tú mismo) --}}
                         <label class="flex items-start gap-4 cursor-pointer p-4 border-2 {{ auth()->user()->profile_visibility === 'private' ? 'border-black bg-brand-yellow/10' : 'border-gray-200' }} hover:border-black transition-colors">
                             <input type="radio" name="profile_visibility" value="private"
                                 {{ auth()->user()->profile_visibility === 'private' ? 'checked' : '' }}
@@ -145,7 +155,7 @@
                     </form>
                 </x-card>
 
-                <!-- Zona de Peligro -->
+                {{-- Zona de Peligro --}}
                 <div class="border-2 border-red-600 p-6 bg-red-50 shadow-[4px_4px_0px_#dc2626]">
                     <h3 class="font-black text-lg uppercase mb-4 text-red-600">Zona de Peligro</h3>
                     <p class="text-sm font-bold text-gray-800 mb-6">Una vez que elimines tu cuenta, no habrá vuelta atrás.
@@ -164,7 +174,4 @@
             </div>
         </div>
     </div>
-
-    <!-- Modal de confirmación de eliminación genérico -->
-    <x-modals.delete-modal />
-@endsection
+</div>

@@ -1,4 +1,3 @@
-```php
 @auth
     <div x-data="{
                 show: false,
@@ -84,4 +83,3 @@
         </div>
     </div>
 @endauth
-```

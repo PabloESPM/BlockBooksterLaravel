@@ -42,9 +42,9 @@
 
 <div id="mobile-menu-container"></div>
 
-<x-modals.add-to-list />
+<livewire:components.books.add-to-list-modal />
 <x-modals.edit-review />
-<x-modals.add-review />
+<livewire:components.books.add-review-modal />
 <x-modals.delete-modal />
 <x-modals.share-modal />
 </body>

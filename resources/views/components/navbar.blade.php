@@ -31,12 +31,10 @@
 
             <!-- Derecha: Buscador y Usuario -->
             <div class="flex items-center space-x-4">
-                <!-- Buscador Desktop
-                <div class="hidden sm:block relative">
-                    <input type="text" placeholder="BUSCAR..."
-                        class="w-64 bg-white border-2 border-black rounded-none py-2 px-4 text-sm font-bold placeholder-gray-500 focus:outline-none focus:bg-brand-yellow/10 focus:shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] transition-all">
+                <!-- Buscador Desktop -->
+                <div class="hidden sm:block relative w-72">
+                    <livewire:components.search.barra-busqueda :grande="false" />
                 </div>
-                -->
 
                 @auth
                     <div class="ml-3 relative" x-data="{ open: false }">

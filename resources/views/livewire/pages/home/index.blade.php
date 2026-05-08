@@ -103,19 +103,10 @@ new #[Layout('layouts.app')] #[Title('Welcome')] class extends Component {
             La red social sin complicaciones para los amantes de los libros. <br>Valora. Opina. Comparte.
         </p>
 
-        <!-- Barra de Busqueda -->
-        <form action="{{ route('search') }}" method="GET" class="max-w-3xl mx-auto mb-10 flex gap-3">
-            <div class="flex-1 relative">
-                <input type="text" name="q" class="neo-input text-lg py-4 pl-12 w-full"
-                    placeholder="Buscar libros, autores, usuarios, listas, géneros, ISBN..." required>
-                <svg class="w-6 h-6 absolute left-4 top-1/2 -translate-y-1/2 text-gray-500" fill="none" stroke="currentColor"
-                    viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                        d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-                </svg>
-            </div>
-            <button type="submit" class="neo-btn-primary px-8 text-lg">Buscar</button>
-        </form>
+        <!-- Barra de Búsqueda con sugerencias en tiempo real -->
+        <div class="mb-10">
+            <livewire:components.search.barra-busqueda :grande="true" />
+        </div>
     </section>
 
     <!-- Únete al club (registrarse)  -->

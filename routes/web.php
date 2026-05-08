@@ -9,15 +9,15 @@ use App\Http\Controllers\HomeController;
 
 Route::livewire('/', 'pages.home.index')->name('home');
 
-// Buscador
+// Buscador — migrado a Livewire SFC
 use App\Http\Controllers\SearchController;
 
-Route::get('/search', [SearchController::class , 'search'])->name('search');
+Route::livewire('/search', 'pages.search.results')->name('search');
 
 // Libros
-Route::get('/books', [BookController::class , 'index'])->name('books.index');
-Route::get('/books/{book}', [BookController::class , 'show'])->name('books.show');
-Route::get('/books/{book}/load-reviews', [BookController::class , 'loadReviews'])->name('books.load-reviews');
+Route::livewire('/books', 'pages.books.index')->name('books.index');
+// Página de detalle migrada a Livewire SFC — eliminada la ruta AJAX de carga de reseñas
+Route::livewire('/books/{book}', 'pages.books.show')->name('books.show');
 
 // Autores
 Route::livewire('/authors', 'pages.authors.index')->name('authors.index');
@@ -111,14 +111,17 @@ Route::get('/cookies', function () {
 
 use App\Http\Controllers\DashboardController;
 
-// Panel administración del Usuario
-Route::middleware(['auth'])->group(function () {
-    Route::get('/dashboard', [DashboardController::class , 'index'])->name('dashboard.index');
+// Panel administración del Usuario — páginas GET migradas a Livewire SFC
+Route::livewire('/dashboard', 'pages.dashboard.index')->name('dashboard.index')->middleware('auth');
+Route::livewire('/dashboard/profile', 'pages.dashboard.profile')->name('dashboard.profile')->middleware('auth');
+Route::livewire('/dashboard/lists', 'pages.dashboard.lists')->name('dashboard.lists')->middleware('auth');
+Route::livewire('/dashboard/reviews', 'pages.dashboard.reviews')->name('dashboard.reviews')->middleware('auth');
+Route::livewire('/dashboard/settings', 'pages.dashboard.settings')->name('dashboard.settings')->middleware('auth');
 
-    Route::get('/dashboard/profile', [DashboardController::class , 'profile'])->name('dashboard.profile');
+// Acciones POST/PUT/DELETE del dashboard (controladores clásicos)
+Route::middleware(['auth'])->group(function () {
     Route::put('/dashboard/profile', [DashboardController::class , 'updateProfile'])->name('dashboard.profile.update');
 
-    Route::get('/dashboard/lists', [FavListController::class , 'dashboardIndex'])->name('dashboard.lists');
     Route::post('/dashboard/lists', [FavListController::class , 'store'])->name('dashboard.lists.store');
     Route::delete('/dashboard/lists/{list}', [FavListController::class , 'destroy'])->name('dashboard.lists.destroy');
     Route::put('/dashboard/lists/{list}', [FavListController::class , 'update'])->name('dashboard.lists.update');
@@ -126,13 +129,11 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/dashboard/lists/create-attach', [FavListController::class , 'storeAndAttach'])->name('dashboard.lists.storeAndAttach');
     Route::post('/dashboard/lists/{list}/toggle-like', [FavListController::class , 'toggleLike'])->name('dashboard.lists.toggle-like');
 
-    Route::get('/dashboard/reviews', [ReviewController::class , 'dashboardIndex'])->name('dashboard.reviews');
     Route::post('/reviews', [ReviewController::class , 'store'])->name('reviews.store');
     Route::put('/reviews/{review}', [ReviewController::class , 'update'])->name('reviews.update');
     Route::delete('/reviews/{review}', [ReviewController::class , 'destroy'])->name('reviews.destroy');
     Route::post('/reviews/{review}/toggle-like', [ReviewController::class , 'toggleLike'])->name('reviews.toggle-like');
 
-    Route::get('/dashboard/settings', [DashboardController::class , 'settings'])->name('dashboard.settings');
     Route::put('/dashboard/settings', [DashboardController::class , 'updateSettings'])->name('dashboard.settings.update');
     Route::put('/dashboard/settings/privacy', [DashboardController::class , 'updatePrivacy'])->name('dashboard.settings.privacy');
     Route::delete('/dashboard/settings/destroy', [DashboardController::class , 'destroyAccount'])->name('dashboard.settings.destroy');

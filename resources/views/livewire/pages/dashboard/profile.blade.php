@@ -1,13 +1,50 @@
-@extends('layouts.app')
+<?php
+/**
+ * Página Livewire SFC — Editar Perfil
+ *
+ * Muestra el formulario de edición del perfil del usuario: nombre, avatar,
+ * país, biografía y enlaces sociales.
+ * Absorbe la lógica de DashboardController@profile.
+ *
+ * El formulario envía POST clásico a DashboardController@updateProfile
+ * — NO se convierte a wire:submit para mantener la compatibilidad con
+ * la subida de archivos y la validación existente.
+ */
 
-@section('title', 'Editar Perfil')
+use Livewire\Attributes\Computed;
+use Livewire\Attributes\Layout;
+use Livewire\Attributes\Title;
+use Livewire\Component;
+use App\Models\Country;
 
-@section('content')
+new #[Layout('layouts.app')] #[Title('Editar Perfil')] class extends Component {
+
+    /**
+     * Redirigir a login si el usuario no está autenticado.
+     */
+    public function mount(): void
+    {
+        if (auth()->guest()) {
+            $this->redirectRoute('login', navigate: true);
+        }
+    }
+
+    /**
+     * Lista de países disponibles para el selector del formulario.
+     */
+    #[Computed]
+    public function paises()
+    {
+        return Country::orderBy('name')->get();
+    }
+}; ?>
+
+<div>
     <div class="flex flex-col lg:flex-row gap-8">
-        <!-- Barra lateral -->
-        @include('pages.dashboard.partials.sidebar')
+        {{-- Barra lateral --}}
+        @include('livewire.pages.dashboard.partials.sidebar')
 
-        <!-- Contenido principal -->
+        {{-- Contenido principal --}}
         <div class="flex-1">
             <header class="mb-8 border-b-4 border-black pb-4">
                 <h1 class="text-3xl font-black uppercase font-display">Editar Perfil</h1>
@@ -49,11 +86,11 @@
                         <div
                             class="w-24 h-24 bg-gray-200 rounded-full border-2 border-black flex-shrink-0 relative overflow-hidden group cursor-pointer"
                             @click="triggerInput()">
-                            <!-- Muestra la imagen actual del usuario o la previsualización de la nueva -->
+                            {{-- Muestra la imagen actual del usuario o la previsualización de la nueva --}}
                             <img :src="preview"
                                 alt="Avatar de {{ auth()->user()->name }}"
                                 class="w-full h-full object-cover">
-                            <!-- Overlay visible al pasar el ratón para indicar que la imagen es clickeable -->
+                            {{-- Overlay visible al pasar el ratón para indicar que la imagen es clickeable --}}
                             <div
                                 class="absolute inset-0 bg-black/50 hidden group-hover:flex items-center justify-center text-white text-xs font-bold uppercase">
                                 Subir
@@ -65,7 +102,7 @@
                             @error('avatar')
                                 <p class="text-xs text-red-600 font-bold mb-2">{{ $message }}</p>
                             @enderror
-                            <!-- Input oculto que recibe el archivo; se activa desde el botón y el overlay -->
+                            {{-- Input oculto que recibe el archivo; se activa desde el botón y el overlay --}}
                             <input type="file"
                                    name="avatar"
                                    id="avatar"
@@ -73,7 +110,7 @@
                                    accept="image/*"
                                    x-ref="avatarInput"
                                    @change="handleFile($event)">
-                            <!-- Botón decorativo que dispara el selector de archivos -->
+                            {{-- Botón decorativo que dispara el selector de archivos --}}
                             <button type="button" class="neo-btn-secondary py-1 px-3 text-xs" @click="triggerInput()">Cambiar Foto</button>
                         </div>
                     </div>
@@ -94,7 +131,7 @@
                             <label class="block text-xs font-bold uppercase mb-2">País</label>
                             <select name="country_id" class="neo-input w-full">
                                 <option value="">— Sin especificar —</option>
-                                @foreach($countries as $country)
+                                @foreach($this->paises as $country)
                                     <option value="{{ $country->id }}"
                                         {{ old('country_id', auth()->user()->country_id) == $country->id ? 'selected' : '' }}>
                                         {{ $country->name }}
@@ -117,7 +154,7 @@
                         </div>
                     </div>
 
-                    {{-- Sección de enlaces sociales (decorativos por ahora) --}}
+                    {{-- Sección de enlaces sociales --}}
                     <div class="border-t-2 border-black pt-6 mt-6">
                         <h3 class="font-bold uppercase text-sm mb-4">Enlaces Sociales</h3>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -140,4 +177,4 @@
             </x-card>
         </div>
     </div>
-@endsection
+</div>
