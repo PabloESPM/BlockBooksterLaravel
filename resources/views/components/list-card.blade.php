@@ -8,8 +8,8 @@
                 <!-- Vista previa de portadas -->
                 @foreach($list->books->take(5) as $book)
                     <div class="bg-gray-300 border-r-2 border-black overflow-hidden relative">
-                        @if($book->cover ?? $book->cover_image)
-                            <img src="{{ $book->cover ?? $book->cover_image }}" class="w-full h-full object-cover">
+                        @if($book->cover_image)
+                            <img src="{{ $book->cover_image }}" class="w-full h-full object-cover">
                         @else
                             <div
                                 class="absolute inset-0 flex items-center justify-center bg-brand-yellow/50 text-xs font-bold rotate-90">
@@ -49,7 +49,8 @@
 
         <div class="flex items-center gap-2 mb-4">
             <div class="w-6 h-6 rounded-full bg-gray-300 border border-black overflow-hidden flex-shrink-0">
-                <img src="{{ $list->user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($list->user->name ?? 'Usuario') . '&background=random' }}"
+                <img src="{{ $list->user->avatar_url }}"
+                    alt="Avatar de {{ $list->user->name ?? 'Usuario' }}"
                     class="w-full h-full object-cover">
             </div>
             <span class="text-xs font-bold uppercase text-gray-600 truncate">por <span

@@ -11,9 +11,9 @@
                 class="px-6 py-4 border-b border-black font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors {{ request()->routeIs('dashboard.index') ? 'bg-brand-yellow text-black' : '' }}">
                 Vista General
             </a>
-            <a href="{{ route('dashboard.profile') }}" wire:navigate
-                class="px-6 py-4 border-b border-black font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors {{ request()->routeIs('dashboard.profile') ? 'bg-brand-yellow text-black' : '' }}">
-                Editar Perfil
+            <a href="{{ route('dashboard.social') }}" wire:navigate
+               class="px-6 py-4 border-b border-black font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors {{ request()->routeIs('dashboard.social') ? 'bg-brand-yellow text-black' : '' }}">
+                Social
             </a>
             <a href="{{ route('dashboard.lists') }}" wire:navigate
                 class="px-6 py-4 border-b border-black font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors {{ request()->routeIs('dashboard.lists') ? 'bg-brand-yellow text-black' : '' }}">
@@ -22,6 +22,10 @@
             <a href="{{ route('dashboard.reviews') }}" wire:navigate
                 class="px-6 py-4 border-b border-black font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors {{ request()->routeIs('dashboard.reviews') ? 'bg-brand-yellow text-black' : '' }}">
                 Mis Reseñas
+            </a>
+            <a href="{{ route('dashboard.profile') }}" wire:navigate
+               class="px-6 py-4 border-b border-black font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors {{ request()->routeIs('dashboard.profile') ? 'bg-brand-yellow text-black' : '' }}">
+                Editar Perfil
             </a>
             <a href="{{ route('dashboard.settings') }}" wire:navigate
                 class="px-6 py-4 font-bold uppercase hover:bg-red-500 hover:text-white transition-colors {{ request()->routeIs('dashboard.settings') ? 'bg-red-500 text-white' : '' }}">

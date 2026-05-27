@@ -57,7 +57,7 @@ new #[Layout('layouts.app')] #[Title('Autores')] class extends Component {
             @foreach ($classicAuthors as $author)
                 <div class="neo-card p-6 flex items-center gap-6">
                     <div class="w-20 h-20 bg-gray-200 border-2 border-black flex-shrink-0 overflow-hidden">
-                        <img src="{{ $author->photo ?? 'https://ui-avatars.com/api/?name=' . urlencode($author->name) . '&background=random' }}"
+                        <img src="{{ $author->photo }}"
                              alt="{{ $author->name }}" class="w-full h-full object-cover">
                     </div>
                     <div>

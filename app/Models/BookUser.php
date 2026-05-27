@@ -21,7 +21,11 @@ class BookUser extends Model
         'finished_at'
     ];
 
-    protected $dates = ['started_at', 'finished_at'];
+    // $dates está deprecado en Laravel 10+; usamos $casts para garantizar objetos Carbon
+    protected $casts = [
+        'started_at'  => 'date',
+        'finished_at' => 'date',
+    ];
 
     public function user()
     {

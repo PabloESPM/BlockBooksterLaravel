@@ -72,7 +72,7 @@ new #[Layout('layouts.app')] #[Title('Editar Perfil')] class extends Component {
                     {{-- Sección Avatar con previsualización en tiempo real (Alpine.js) --}}
                     <div class="flex items-center gap-6 pb-6 border-b-2 border-gray-200"
                          x-data="{
-                             preview: '{{ auth()->user()->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode(auth()->user()->name ?? 'U') . '&background=random' }}',
+                             preview: '{{ auth()->user()->avatar_url }}',
                              triggerInput() { $refs.avatarInput.click(); },
                              handleFile(e) {
                                  const file = e.target.files[0];

@@ -44,12 +44,13 @@
                                     id="user-menu-button">
                                 <span class="sr-only">Abrir menú de usuario</span>
                                 <img class="h-8 w-8 object-cover border border-black"
-                                     src="https://ui-avatars.com/api/?name=User+Name&background=0E3FA9&color=fff&rounded=false"
-                                     alt="">
+                                     src="{{ auth()->user()->avatar_url }}"
+                                     alt="Avatar de {{ auth()->user()->name }}"
+                                     wire:key="navbar-avatar-{{ auth()->user()->updated_at?->timestamp }}">
                             </button>
                         </div>
 
-                        <div x-show="open" @click.away="open = false"
+                        <div x-show="open" x-cloak @click.away="open = false"
                              class="origin-top-right absolute right-0 mt-2 w-48 bg-white border-2 border-black shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] py-1 focus:outline-none z-50 transform transition-all"
                              role="menu">
 
@@ -61,6 +62,9 @@
                             <a href="/dashboard"
                                class="block px-4 py-2 text-sm text-black font-bold hover:bg-brand-yellow border-b border-gray-100"
                                role="menuitem">PERFIL</a>
+                            <a href="{{ route('dashboard.social') }}"
+                               class="block px-4 py-2 text-sm text-black font-bold hover:bg-brand-yellow border-b border-gray-100"
+                               role="menuitem">SOCIAL</a>
                             <a href="/dashboard/lists"
                                class="block px-4 py-2 text-sm text-black font-bold hover:bg-brand-yellow border-b border-gray-100"
                                role="menuitem">MIS LISTAS</a>

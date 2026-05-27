@@ -21,8 +21,8 @@
 
             // Resolver la portada real
             $realCover = 'https://via.placeholder.com/300x450';
-            if ($bookEntity && $bookEntity->cover_path) {
-                $realCover = \Illuminate\Support\Facades\Storage::url($bookEntity->cover_path);
+            if ($bookEntity && $bookEntity->cover_image) {
+                $realCover = $bookEntity->cover_image;
             } elseif (!empty($cover) && str_starts_with($cover, 'http')) {
                 $realCover = $cover;
             }

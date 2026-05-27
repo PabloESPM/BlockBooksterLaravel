@@ -162,18 +162,9 @@ new #[Layout('layouts.app')] class extends Component {
      * URL resuelta de la portada del libro (storage, URL externa o placeholder).
      */
     #[Computed]
-    public function coverUrl(): string
+    public function coverUrl(): ?string
     {
-        if ($this->book->cover_path) {
-            return Storage::url($this->book->cover_path);
-        }
-        if (!empty($this->book->cover_image)) {
-            return $this->book->cover_image;
-        }
-        if (!empty($this->book->cover) && str_starts_with($this->book->cover, 'http')) {
-            return $this->book->cover;
-        }
-        return null; // null = mostrar placeholder visual en la vista
+        return $this->book->cover_image;
     }
 
     /**
@@ -369,7 +360,7 @@ new #[Layout('layouts.app')] class extends Component {
                         >
                             <span wire:loading.remove wire:target="actualizarEstadoLectura">
                                 @if($estadoLectura === 'reading')
-                                    📖 Leyendo actualmente
+                                    📖 Leyendo
                                 @elseif($estadoLectura === 'read')
                                     📚 Leído
                                 @else
@@ -408,7 +399,7 @@ new #[Layout('layouts.app')] class extends Component {
                                     class="text-left px-4 py-2 font-bold uppercase hover:bg-brand-yellow border-b border-black flex items-center gap-2 {{ $estadoLectura === 'pending' ? 'bg-brand-yellow' : '' }}"
                                 >
                                     @if($estadoLectura === 'pending') ✓ @endif
-                                    Quiero leer
+                                    Leer
                                 </button>
 
                                 {{-- Opción: Leyendo actualmente --}}
@@ -418,7 +409,7 @@ new #[Layout('layouts.app')] class extends Component {
                                     class="text-left px-4 py-2 font-bold uppercase hover:bg-brand-yellow border-b border-black flex items-center gap-2 {{ $estadoLectura === 'reading' ? 'bg-brand-yellow' : '' }}"
                                 >
                                     @if($estadoLectura === 'reading') ✓ @endif
-                                    Leyendo actualmente
+                                    Leyendo
                                 </button>
 
                                 {{-- Opción: Leído --}}
@@ -577,14 +568,7 @@ new #[Layout('layouts.app')] class extends Component {
                 <div class="grid grid-cols-2 gap-4">
                     @foreach($this->librosRelacionados as $libroRel)
                         @php
-                            $portadaRel = null;
-                            if ($libroRel->cover_path) {
-                                $portadaRel = Storage::url($libroRel->cover_path);
-                            } elseif (!empty($libroRel->cover_image)) {
-                                $portadaRel = $libroRel->cover_image;
-                            } elseif (!empty($libroRel->cover) && str_starts_with($libroRel->cover, 'http')) {
-                                $portadaRel = $libroRel->cover;
-                            }
+                            $portadaRel = $libroRel->cover_image;
                         @endphp
                         <a href="{{ route('books.show', $libroRel->isbn) }}"
                            wire:navigate

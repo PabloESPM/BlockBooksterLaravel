@@ -17,7 +17,7 @@
                 const url = this.following
                     ? '{{ $unfollowUrl ?? $followUrl }}'
                     : '{{ $followUrl }}';
-                const method = this.following ? 'DELETE' : 'POST';
+                const method = (this.following && '{{ $unfollowUrl }}') ? 'DELETE' : 'POST';
 
                 fetch(url, {
                     method: method,

@@ -1,6 +1,7 @@
 <?php
 
 use Livewire\Attributes\Layout;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Models\User;
 use Illuminate\Support\Str;
@@ -14,10 +15,41 @@ new #[Layout('layouts.app')] class extends Component {
     public $pendingLimit = 5;
     public $reviewsLimit = 3;
     public $listsLimit = 3;
+    public $followedListsLimit = 3;
+
+    // Estados de modales
+    public bool $showFollowingModal = false;
+    public bool $showFollowersModal = false;
 
     public function mount(User $user)
     {
         $this->user = $user;
+    }
+
+    public function openFollowingModal()
+    {
+        $this->showFollowingModal = true;
+    }
+
+    public function closeFollowingModal()
+    {
+        $this->showFollowingModal = false;
+    }
+
+    public function openFollowersModal()
+    {
+        $this->showFollowersModal = true;
+    }
+
+    public function closeFollowersModal()
+    {
+        $this->showFollowersModal = false;
+    }
+
+    #[On('follow-updated')]
+    public function handleFollowUpdated($type, $id, $following)
+    {
+        $this->user->refresh();
     }
 
     public function loadMore($section)
@@ -27,6 +59,7 @@ new #[Layout('layouts.app')] class extends Component {
         if ($section === 'pending') $this->pendingLimit += 5;
         if ($section === 'reviews') $this->reviewsLimit += 3;
         if ($section === 'lists') $this->listsLimit += 3;
+        if ($section === 'followedLists') $this->followedListsLimit += 3;
     }
 
     public function with()
@@ -107,6 +140,39 @@ new #[Layout('layouts.app')] class extends Component {
         $followersCount = $this->user->followers()->count();
         $followingCount = $this->user->following()->count();
 
+        // Listas SEGUIDAS por el usuario (solo las públicas, visibles para terceros)
+        $followedLists = $this->user->likedLists()
+            ->where('visibility', 'public')
+            ->with(['user', 'books', 'likes'])
+            ->withCount(['books', 'likes'])
+            ->latest('list_likes.created_at')
+            ->take($this->followedListsLimit)
+            ->get();
+
+        $hasMoreFollowedLists = $this->user->likedLists()
+            ->where('visibility', 'public')
+            ->count() > $this->followedListsLimit;
+
+        $followingUsers = $this->showFollowingModal
+            ? $this->user->following()
+                ->with(['followed' => fn ($q) => $q->withCount(['followers', 'books'])])
+                ->latest()
+                ->get()
+                ->pluck('followed')
+                ->filter()
+                ->values()
+            : collect();
+
+        $followerUsers = $this->showFollowersModal
+            ? $this->user->followers()
+                ->with(['follower' => fn ($q) => $q->withCount(['followers', 'books'])])
+                ->latest()
+                ->get()
+                ->pluck('follower')
+                ->filter()
+                ->values()
+            : collect();
+
         return [
             'canViewContent' => true,
             'readBooks' => $readBooks,
@@ -119,8 +185,12 @@ new #[Layout('layouts.app')] class extends Component {
             'hasMoreReviews' => $hasMoreReviews,
             'listsPaginated' => $lists, // Mantengo el nombre de la variable original para el blade
             'hasMoreLists' => $hasMoreLists,
+            'followedLists' => $followedLists,
+            'hasMoreFollowedLists' => $hasMoreFollowedLists,
             'followersCount' => $followersCount,
             'followingCount' => $followingCount,
+            'followingUsers' => $followingUsers,
+            'followerUsers' => $followerUsers,
         ];
     }
 
@@ -130,7 +200,15 @@ new #[Layout('layouts.app')] class extends Component {
     }
 }; ?>
 
-<div class="max-w-7xl mx-auto">
+<div class="max-w-7xl mx-auto"
+     x-data
+     @open-user-list-modal.window="
+         if ($event.detail.type === 'following') {
+             $wire.openFollowingModal();
+         } else if ($event.detail.type === 'followers') {
+             $wire.openFollowersModal();
+         }
+     ">
     {{-- Sección de Encabezado --}}
     <x-user-profile-header
         :user="$user"
@@ -255,7 +333,7 @@ new #[Layout('layouts.app')] class extends Component {
             </div>
         </section>
 
-        {{-- Sección de Listas --}}
+        {{-- Sección de Listas Públicas (creadas por el usuario) --}}
         @if($listsPaginated->isNotEmpty())
             <section class="mb-8">
                 <h2 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
@@ -275,6 +353,35 @@ new #[Layout('layouts.app')] class extends Component {
                     <div class="mt-8 flex justify-center">
                         <button wire:click="loadMore('lists')" wire:loading.attr="disabled" class="neo-btn-secondary px-8 py-3 uppercase font-black">
                             Cargar más listas
+                        </button>
+                    </div>
+                @endif
+            </section>
+        @endif
+
+        {{-- Sección de Listas Seguidas (solo públicas, solo si el perfil es accesible) --}}
+        @if($user->profile_visibility === 'public' && $followedLists->isNotEmpty())
+            <section class="mb-8">
+                <h2 class="text-2xl font-black uppercase mb-4 flex items-center gap-2">
+                    <span class="w-3 h-3 bg-brand-blue border border-black"></span>
+                    Listas Seguidas
+                </h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    @foreach($followedLists as $list)
+                        <div wire:key="followed-list-{{ $list->id }}">
+                            <x-list-card :list="$list" />
+                        </div>
+                    @endforeach
+                </div>
+
+                @if($hasMoreFollowedLists)
+                    <div class="mt-8 flex justify-center">
+                        <button wire:click="loadMore('followedLists')" wire:loading.attr="disabled"
+                            class="neo-btn-secondary px-8 py-3 uppercase font-black">
+                            <span wire:loading wire:target="loadMore('followedLists')"
+                                class="inline-block w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin mr-2"></span>
+                            Cargar más listas seguidas
                         </button>
                     </div>
                 @endif
@@ -317,7 +424,9 @@ new #[Layout('layouts.app')] class extends Component {
 
                 <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                     @foreach($user->followedAuthors as $followedAuthor)
-                        <x-author-card :author="$followedAuthor" :showFollow="auth()->id() !== $user->id" />
+                        <div wire:key="followed-author-{{ $followedAuthor->id }}">
+                            <x-author-card :author="$followedAuthor" :showFollow="auth()->id() !== $user->id" />
+                        </div>
                     @endforeach
                 </div>
             </section>
@@ -352,6 +461,14 @@ new #[Layout('layouts.app')] class extends Component {
                 />
             </div>
         </section>
+
+        @if($showFollowingModal)
+            <x-modals.following-list :users="$followingUsers" />
+        @endif
+
+        @if($showFollowersModal)
+            <x-modals.followers-list :users="$followerUsers" />
+        @endif
 
     @else
         {{-- Mensaje cuando el perfil tiene contenido restringido --}}

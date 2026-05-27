@@ -141,7 +141,7 @@ new #[Layout('layouts.app')] #[Title('Welcome')] class extends Component {
             @foreach($latestBooks as $book)
                 <div class="w-48 flex-none snap-start">
                     <x-book-card id="{{ $book->isbn }}" :title="$book->title" :author="$book->authors->first()->name ?? 'Unknown'"
-                        :cover="$book->cover ?? 'https://via.placeholder.com/300x450'"
+                        :cover="$book->cover_image ?? 'https://via.placeholder.com/300x450'"
                         :rating="4.5" />
                 </div>
             @endforeach
@@ -160,7 +160,7 @@ new #[Layout('layouts.app')] #[Title('Welcome')] class extends Component {
         <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-6">
             @foreach($bestRatedBooks as $book)
                 <x-book-card id="{{ $book->isbn }}" :title="$book->title" :author="$book->authors->first()->name ?? 'Unknown'"
-                    :cover="$book->cover ?? 'https://via.placeholder.com/300x450'"
+                    :cover="$book->cover_image ?? 'https://via.placeholder.com/300x450'"
                     :rating="5.0" />
             @endforeach
         </div>

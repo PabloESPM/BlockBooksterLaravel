@@ -52,3 +52,10 @@
         @apply bg-white text-black border-2 border-black font-bold px-6 py-3 shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] hover:shadow-[6px_6px_0px_0px_rgba(0,0,0,1)] hover:-translate-y-1 transition-all active:shadow-none active:translate-y-[4px] active:translate-x-[4px];
     }
 }
+
+/*
+ * Oculta elementos con x-cloak hasta que Alpine.js termina de inicializarse.
+ * Evita el "flash" de menús desplegables y otros elementos controlados por Alpine.
+ */
+[x-cloak] { display: none !important; }
+

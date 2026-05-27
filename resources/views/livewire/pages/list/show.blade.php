@@ -70,11 +70,12 @@ new #[Layout('layouts.app')] class extends Component {
                 <p class="text-lg font-medium text-gray-700 max-w-2xl mb-6 border-l-4 border-brand-yellow pl-4">
                     {{ $list->description ?? 'Sin descripción disponible.' }}
                 </p>
+                <!-- Datos usuario creador -->
 
                 <div class="flex items-center gap-4">
                     <a href="{{ route('users.show', $list->user->id) }}" wire:navigate class="flex items-center gap-2 hover:opacity-80 transition-opacity">
                         <div class="w-8 h-8 rounded-full bg-gray-300 border border-black overflow-hidden">
-                            <img src="https://ui-avatars.com/api/?name={{ urlencode($list->user->name ?? 'Usuario') }}&background=random" class="w-full h-full object-cover">
+                            <img src="{{ $list->user->avatar_url }}" alt="Avatar de {{ $list->user->name ?? 'Usuario' }}" class="w-full h-full object-cover">
                         </div>
                         <span class="text-sm font-bold uppercase">por <span class="underline hover:text-brand-blue">{{ $list->user->name ?? 'Desconocido' }}</span></span>
                     </a>
@@ -119,7 +120,7 @@ new #[Layout('layouts.app')] class extends Component {
                         :id="$book->isbn"
                         :title="$book->title"
                         :author="$book->authors->first()->name ?? 'Autor Desconocido'"
-                        :cover="$book->cover"
+                        :cover="$book->cover_image"
                         :rating="0"
                     />
                 </div>

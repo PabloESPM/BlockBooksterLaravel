@@ -44,6 +44,21 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Devuelve la URL del avatar del usuario.
+     * Si tiene foto de perfil propia la devuelve; en caso contrario genera
+     * un avatar automático con ui-avatars usando el nombre real del usuario.
+     */
+    public function getAvatarUrlAttribute(): string
+    {
+        if ($this->avatar) {
+            return $this->avatar;
+        }
+
+        return 'https://ui-avatars.com/api/?name=' . urlencode($this->name ?? 'U')
+            . '&background=0E3FA9&color=fff&rounded=false';
+    }
+
     /* Relaciones */
 
     public function country()

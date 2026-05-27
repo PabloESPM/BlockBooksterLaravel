@@ -10,11 +10,11 @@
             @if($showBook && $review->book)
                 <!-- Mostrar la portada del libro si $showBook es true -->
                 <a href="{{ route('books.show', $review->book->isbn) }}">
-                    <img src="{{ $review->book->cover ?? 'https://via.placeholder.com/50x75' }}"
+                    <img src="{{ $review->book->cover_image ?? 'https://via.placeholder.com/50x75' }}"
                         alt="{{ $review->book->title }}"
                         class="w-10 h-14 object-cover border-2 border-black shadow-[2px_2px_0px_#000] mr-3">
                 </a>
-                <div>
+                <div class="min-w-0 flex-1">
                     <a href="{{ route('books.show', $review->book->isbn) }}"
                         class="font-bold text-sm uppercase hover:text-brand-blue line-clamp-1"
                         title="{{ $review->book->title }}">{{ $review->book->title }}</a>

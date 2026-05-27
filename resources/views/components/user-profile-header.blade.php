@@ -8,7 +8,7 @@
     <div class="flex flex-col md:flex-row gap-6 items-center md:items-start">
         {{-- Avatar --}}
         <div class="w-32 h-32 bg-gray-200 rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
-            <img src="{{ $user->avatar ?? 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random' }}"
+            <img src="{{ $user->avatar_url }}"
                 alt="{{ $user->name }}"
                 class="w-full h-full object-cover">
         </div>

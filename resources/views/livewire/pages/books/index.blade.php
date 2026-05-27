@@ -183,13 +183,7 @@ new #[Layout('layouts.app')] #[Title('Explorar Libros')] class extends Component
      */
     public function resolveBookCover(Book $book): string
     {
-        if ($book->cover_path) {
-            return Storage::url($book->cover_path);
-        }
-        if (!empty($book->cover) && str_starts_with($book->cover, 'http')) {
-            return $book->cover;
-        }
-        return 'https://via.placeholder.com/300x450';
+        return $book->cover_image ?? 'https://via.placeholder.com/300x450';
     }
 
     /**

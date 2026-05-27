@@ -17,17 +17,17 @@
                             x-transition:leave="transform transition ease-in-out duration-500 sm:duration-700"
                             x-transition:leave-start="translate-x-0" x-transition:leave-end="translate-x-full"
                             class="pointer-events-auto w-screen max-w-md">
-                            <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 shadow-xl">
-                                <div class="px-4 sm:px-6">
-                                    <div class="flex items-start justify-between">
-                                        <h2 class="text-lg font-medium text-gray-900" id="slide-over-title">Menu</h2>
+                            <div class="flex h-full flex-col overflow-y-scroll bg-white py-6 border-l-4 border-black shadow-[-6px_0px_0px_0px_rgba(0,0,0,1)]">
+                                <div class="px-4 sm:px-6 pb-4 border-b-2 border-black">
+                                    <div class="flex items-center justify-between">
+                                        <h2 class="text-2xl font-display font-black text-brand-blue tracking-tight uppercase" id="slide-over-title">Menú</h2>
                                         <div class="ml-3 flex h-7 items-center">
                                             <button type="button" @click="open = false"
-                                                class="rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-brand-blue focus:ring-offset-2">
-                                                <span class="sr-only">Close panel</span>
-                                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                                class="border-2 border-black p-1 hover:bg-brand-yellow shadow-[2px_2px_0px_#000] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] focus:outline-none transition-all">
+                                                <span class="sr-only">Cerrar menú</span>
+                                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="2"
                                                     stroke="currentColor" aria-hidden="true">
-                                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                                    <path stroke-linecap="square" stroke-linejoin="miter"
                                                         d="M6 18L18 6M6 6l12 12" />
                                                 </svg>
                                             </button>
@@ -36,50 +36,70 @@
                                 </div>
                                 <div class="relative mt-6 flex-1 px-4 sm:px-6">
                                     <!-- Mobile Nav Links -->
-                                    <nav class="space-y-1">
-                                        <a href="/"
-                                            class="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50">Home</a>
+                                    <nav class="space-y-3">
                                         <a href="/books"
-                                            class="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50">Books</a>
-                                        <a href="/lists"
-                                            class="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50">Lists</a>
+                                            class="block border-2 border-black p-3 font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] {{ request()->is('books*') ? 'bg-brand-yellow text-black' : 'bg-white text-black' }}">
+                                            Libros
+                                        </a>
                                         <a href="/authors"
-                                            class="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50">Authors</a>
-                                        <a href="/users"
-                                            class="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-50">Community</a>
+                                            class="block border-2 border-black p-3 font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] {{ request()->is('authors*') ? 'bg-brand-yellow text-black' : 'bg-white text-black' }}">
+                                            Autores
+                                        </a>
+                                        <a href="/lists"
+                                            class="block border-2 border-black p-3 font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] {{ request()->is('lists*') ? 'bg-brand-yellow text-black' : 'bg-white text-black' }}">
+                                            Listas
+                                        </a>
+                                        <a href="/community"
+                                            class="block border-2 border-black p-3 font-bold uppercase hover:bg-brand-yellow hover:text-black transition-colors shadow-[4px_4px_0px_0px_rgba(0,0,0,1)] active:shadow-none active:translate-x-[2px] active:translate-y-[2px] {{ request()->is('community*') ? 'bg-brand-yellow text-black' : 'bg-white text-black' }}">
+                                            Comunidad
+                                        </a>
                                     </nav>
 
-                                    <div class="mt-8 border-t border-gray-200 py-6">
+                                    <div class="mt-8 border-t-2 border-black py-6">
                                         @auth
-                                            <div class="flex items-center px-4">
-                                                <div class="flex-shrink-0">
-                                                    <img class="h-10 w-10 rounded-full"
-                                                        src="https://ui-avatars.com/api/?name=User+Name" alt="">
-                                                </div>
-                                                <div class="ml-3">
-                                                    <div class="text-base font-medium text-gray-800">User Name</div>
-                                                    <div class="text-sm font-medium text-gray-500">user@example.com</div>
-                                                </div>
-                                            </div>
-                                            <div class="mt-3 space-y-1 px-2">
-                                                <a href="/dashboard"
-                                                    class="block rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900">Your
-                                                    Dashboard</a>
-                                                <form method="POST" action="{{ route('logout') }}">
-                                                    @csrf
-                                                    <button type="submit"
-                                                        class="block w-full text-left rounded-md px-3 py-2 text-base font-medium text-gray-500 hover:bg-gray-50 hover:text-gray-900">Sign
-                                                        out</button>
-                                                </form>
-                                            </div>
+                                             <div class="flex items-center px-4 pb-4 border-b-2 border-black">
+                                                 <div class="flex-shrink-0">
+                                                     <img class="h-10 w-10 object-cover border-2 border-black"
+                                                         src="{{ auth()->user()->avatar_url }}"
+                                                         alt="Avatar de {{ auth()->user()->name }}">
+                                                 </div>
+                                                 <div class="ml-3">
+                                                     <div class="text-base font-bold text-black uppercase">{{ auth()->user()->name }}</div>
+                                                     <div class="text-xs font-semibold text-gray-500">{{ auth()->user()->email }}</div>
+                                                 </div>
+                                             </div>
+                                             <div class="mt-4 space-y-0 bg-white border-2 border-black shadow-[4px_4px_0px_0px_rgba(0,0,0,1)]">
+                                                 @if(auth()->user()->type === 'admin' || auth()->user()->type === 'worker')
+                                                     <a href="{{ route('admin.dashboard') }}"
+                                                        class="block px-4 py-3 text-sm text-brand-blue font-black hover:bg-brand-yellow border-b-2 border-black transition-colors"
+                                                        role="menuitem">PANEL ADMIN</a>
+                                                 @endif
+                                                 <a href="/dashboard"
+                                                     class="block px-4 py-3 text-sm text-black font-bold hover:bg-brand-yellow border-b-2 border-black transition-colors"
+                                                     role="menuitem">PERFIL</a>
+                                                 <a href="{{ route('dashboard.social') }}"
+                                                     class="block px-4 py-3 text-sm text-black font-bold hover:bg-brand-yellow border-b-2 border-black transition-colors"
+                                                     role="menuitem">SOCIAL</a>
+                                                 <a href="/dashboard/lists"
+                                                     class="block px-4 py-3 text-sm text-black font-bold hover:bg-brand-yellow border-b-2 border-black transition-colors"
+                                                     role="menuitem">MIS LISTAS</a>
+                                                 <a href="/dashboard/reviews"
+                                                     class="block px-4 py-3 text-sm text-black font-bold hover:bg-brand-yellow border-b-2 border-black transition-colors"
+                                                     role="menuitem">MIS RESEÑAS</a>
+                                                 <a href="/dashboard/settings"
+                                                     class="block px-4 py-3 text-sm text-black font-bold hover:bg-brand-yellow border-b-2 border-black transition-colors"
+                                                     role="menuitem">AJUSTES</a>
+                                                 <form method="POST" action="{{ route('logout') }}">
+                                                     @csrf
+                                                     <button type="submit"
+                                                         class="block w-full text-left px-4 py-3 text-sm text-black font-bold hover:bg-red-500 hover:text-white transition-colors"
+                                                         role="menuitem">CERRAR SESIÓN</button>
+                                                 </form>
+                                             </div>
                                         @else
                                             <div class="grid grid-cols-2 gap-4 px-4">
-                                                <a href="/login"
-                                                    class="flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50">Sign
-                                                    In</a>
-                                                <a href="/register"
-                                                    class="flex w-full items-center justify-center rounded-md border border-transparent bg-brand-blue px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-indigo-700">Sign
-                                                    Up</a>
+                                                <x-neutral-button href="{{ route('login') }}" class="text-sm py-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">INICIA SESIÓN</x-neutral-button>
+                                                <x-primary-button href="/register" class="text-sm py-3 shadow-[2px_2px_0px_0px_rgba(0,0,0,1)] uppercase">REGÍSTRATE</x-primary-button>
                                             </div>
                                         @endauth
                                     </div>

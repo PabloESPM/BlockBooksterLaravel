@@ -60,5 +60,29 @@ class Book extends Model
     {
         return $this->hasMany(Purchase::class, 'book_isbn', 'isbn');
     }
+
+    /**
+     * Accessor para obtener la URL de la portada del libro.
+     * Si el cover_path existe, devuelve la URL de Storage. En caso contrario, null.
+     */
+    public function getCoverImageAttribute(): ?string
+    {
+        if ($this->cover_path) {
+            return \Illuminate\Support\Facades\Storage::url($this->cover_path);
+        }
+
+        return null;
+    }
+
+    /**
+     * Accessor de compatibilidad para obtener la URL de la portada del libro.
+     *
+     * @return string|null
+     */
+    public function getCoverAttribute(): ?string
+    {
+        return $this->cover_image;
+    }
 }
+
 

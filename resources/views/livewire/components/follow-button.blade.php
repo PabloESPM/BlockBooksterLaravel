@@ -23,6 +23,12 @@ new class extends Component {
 
         $user = auth()->user();
 
+        // Prevenir que un usuario siga su propia lista (defensa en profundidad)
+        if ($this->type === 'list' && isset($this->model->user_id) && $this->model->user_id === $user->id) {
+            $this->dispatch('notify', type: 'error', message: 'No puedes seguir tu propia lista.');
+            return;
+        }
+
         if ($this->type === 'user') {
             if ($user->isFollowing($this->model)) {
                 $user->unfollow($this->model);
@@ -72,9 +78,11 @@ new class extends Component {
 }; ?>
 
 <button
-    wire:click="toggle"
+    wire:click.stop="toggle"
     wire:loading.attr="disabled"
-    class="neo-btn-primary text-sm px-4 py-2 flex items-center justify-center gap-2 transition-all {{ $isFollowing ? 'bg-gray-200 !border-gray-400 !shadow-none' : '' }}"
+    {{ $attributes->merge([
+        'class' => ($attributes->has('class') ? '' : 'neo-btn-primary text-sm px-4 py-2 flex items-center justify-center gap-2') . ' transition-all ' . ($isFollowing ? 'bg-gray-200 !border-gray-400 !shadow-none' : '')
+    ]) }}
 >
     <div wire:loading class="w-4 h-4 border-2 border-black border-t-transparent rounded-full animate-spin"></div>
     <span wire:loading.remove>{{ $isFollowing ? 'Dejar de seguir' : 'Seguir' }}</span>

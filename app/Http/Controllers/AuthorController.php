@@ -68,7 +68,7 @@ class AuthorController extends Controller
             return view('components.book-card', [
                 'title' => $book->title,
                 'author' => $author->name . ' ' . $author->surname,
-                'cover' => $book->cover,
+                'cover' => $book->cover_image,
                 'id' => $book->isbn,
                 'rating' => 0,
             ])->render();

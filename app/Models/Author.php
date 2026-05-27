@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Author extends Model
@@ -22,6 +23,30 @@ class Author extends Model
         'biography',
         'photo_url',
     ];
+
+    /**
+     * Accessor 'photo' → devuelve la URL de la foto del autor o el avatar por defecto.
+     *
+     * Resuelve de forma unificada si la URL es externa (http/https) o local (Storage::url),
+     * y genera el fallback a ui-avatars si no hay foto configurada.
+     */
+    protected function photo(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                if (!$this->photo_url) {
+                    $fullName = trim(($this->name ?? '') . ' ' . ($this->surname ?? ''));
+                    return 'https://ui-avatars.com/api/?name=' . urlencode($fullName ?: 'A') . '&background=random&size=256';
+                }
+
+                if (str_starts_with($this->photo_url, 'http://') || str_starts_with($this->photo_url, 'https://')) {
+                    return $this->photo_url;
+                }
+
+                return \Illuminate\Support\Facades\Storage::url($this->photo_url);
+            }
+        );
+    }
 
     public function books()
     {

@@ -116,6 +116,7 @@ Route::livewire('/dashboard', 'pages.dashboard.index')->name('dashboard.index')-
 Route::livewire('/dashboard/profile', 'pages.dashboard.profile')->name('dashboard.profile')->middleware('auth');
 Route::livewire('/dashboard/lists', 'pages.dashboard.lists')->name('dashboard.lists')->middleware('auth');
 Route::livewire('/dashboard/reviews', 'pages.dashboard.reviews')->name('dashboard.reviews')->middleware('auth');
+Route::livewire('/dashboard/social', 'pages.dashboard.social')->name('dashboard.social')->middleware('auth');
 Route::livewire('/dashboard/settings', 'pages.dashboard.settings')->name('dashboard.settings')->middleware('auth');
 
 // Acciones POST/PUT/DELETE del dashboard (controladores clásicos)

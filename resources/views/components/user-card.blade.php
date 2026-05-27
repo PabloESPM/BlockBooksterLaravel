@@ -12,7 +12,7 @@
     @endif
     <a href="{{ route('users.show', $user->id) }}" class="flex items-center gap-4 flex-grow">
         <div class="w-12 h-12 {{ $avatarBg }} rounded-full border-2 border-black flex-shrink-0 overflow-hidden">
-            <img src="https://ui-avatars.com/api/?name={{ urlencode($user->name) }}&background=random"
+            <img src="{{ $user->avatar ?: 'https://ui-avatars.com/api/?name=' . urlencode($user->name) . '&background=random' }}"
                 class="w-full h-full object-cover">
         </div>
         <div class="flex-grow">
@@ -22,11 +22,10 @@
     </a>
     @auth
         @if(auth()->id() !== $user->id)
-            <x-modals.follow-modal
-                :followableId="$user->id"
-                followableType="user"
-                :isFollowing="auth()->user()->isFollowing($user)"
-                :followUrl="route('users.follow', $user)"
+            <livewire:components.follow-button
+                :model="$user"
+                type="user"
+                :wire:key="'follow-user-' . $user->id"
                 class="text-xs font-black uppercase border-2 border-black px-3 py-1 hover:bg-brand-yellow transition-colors"
             />
         @endif

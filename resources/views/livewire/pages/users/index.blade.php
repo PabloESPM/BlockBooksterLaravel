@@ -2,10 +2,17 @@
 
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use App\Models\User;
 
 new #[Layout('layouts.app')] #[Title('Comunidad')] class extends Component {
+    #[On('follow-updated')]
+    public function handleFollowUpdated()
+    {
+        // Fuerza el re-render de la vista para actualizar rankings y contadores
+    }
+
     public function with()
     {
         // Más seguidos: usuarios con más seguidores
@@ -50,13 +57,15 @@ new #[Layout('layouts.app')] #[Title('Comunidad')] class extends Component {
 
             <div class="space-y-6">
                 @foreach ($mostFollowed as $user)
-                    <x-user-card
-                        :user="$user"
-                        :rank="$loop->iteration"
-                        statLabel="Seguidores"
-                        :statValue="$user->followers_count"
-                        avatarBg="bg-brand-blue"
-                    />
+                    <div wire:key="most-followed-{{ $user->id }}">
+                        <x-user-card
+                            :user="$user"
+                            :rank="$loop->iteration"
+                            statLabel="Seguidores"
+                            :statValue="$user->followers_count"
+                            avatarBg="bg-brand-blue"
+                        />
+                    </div>
                 @endforeach
             </div>
         </section>
@@ -69,13 +78,15 @@ new #[Layout('layouts.app')] #[Title('Comunidad')] class extends Component {
 
             <div class="space-y-6">
                 @foreach ($topCurators as $user)
-                    <x-user-card
-                        :user="$user"
-                        :rank="$loop->iteration"
-                        statLabel="Listas Creadas"
-                        :statValue="$user->lists_count"
-                        avatarBg="bg-brand-yellow"
-                    />
+                    <div wire:key="top-curators-{{ $user->id }}">
+                        <x-user-card
+                            :user="$user"
+                            :rank="$loop->iteration"
+                            statLabel="Listas Creadas"
+                            :statValue="$user->lists_count"
+                            avatarBg="bg-brand-yellow"
+                        />
+                    </div>
                 @endforeach
             </div>
         </section>
@@ -88,13 +99,15 @@ new #[Layout('layouts.app')] #[Title('Comunidad')] class extends Component {
 
             <div class="space-y-6">
                 @foreach ($mostActive as $user)
-                    <x-user-card
-                        :user="$user"
-                        :rank="$loop->iteration"
-                        statLabel="Reseñas"
-                        :statValue="$user->reviews_count"
-                        avatarBg="bg-gray-200"
-                    />
+                    <div wire:key="most-active-{{ $user->id }}">
+                        <x-user-card
+                            :user="$user"
+                            :rank="$loop->iteration"
+                            statLabel="Reseñas"
+                            :statValue="$user->reviews_count"
+                            avatarBg="bg-gray-200"
+                        />
+                    </div>
                 @endforeach
             </div>
         </section>

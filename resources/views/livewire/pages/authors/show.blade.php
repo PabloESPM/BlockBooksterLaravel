@@ -48,14 +48,7 @@ new #[Layout('layouts.app')] class extends Component {
             <div class="flex-shrink-0">
                 <div
                     class="w-48 h-48 bg-gray-300 rounded-full border-4 border-black shadow-[8px_8px_0px_#000] overflow-hidden">
-                    @php
-                    $authorPhoto = 'https://ui-avatars.com/api/?name=' . urlencode($author->name . ' ' .
-                    $author->surname) . '&background=random&size=256';
-                    if ($author->photo_url) {
-                    $authorPhoto = \Illuminate\Support\Facades\Storage::url($author->photo_url);
-                    }
-                    @endphp
-                    <img src="{{ $authorPhoto }}" alt="{{ $author->name }} {{ $author->surname }}"
+                    <img src="{{ $author->photo }}" alt="{{ $author->name }} {{ $author->surname }}"
                         class="w-full h-full object-cover">
                 </div>
             </div>
@@ -103,7 +96,7 @@ new #[Layout('layouts.app')] class extends Component {
 
                 @auth
                 <div x-data class="flex gap-4 justify-center md:justify-start">
-                    <livewire:components.follow-button :model="$author" type="author" />
+                    <livewire:components.follow-button :model="$author" type="author" :wire:key="'follow-author-' . $author->id" />
                     <button
                         @click="$dispatch('open-share-modal', { title: 'Compartir Perfil del Autor', url: '{{ route('authors.show', $author->id) }}' })"
                         class="neo-btn-secondary">
@@ -146,7 +139,7 @@ new #[Layout('layouts.app')] class extends Component {
                 @foreach($books as $book)
                 <div wire:key="book-{{ $book->isbn }}">
                     <x-book-card :title="$book->title" :author="$author->name . ' ' . $author->surname"
-                        :cover="$book->cover" :id="$book->isbn" />
+                        :cover="$book->cover_image" :id="$book->isbn" />
                 </div>
                 @endforeach
             </div>
